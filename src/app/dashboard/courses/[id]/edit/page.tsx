@@ -12,7 +12,7 @@ import { CourseForm } from "@/components/courses/course-form";
 import { getCourse } from "@/lib/queries";
 
 export const metadata = {
-  title: "Edit course — Campus Hub",
+  title: "Edit course — UniMate",
 };
 
 export const dynamic = "force-dynamic";

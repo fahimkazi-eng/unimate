@@ -5,7 +5,7 @@ const steps = [
     icon: ListTodo,
     title: "Plan your semester",
     description:
-      "Add your courses, tasks and deadlines. Campus Hub shows you what matters right now — not a cluttered list.",
+      "Add your courses, tasks and deadlines. UniMate shows you what matters right now — not a cluttered list.",
   },
   {
     icon: BookOpenCheck,

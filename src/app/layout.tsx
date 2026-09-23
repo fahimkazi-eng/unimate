@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Campus Hub — Everything a student needs, in one place",
+  title: "UniMate — Everything a student needs, in one place",
   description:
     "Plan your semester, manage deadlines, study smarter, and prepare for your career — all in one student dashboard.",
 };
@@ -22,6 +22,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      data-scroll-behavior="smooth"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">

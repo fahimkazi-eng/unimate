@@ -12,7 +12,7 @@ import { TaskForm } from "@/components/tasks/task-form";
 import { getCourses, getTask } from "@/lib/queries";
 
 export const metadata = {
-  title: "Edit task — Campus Hub",
+  title: "Edit task — UniMate",
 };
 
 export const dynamic = "force-dynamic";

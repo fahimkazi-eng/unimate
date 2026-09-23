@@ -25,7 +25,7 @@ import { WeeklyChart } from "@/components/progress/weekly-chart";
 import { CourseProgressList } from "@/components/progress/course-progress";
 
 export const metadata = {
-  title: "Progress — Campus Hub",
+  title: "Progress — UniMate",
 };
 
 export const dynamic = "force-dynamic";

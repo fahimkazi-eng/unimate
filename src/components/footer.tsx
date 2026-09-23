@@ -14,7 +14,7 @@ export function Footer() {
               <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                 <GraduationCap className="h-5 w-5" />
               </span>
-              <span>Campus Hub</span>
+              <span>UniMate</span>
             </Link>
             <p className="mt-4 max-w-sm text-sm leading-6 text-muted-foreground">
               Everything a student needs to survive university — in one place.
@@ -67,7 +67,7 @@ export function Footer() {
         </div>
 
         <div className="mt-10 border-t border-border pt-6 text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Campus Hub. Made for students everywhere.
+          © {new Date().getFullYear()} UniMate. Made for students everywhere.
         </div>
       </div>
     </footer>

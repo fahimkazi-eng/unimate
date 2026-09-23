@@ -1,5 +1,5 @@
 -- =============================================================
--- Campus Hub — V1 database schema
+-- UniMate — V1 database schema
 -- Run in the Supabase SQL Editor (Dashboard > SQL > New query).
 -- Safe to run as-is; designed for V1 only (no AI/career tables yet).
 -- =============================================================

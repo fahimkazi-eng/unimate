@@ -1,9 +1,9 @@
-# Campus Hub
+# UniMate
 
 > Your student operating system — plan your semester, manage deadlines, study
 > smarter, all in one place.
 
-Campus Hub is a student productivity app in active development (V1). Tasks,
+UniMate is a student productivity app in active development (V1). Tasks,
 deadlines, courses, a pomodoro focus timer, and quiet gamification (XP, levels,
 streaks) — built to be fast, calm, and useful on day one.
 
@@ -41,8 +41,8 @@ streaks) — built to be fast, calm, and useful on day one.
 ### 2. Install & configure
 
 ```bash
-git clone <your-repo-url> campus-hub
-cd campus-hub
+git clone https://github.com/fahimkazi-eng/unimate.git
+cd unimate
 npm install
 ```
 

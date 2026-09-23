@@ -10,7 +10,7 @@ import {
 import { SignupForm } from "@/components/auth/signup-form";
 
 export const metadata = {
-  title: "Get started — Campus Hub",
+  title: "Get started — UniMate",
 };
 
 export default function SignupPage() {
@@ -20,7 +20,7 @@ export default function SignupPage() {
         <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
           <GraduationCap className="h-5 w-5" />
         </span>
-        Campus Hub
+        UniMate
       </Link>
 
       <Card className="w-full max-w-sm">

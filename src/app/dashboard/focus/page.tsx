@@ -12,7 +12,7 @@ import { RecentSessions } from "@/components/focus/recent-sessions";
 import { getCourses, getRecentSessions } from "@/lib/queries";
 
 export const metadata = {
-  title: "Focus — Campus Hub",
+  title: "Focus — UniMate",
 };
 
 export const dynamic = "force-dynamic";

@@ -13,7 +13,7 @@ import { TaskRow } from "@/components/tasks/task-row";
 import { getCourses, getTasks } from "@/lib/queries";
 
 export const metadata = {
-  title: "Tasks — Campus Hub",
+  title: "Tasks — UniMate",
 };
 
 export const dynamic = "force-dynamic";

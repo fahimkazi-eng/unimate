@@ -25,7 +25,7 @@ export function Navbar() {
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <GraduationCap className="h-5 w-5" />
           </span>
-          <span>Campus Hub</span>
+          <span>UniMate</span>
         </Link>
 
         {/* Desktop links */}

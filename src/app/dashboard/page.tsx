@@ -22,7 +22,7 @@ import {
 } from "@/lib/queries";
 
 export const metadata = {
-  title: "Dashboard — Campus Hub",
+  title: "Dashboard — UniMate",
 };
 
 export const dynamic = "force-dynamic";

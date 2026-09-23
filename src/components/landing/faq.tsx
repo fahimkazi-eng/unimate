@@ -1,18 +1,18 @@
 const faqs = [
   {
-    question: "Who is Campus Hub for?",
+    question: "Who is UniMate for?",
     answer:
       "University and college students juggling multiple courses, deadlines, exams, and career decisions — anywhere in the world.",
   },
   {
-    question: "Does Campus Hub use AI?",
+    question: "Does UniMate use AI?",
     answer:
       "Not in V1. Tasks, deadlines, focus sessions and progress run on plain, predictable software. AI study tools are planned for a later version.",
   },
   {
     question: "Is it free?",
     answer:
-      "Campus Hub is free while we build and validate V1. A Pro tier may appear later, but the core student tools stay free.",
+      "UniMate is free while we build and validate V1. A Pro tier may appear later, but the core student tools stay free.",
   },
   {
     question: "Is my data private?",

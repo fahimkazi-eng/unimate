@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 
 export const metadata = {
-  title: "Check your email — Campus Hub",
+  title: "Check your email — UniMate",
 };
 
 export default function CheckEmailPage() {

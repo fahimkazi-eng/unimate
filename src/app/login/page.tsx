@@ -10,7 +10,7 @@ import {
 import { LoginForm } from "@/components/auth/login-form";
 
 export const metadata = {
-  title: "Log in — Campus Hub",
+  title: "Log in — UniMate",
 };
 
 export default async function LoginPage({
@@ -29,7 +29,7 @@ export default async function LoginPage({
         <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
           <GraduationCap className="h-5 w-5" />
         </span>
-        Campus Hub
+        UniMate
       </Link>
 
       <Card className="w-full max-w-sm">
