@@ -44,6 +44,7 @@ function refreshCoursePages() {
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/tasks");
   revalidatePath("/dashboard/courses");
+  revalidatePath("/dashboard/progress");
 }
 
 /* ---------- Actions ---------- */

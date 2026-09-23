@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireUser } from "@/lib/auth";
+import { recordProgress } from "@/lib/gamification";
 import { createClient } from "@/lib/supabase/server";
 
 /* ---------- Schema ---------- */
@@ -56,7 +57,11 @@ export async function recordFocusSession(input: {
     return { ok: false, error: error.message };
   }
 
+  // Focus time earns XP (1 per minute) and feeds the streak.
+  await recordProgress(user.id, durationMinutes);
+
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/focus");
+  revalidatePath("/dashboard/progress");
   return { ok: true };
 }

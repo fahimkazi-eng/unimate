@@ -217,3 +217,96 @@ export async function getRecentSessions(
   }
   return (data ?? []) as StudySessionWithCourse[];
 }
+
+/* ---------- Progress ---------- */
+
+export interface StudyDay {
+  date: string; // yyyy-mm-dd (local)
+  label: string; // weekday, e.g. "Mon"
+  minutes: number;
+  isToday: boolean;
+}
+
+function localDateString(iso: string): string {
+  const d = new Date(iso);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+    d.getDate()
+  ).padStart(2, "0")}`;
+}
+
+/** Focus minutes per day for the last 7 days (oldest → today). */
+export async function getWeeklyStudyByDay(userId: string): Promise<StudyDay[]> {
+  const supabase = await createClient();
+
+  const sixDaysAgo = new Date(new Date(Date.now() - 6 * 86_400_000));
+  sixDaysAgo.setHours(0, 0, 0, 0);
+
+  const { data, error } = await supabase
+    .from("study_sessions")
+    .select("started_at, duration")
+    .eq("user_id", userId)
+    .gte("started_at", sixDaysAgo.toISOString())
+    .not("completed_at", "is", null);
+
+  const minutesByDay: Record<string, number> = {};
+  for (const session of data ?? []) {
+    const key = localDateString(session.started_at);
+    minutesByDay[key] = (minutesByDay[key] ?? 0) + session.duration;
+  }
+
+  if (error) {
+    console.error("Failed to load weekly study data:", error.message);
+  }
+
+  const days: StudyDay[] = [];
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date(Date.now() - i * 86_400_000);
+    const key = toDateString(date);
+    const isToday = i === 0;
+    days.push({
+      date: key,
+      label: new Intl.DateTimeFormat("en", { weekday: "short" }).format(
+        new Date(key + "T12:00:00")
+      ),
+      minutes: minutesByDay[key] ?? 0,
+      isToday,
+    });
+  }
+
+  return days;
+}
+
+function toDateString(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+    d.getDate()
+  ).padStart(2, "0")}`;
+}
+
+export interface CourseProgress {
+  id: string;
+  name: string;
+  color: string;
+  total: number;
+  completed: number;
+}
+
+/** Completion per course (only courses that have at least one task). */
+export async function getCourseProgress(userId: string): Promise<CourseProgress[]> {
+  const [courses, tasks] = await Promise.all([
+    getCourses(userId),
+    getTasks(userId),
+  ]);
+
+  return courses
+    .map((course) => {
+      const courseTasks = tasks.filter((t) => t.course_id === course.id);
+      return {
+        id: course.id,
+        name: course.name,
+        color: course.color,
+        total: courseTasks.length,
+        completed: courseTasks.filter((t) => t.status === "completed").length,
+      };
+    })
+    .filter((course) => course.total > 0);
+}

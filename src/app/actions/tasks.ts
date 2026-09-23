@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requireUser } from "@/lib/auth";
+import { recordProgress } from "@/lib/gamification";
 import { createClient } from "@/lib/supabase/server";
 
 /* ---------- Schemas ---------- */
@@ -67,6 +68,7 @@ function dueDateToIso(dueDate: string | null): string | null {
 function refreshTaskPages() {
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/tasks");
+  revalidatePath("/dashboard/progress");
 }
 
 function parseTaskForm(formData: FormData) {
@@ -185,11 +187,19 @@ export async function toggleTaskComplete(
 
   if (!data) return;
 
+  const newStatus =
+    data.status === "completed" ? "todo" : "completed";
+
   await supabase
     .from("tasks")
-    .update({ status: data.status === "completed" ? "todo" : "completed" })
+    .update({ status: newStatus })
     .eq("id", id.data)
     .eq("user_id", user.id);
+
+  // Completing a task earns XP and feeds the streak.
+  if (newStatus === "completed") {
+    await recordProgress(user.id, 10);
+  }
 
   refreshTaskPages();
 }

@@ -9,6 +9,7 @@ const items = [
   { href: "/dashboard/tasks", label: "Tasks" },
   { href: "/dashboard/courses", label: "Courses" },
   { href: "/dashboard/focus", label: "Focus" },
+  { href: "/dashboard/progress", label: "Progress" },
 ];
 
 /** Top-level nav shared by app pages. Grows with each new phase. */
