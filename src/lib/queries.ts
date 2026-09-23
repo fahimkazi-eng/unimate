@@ -31,7 +31,10 @@ export async function getOrCreateProfile(userId: string): Promise<Profile | null
     .maybeSingle();
 
   if (error) {
-    console.error("Failed to create profile row:", error.message);
+    console.error(
+      "Profile row missing and couldn't be created. If this account predates the signup trigger, run the 'Users create own profile' INSERT policy from supabase/v1_schema.sql in the SQL Editor.",
+      error.message
+    );
     return null;
   }
   return data;
@@ -110,6 +113,27 @@ export async function getCourses(userId: string): Promise<Course[]> {
     return [];
   }
   return data ?? [];
+}
+
+/** A single course owned by the user, or null (wrong user / missing). */
+export async function getCourse(
+  userId: string,
+  courseId: string
+): Promise<Course | null> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("courses")
+    .select("*")
+    .eq("id", courseId)
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Failed to load course:", error.message);
+    return null;
+  }
+  return data ?? null;
 }
 
 /** Task completion counts used for the semester-progress figure. */

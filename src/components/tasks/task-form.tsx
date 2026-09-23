@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useActionState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   createTask,
@@ -82,6 +83,18 @@ export function TaskForm({ courses, task }: TaskFormProps) {
               </option>
             ))}
           </Select>
+          {courses.length === 0 ? (
+            <p className="mt-1 text-xs text-muted-foreground">
+              No courses yet —{" "}
+              <Link
+                href="/dashboard/courses"
+                className="font-medium text-primary underline-offset-2 hover:underline"
+              >
+                add your first course
+              </Link>
+              .
+            </p>
+          ) : null}
         </div>
 
         <div>

@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 const items = [
   { href: "/dashboard", label: "Overview" },
   { href: "/dashboard/tasks", label: "Tasks" },
+  { href: "/dashboard/courses", label: "Courses" },
 ];
 
 /** Top-level nav shared by app pages. Grows with each new phase. */
