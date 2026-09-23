@@ -141,7 +141,7 @@ export function FocusTimer({ courses }: FocusTimerProps) {
           width="220"
           height="220"
           viewBox="0 0 220 220"
-          className="-rotate-90"
+          className="-rotate-90 h-auto w-[220px] max-w-full"
           role="img"
           aria-label={`${preset} minute timer`}
         >
@@ -209,7 +209,7 @@ export function FocusTimer({ courses }: FocusTimerProps) {
         </Select>
       </div>
 
-      <div className="mt-6 flex items-center gap-3">
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
         {running ? (
           <Button variant="secondary" onClick={pause}>
             <Pause className="h-4 w-4" />

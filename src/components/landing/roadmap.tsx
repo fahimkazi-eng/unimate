@@ -31,7 +31,7 @@ const upcoming = [
 
 export function Roadmap() {
   return (
-    <section id="roadmap" className="border-t border-border bg-surface py-20">
+    <section id="roadmap" className="scroll-mt-16 border-t border-border bg-surface py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
           <Badge variant="outline">On the roadmap</Badge>

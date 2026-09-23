@@ -71,7 +71,7 @@ export default async function DashboardPage() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <AppNav />
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="text-2xl font-bold text-foreground">

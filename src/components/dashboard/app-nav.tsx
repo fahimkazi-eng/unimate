@@ -17,7 +17,7 @@ export function AppNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="mb-8 flex items-center gap-1 border-b border-border pb-2">
+    <nav className="mb-8 flex items-center gap-1 overflow-x-auto border-b border-border pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {items.map((item) => {
         const active =
           item.href === "/dashboard"
@@ -28,7 +28,7 @@ export function AppNav() {
             key={item.href}
             href={item.href}
             className={cn(
-              "rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
+              "shrink-0 whitespace-nowrap rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors sm:px-3",
               active
                 ? "bg-surface text-foreground"
                 : "text-muted-foreground hover:bg-muted hover:text-foreground"

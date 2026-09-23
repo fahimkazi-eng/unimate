@@ -49,7 +49,7 @@ const features = [
 
 export function Features() {
   return (
-    <section id="features" className="py-20">
+    <section id="features" className="scroll-mt-16 py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
           <Badge>Included in V1</Badge>

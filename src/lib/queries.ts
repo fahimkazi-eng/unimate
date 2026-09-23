@@ -36,6 +36,17 @@ export async function getOrCreateProfile(userId: string): Promise<Profile | null
     .maybeSingle();
 
   if (error) {
+    // Two requests can race to create the same profile row — the loser gets
+    // a duplicate-key error even though the row now exists. Re-read before
+    // giving up.
+    const { data: retry } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", userId)
+      .maybeSingle();
+
+    if (retry) return retry;
+
     console.error(
       "Profile row missing and couldn't be created. If this account predates the signup trigger, run the 'Users create own profile' INSERT policy from supabase/v1_schema.sql in the SQL Editor.",
       error.message
