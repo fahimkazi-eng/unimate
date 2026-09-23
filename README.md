@@ -140,13 +140,13 @@ npm run lint     # ESLint
 
 ## 🖼️ Screenshots
 
-| Landing page | Dashboard |
+| Dashboard | Tasks |
 | --- | --- |
-| ![Landing page](public/screenshots/landing.png) | ![Dashboard](public/screenshots/dashboard.png) |
+| ![Dashboard](public/screenshots/dashboard.png) | ![Tasks](public/screenshots/tasks.png) |
 
-| Tasks | Focus timer |
+| Courses | Focus timer |
 | --- | --- |
-| ![Tasks](public/screenshots/tasks.png) | ![Focus timer](public/screenshots/focus.png) |
+| ![Courses](public/screenshots/courses.png) | ![Focus timer](public/screenshots/focus.png) |
 
 | Progress |
 | --- |
