@@ -137,6 +137,12 @@ create policy "Users update own profile"
   using (auth.uid() = id)
   with check (auth.uid() = id);
 
+-- Allows the app to lazily create a profile row (e.g. for signups
+-- that predate the on_auth_user_created trigger).
+create policy "Users create own profile"
+  on public.profiles for insert
+  with check (auth.uid() = id);
+
 -- -------------------------------------------------------------
 -- END OF V1 SCHEMA
 -- -------------------------------------------------------------
