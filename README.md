@@ -140,7 +140,17 @@ npm run lint     # ESLint
 
 ## 🖼️ Screenshots
 
-_Coming soon — landing page, dashboard, tasks, focus timer, and progress._
+| Landing page | Dashboard |
+| --- | --- |
+| ![Landing page](public/screenshots/landing.png) | ![Dashboard](public/screenshots/dashboard.png) |
+
+| Tasks | Focus timer |
+| --- | --- |
+| ![Tasks](public/screenshots/tasks.png) | ![Focus timer](public/screenshots/focus.png) |
+
+| Progress |
+| --- |
+| ![Progress](public/screenshots/progress.png) |
 
 ## 📄 License
 
