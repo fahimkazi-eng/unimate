@@ -52,3 +52,11 @@ export function formatDueLabel(iso: string): string {
   if (days === 1) return "Tomorrow";
   return formatShort(iso);
 }
+
+/** Clock time like "2:30 PM" for session records. */
+export function formatTime(iso: string): string {
+  return new Intl.DateTimeFormat("en", {
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(iso));
+}

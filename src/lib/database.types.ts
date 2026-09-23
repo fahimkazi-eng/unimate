@@ -76,6 +76,11 @@ export interface Profile {
   created_at: string;
 }
 
+/* A study session joined with its course, for recent-session lists. */
+export interface StudySessionWithCourse extends StudySession {
+  course: Pick<Course, "id" | "name" | "color"> | null;
+}
+
 /* A task joined with its course, for lists that need the course name/color. */
 export interface TaskWithCourse extends Task {
   course: Pick<Course, "id" | "name" | "color"> | null;

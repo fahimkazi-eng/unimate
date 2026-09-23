@@ -1,7 +1,12 @@
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
-import type { Course, Profile, TaskWithCourse } from "@/lib/database.types";
+import type {
+  Course,
+  Profile,
+  StudySessionWithCourse,
+  TaskWithCourse,
+} from "@/lib/database.types";
 
 /**
  * Data access for the dashboard — Phase 5.
@@ -190,4 +195,25 @@ export async function getStudyStats(userId: string): Promise<StudyStats> {
     sessions: rows.length,
     minutes: rows.reduce((sum, s) => sum + s.duration, 0),
   };
+}
+
+/** Most recent completed focus sessions, newest first (for the focus page). */
+export async function getRecentSessions(
+  userId: string,
+  limit = 5
+): Promise<StudySessionWithCourse[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("study_sessions")
+    .select("*, course:courses(id, name, color)")
+    .eq("user_id", userId)
+    .order("started_at", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.error("Failed to load recent sessions:", error.message);
+    return [];
+  }
+  return (data ?? []) as StudySessionWithCourse[];
 }
