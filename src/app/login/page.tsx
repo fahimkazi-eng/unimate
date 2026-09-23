@@ -13,7 +13,16 @@ export const metadata = {
   title: "Log in — Campus Hub",
 };
 
-export default function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const error =
+    typeof (await searchParams).error === "string"
+      ? (await searchParams).error
+      : undefined;
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-12">
       <Link href="/" className="mb-8 flex items-center gap-2 font-semibold text-foreground">
@@ -31,6 +40,13 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {error === "auth" && (
+            <p className="mb-4 rounded-lg bg-warning/10 px-3 py-2 text-sm text-warning">
+              The confirmation link was invalid or expired. You can log in
+              below — if this persists, request a fresh confirmation email from
+              your dashboard.
+            </p>
+          )}
           <LoginForm />
         </CardContent>
       </Card>
