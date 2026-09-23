@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
-import type { Profile, TaskWithCourse } from "@/lib/database.types";
+import type { Course, Profile, TaskWithCourse } from "@/lib/database.types";
 
 /**
  * Data access for the dashboard — Phase 5.
@@ -55,6 +55,61 @@ export async function getIncompleteDeadlines(userId: string): Promise<TaskWithCo
     return [];
   }
   return (data ?? []) as TaskWithCourse[];
+}
+
+/** All of a user's tasks with their course joined, newest first. */
+export async function getTasks(userId: string): Promise<TaskWithCourse[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("tasks")
+    .select(taskWithCourseSelect)
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Failed to load tasks:", error.message);
+    return [];
+  }
+  return (data ?? []) as TaskWithCourse[];
+}
+
+/** A single task owned by the user, or null (e.g. wrong user / missing). */
+export async function getTask(
+  userId: string,
+  taskId: string
+): Promise<TaskWithCourse | null> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("tasks")
+    .select(taskWithCourseSelect)
+    .eq("id", taskId)
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Failed to load task:", error.message);
+    return null;
+  }
+  return (data as TaskWithCourse | null) ?? null;
+}
+
+/** The user's courses, sorted by name. */
+export async function getCourses(userId: string): Promise<Course[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("courses")
+    .select("*")
+    .eq("user_id", userId)
+    .order("name", { ascending: true });
+
+  if (error) {
+    console.error("Failed to load courses:", error.message);
+    return [];
+  }
+  return data ?? [];
 }
 
 /** Task completion counts used for the semester-progress figure. */
