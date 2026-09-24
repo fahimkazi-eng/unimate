@@ -252,9 +252,10 @@ Phase 10 fixed the honesty gap and promoted the V2 features:
 - **Verified:** `npm run build` green; rendered HTML contains every new
   section/string and none of the stale ones; `/signup` copy updated.
 
-Remaining from the V2 spec: only the user-deferred items (v5 gradebook
-migration run, dashboard screenshot re-shoot — see Checkpoint 25). Phase 11
-final audit shipped above.
+Remaining from the V2 spec: only the user-deferred dashboard screenshot
+re-shoot (needs a real test login — see Checkpoint 25). Phase 11 final audit
+shipped above; v5 gradebook migration was run by the user and verified applied
+via PostgREST probe (table + columns + RLS present, zero rows).
 
 ## Checkpoint 23 — V2 Phase 9 applied (motion polish + optimistic tasks)
 
