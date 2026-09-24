@@ -157,6 +157,46 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 22 — V2 Phase 8 applied (emergency mode)
+
+Emergency mode at `/dashboard/emergency` — the README/landing "Emergency help"
+promise, now real. One calm screen for crunch time, real-data-only and
+*advisory by construction* (spec 37: never edits tasks, never moves dates,
+never schedules — every escape hatch just links to a user-owned action):
+
+- **`src/lib/emergency.ts`** (new, pure, server-safe): 
+  - `detectCrisis` — the single most urgent open task = earliest-due, but
+    only when time is actually short (overdue OR due within `CRISIS_WINDOW_DAYS`
+    = 7). A deadline 10 days out honestly returns `null` — no fake panic.
+    Returns signed days/hours + a human headline ("Overdue by 2 days",
+    "Due today · 5:00 PM", "Due in ~47 hours").
+  - `crunchLoad` — real load math: minutes (estimates are the user's; missing
+    → 25 min, the same stated assumption as the planner) + overdue/due-today/
+    within-week counts over open dated tasks.
+  - `sprintEstimate` (ceil to 25-min sprints) and `deferrableList` — open,
+    low-priority, undated tasks that are safe to postpone (advisory only).
+  - `priorityTone` — badge tone mapping.
+  - 37-assertion probe green (empty/completed/far-future → null, hours vs
+    days headlines incl. singulars, earliest-due always wins, crunch
+    exclusions, sprint rounding, deferrable filter/sort).
+- **Page** (server, force-dynamic): big crisis card (course color bar, title,
+  code, priority badges, large countdown, "Start a focus session" →
+  `/dashboard/focus?course=<id>` which the focus page validates against the
+  user's real courses, secondary link to the task's edit page); a 4-stat
+  load strip (Overdue / Due today / Due this week / Load ahead); "the honest
+  math" card comparing the load (~N min) to the user's *logged* weekly focus
+  minutes (never promised); and a "What can wait" advisory list. Calm state
+  when nothing is urgent ("Nothing's on fire right now" + still shows the
+  load). Footer states the advisory design plainly.
+- **Nav:** Emergency (Siren) added to the sidebar + Cmd+K palette (keywords:
+  panic crisis crunch deadline urgent help rescue) right after Focus, and to
+  the mobile More sheet (after Planner).
+- **Honest public copy:** the landing roadmap always said "we won't claim
+  them before they exist" — Emergency Mode is now removed from that list
+  (and its Siren import), and the README's coming-soon drops "Emergency
+  help" & "AI study assistant" (shipped as Study Coach) in favor of a real
+  "Features (V2)" table.
+
 ## Checkpoint 21 — V2 Phase 7 applied (academics)
 
 Academic center at `/dashboard/academics` — real where the schema supports it,

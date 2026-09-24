@@ -3,7 +3,6 @@ import {
   Briefcase,
   CalendarRange,
   Sparkles,
-  Siren,
 } from "lucide-react";
 
 const upcoming = [
@@ -11,11 +10,6 @@ const upcoming = [
     icon: Sparkles,
     title: "AI study tools",
     description: "Notes to flashcards, auto-generated quizzes, and Explain This.",
-  },
-  {
-    icon: Siren,
-    title: "Emergency Mode",
-    description: "‘I’m screwed’ — a calm, practical plan when time is short.",
   },
   {
     icon: CalendarRange,
@@ -44,7 +38,7 @@ export function Roadmap() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {upcoming.map((item) => (
             <div
               key={item.title}

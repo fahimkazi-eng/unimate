@@ -20,9 +20,18 @@ streaks) — built to be fast, calm, and useful on day one.
 | **Responsive** | Works from a 320 px phone up to desktop; landing nav scrolls, grids stack, timer scales |
 
 ### Coming soon (not built yet — the landing page says so)
-- AI study assistant
-- Career tools
-- Emergency help
+- Career tools (CV analysis, skill gaps)
+
+### ✨ Features (V2)
+
+| Area | What you get |
+| --- | --- |
+| **Study Coach** | Real-data AI assistant (optional server-side key) — plans, context, momentum |
+| **Smart Planner** | Deterministic 7-day plan from your real open tasks; advisory only, never writes |
+| **Academics** | Gradebook + credit-weighted GPA (your entries), per-course snapshot, honest attendance/exams status |
+| **Emergency mode** | One calm screen for crunch time — real crisis, honest load math, advisory "what can wait" |
+| **Calendar 2.0** | Month / week / agenda views, server-driven links, add-on-day |
+| **Auth UX** | Password strength, forgot/reset flow, Google sign-in, richer profile |
 
 ## 🧰 Tech stack
 
