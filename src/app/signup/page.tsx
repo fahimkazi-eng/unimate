@@ -5,7 +5,6 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { SignupForm } from "@/components/auth/signup-form";
 
@@ -25,7 +24,7 @@ export default function SignupPage() {
 
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle>Create your account</CardTitle>
+          <h1 className="text-xl font-bold tracking-tight text-foreground">Create your account</h1>
           <CardDescription>
             Free during V1. Your student dashboard takes under a minute to set
             up.

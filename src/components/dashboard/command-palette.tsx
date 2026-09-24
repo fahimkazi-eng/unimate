@@ -147,7 +147,7 @@ export function CommandPalette() {
             aria-activedescendant={
               items[index] ? `palette-option-${index}` : undefined
             }
-            className="h-12 w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
+            className="h-12 w-full rounded-md bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
           />
           <kbd className="shrink-0 rounded border border-border bg-surface-elevated px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
             ESC

@@ -157,6 +157,27 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 13 — applied (audit)
+
+- **A11y — keyboard focus**: global `a/button/[role=button]:focus-visible`
+  outline (ring token) in `globals.css` base layer, so every plain link and
+  raw button shows focus; ring-based controls keep theirs (their
+  `outline-none` utility wins). Command-palette input now has a visible ring.
+- **A11y — headings**: `/login`, `/signup`, `/check-email` now start with a
+  real `h1` (previously only an `h3` CardTitle, no page-level heading). All
+  dashboard pages already had `h1`; landing keeps `h1 → h2 → h3` order.
+- **A11y — reduced motion**: global media collapse + force-reveal already
+  covered C5; verified drift/float/animate-* all collapse, video only ever
+  starts from an explicit gesture.
+- **Offscreen pause**: creator video now pauses via IntersectionObserver
+  when scrolled out of view and resumes if it was playing (muted, GPU-wise
+  free — no hidden playback).
+- **Lazy-loading**: video stays lazy (mounts only on play); poster+assets are
+  tiny SVGs; no heavy images anywhere.
+- **Security re-check**: no secrets in code (anon key only via env; env
+  files git-ignored; no service-role references), RLS scopes every table to
+  `auth.uid()`, queries double-filter `user_id`, proxy guards `/dashboard`.
+
 ## Checkpoint 12 — applied (mobile polish)
 
 - `src/components/dashboard/mobile-bottom-nav.tsx`: fixed bottom nav on <lg —

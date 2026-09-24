@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Play, RotateCcw, Video, Volume2, VolumeX } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -16,13 +16,39 @@ interface CreatorVideoProps {
  * homepage never pays bandwidth for the clip. Poster-first UI with a glass
  * play button; after the first play the clip loops muted with unobtrusive
  * mute/replay controls. `prefers-reduced-motion` is respected by only ever
- * starting playback on explicit user gesture.
+ * starting playback on explicit user gesture. C13: pauses when the panel
+ * scrolls out of view and resumes when it returns (if it was playing).
  */
 export function CreatorVideo({ src, poster, available }: CreatorVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(true);
   const [failed, setFailed] = useState(false);
+
+  // Offscreen pause — only meaningful once the clip is actually mounted.
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+
+    let wasPlaying = false;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const video = videoRef.current;
+        if (!video) return;
+        if (entry.isIntersecting) {
+          if (wasPlaying) void video.play();
+        } else {
+          wasPlaying = !video.paused && !video.ended;
+          video.pause();
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(panel);
+    return () => observer.disconnect();
+  }, []);
 
   // Panel is a 16:9 surface with rounded corners and a dark stage.
   const panel =
@@ -54,7 +80,7 @@ export function CreatorVideo({ src, poster, available }: CreatorVideoProps) {
   }
 
   return (
-    <div className={panel}>
+    <div ref={panelRef} className={panel}>
       {playing ? (
         <video
           ref={videoRef}

@@ -5,7 +5,6 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { LoginForm } from "@/components/auth/login-form";
 
@@ -34,7 +33,7 @@ export default async function LoginPage({
 
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle>Welcome back</CardTitle>
+          <h1 className="text-xl font-bold tracking-tight text-foreground">Welcome back</h1>
           <CardDescription>
             Log in to your student dashboard.
           </CardDescription>

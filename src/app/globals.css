@@ -246,6 +246,16 @@
     --tw-ring-offset-color: var(--color-background);
   }
 
+  /* Checkpoint 13 — keyboard focus is visible everywhere, even on plain
+     links/buttons without an explicit ring (ring-based controls keep
+     theirs: their outline-none utility wins in the utilities layer). */
+  a:focus-visible,
+  button:focus-visible,
+  [role="button"]:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
   ::selection {
     background: var(--color-primary-soft);
     color: var(--color-foreground);
