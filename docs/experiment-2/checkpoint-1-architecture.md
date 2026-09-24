@@ -157,6 +157,22 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 7 — applied (feature demo system)
+
+- `src/components/demos/demo-frame.tsx`: shared fixed-height "Live demo"
+  panel keeping the features grid even.
+- Six looping demo components (`demo-dashboard`, `demo-tasks`, `demo-courses`,
+  `demo-focus`, `demo-progress`, `demo-gamification`), all:
+  - `"use client"` with timers that **skip entirely** when
+    `prefersReducedMotion()` is true (static, fully-revealed end state);
+  - token-based colors, transform/opacity or tiny width transitions only.
+  - Feature demos: next-move ticker · auto-completing tasks (+XP chip) ·
+    course color cycling · pomodoro ring fill · weekly bars growing ·
+    XP bar → level-up pulse.
+- `features.tsx`: each card now leads with its animated demo in `DemoFrame`,
+  then icon + title + copy; card reveal cascade kept from C6.
+- `motion.ts`: added client-only `prefersReducedMotion()` helper.
+
 ## Checkpoint 6 — applied (homepage upgrade)
 
 - `AmbientBackground` (`src/components/landing/ambient-background.tsx`): theme-aware
