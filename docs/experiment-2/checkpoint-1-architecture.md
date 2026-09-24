@@ -157,6 +157,41 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 19 — V2 Phase 5 applied (AI study OS)
+
+Study Coach — the AI layer, built *honest by construction*:
+
+- **Spec 46 (AI key never on frontend):** the key is only ever read from
+  server env (`ASSISTANT_API_KEY` inside `src/lib/assistant.ts` / the server
+  action). No `NEXT_PUBLIC_*` AI var exists; the client sees only the boolean
+  "is it configured?" — never the key.
+- **`src/app/dashboard/assistant/page.tsx`** (new, server, force-dynamic):
+  smart cards computed *from real data* on every load — Next move (reuses the
+  existing `NextMoveWidget`), Week load (open tasks due in the next 7 days +
+  estimated minutes), Course watch (course with the most open tasks + its next
+  due date), Momentum (streak / level / XP / weekly focus minutes). Zero fake
+  numbers — all rows are the user's actual tasks/courses/study sessions.
+- **`src/components/assistant/study-assistant.tsx`** (new, client): the Study
+  Coach chat. Empty state with one-tap suggestion chips; user/assistant
+  bubbles; pending "typing" dots; honest error row. It works **even with no AI
+  key** — replies are clearly honest about the wiring (no pretend AI).
+- **`src/app/actions/assistant.ts`** (new, server action): `coachReply` —
+  zod-validated message + bounded history (last 10 turns, each ≤2000 chars),
+  real-data context built from the user's actual profile/tasks/courses/focus
+  stats, `parseHistory` sanitizes the client-supplied history before it ever
+  reaches the model.
+- **`src/lib/assistant.ts`** (new, server-only): `buildCoachContext` (pure —
+  12-assertion probe green: identity/level/XP/streak, task counts, focus
+  stats, deadline, course rows incl. "no next due" and empty-state cases) and
+  `askLlm` — OpenAI-compatible chat-completions call with timeout, returns
+  `null` (→ honest offline reply) when the key is missing or the call fails.
+- **Nav:** Assistant added to the sidebar (Sparkles), the mobile More sheet,
+  and the Cmd+K palette (which also finally gains Profile).
+- Honest states only: with no key the page says so plainly instead of faking.
+  With `ASSISTANT_API_KEY` server env + optional `ASSISTANT_BASE_URL` /
+  `ASSISTANT_MODEL`, the same chat turns into a real, data-grounded coach —
+  no other code change.
+
 ## Checkpoint 18 — V2 Phase 4 applied (calendar 2.0)
 
 Calendar 2.0 upgrades C11's month grid *in place* — no rebuild, everything

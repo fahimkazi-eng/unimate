@@ -12,6 +12,7 @@ import {
   ListChecks,
   LogOut,
   MoreHorizontal,
+  Sparkles,
   Target,
   Timer,
   TrendingUp,
@@ -39,6 +40,7 @@ const MORE = [
   { href: "/dashboard/courses", label: "Courses", icon: BookOpen },
   { href: "/dashboard/goals", label: "Goals", icon: Target },
   { href: "/dashboard/achievements", label: "Achievements", icon: Trophy },
+  { href: "/dashboard/assistant", label: "Assistant", icon: Sparkles },
   { href: "/dashboard/profile", label: "Profile", icon: UserRound },
 ];
 

@@ -15,6 +15,7 @@ import {
   NotebookPen,
   Search,
   Settings,
+  Sparkles,
   Target,
   Timer,
   TrendingUp,
@@ -51,6 +52,7 @@ const mainItems: SidebarItem[] = [
   { href: "/dashboard/goals", label: "Goals", icon: Target },
   { href: "/dashboard/progress", label: "Progress", icon: TrendingUp },
   { href: "/dashboard/achievements", label: "Achievements", icon: Trophy },
+  { href: "/dashboard/assistant", label: "Assistant", icon: Sparkles },
   { href: "/dashboard/profile", label: "Profile", icon: UserRound },
 ];
 

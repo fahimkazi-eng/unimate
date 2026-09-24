@@ -9,9 +9,11 @@ import {
   CalendarDays,
   GraduationCap,
   ListChecks,
+  Sparkles,
   Target,
   Timer,
   Trophy,
+  UserRound,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -43,6 +45,8 @@ const NAV_ITEMS: {
   { href: "/dashboard/goals", label: "Goals", icon: Target, keywords: "targets objectives targets" },
   { href: "/dashboard/progress", label: "Progress", icon: BarChart3, keywords: "stats analytics charts xp" },
   { href: "/dashboard/achievements", label: "Achievements", icon: Trophy, keywords: "badges awards unlocks" },
+  { href: "/dashboard/assistant", label: "Assistant", icon: Sparkles, keywords: "ai coach study chat insights" },
+  { href: "/dashboard/profile", label: "Profile", icon: UserRound, keywords: "account about me name university" },
 ];
 
 export function CommandPalette() {
