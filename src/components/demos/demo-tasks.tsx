@@ -21,8 +21,8 @@ export function DemoTasks() {
 
   useEffect(() => {
     if (prefersReducedMotion()) {
-      setDone(TASKS.length);
-      return;
+      const raf = requestAnimationFrame(() => setDone(TASKS.length));
+      return () => cancelAnimationFrame(raf);
     }
     const id = setInterval(() => {
       setPing((p) => p + 1);

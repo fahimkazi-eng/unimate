@@ -9,12 +9,13 @@ const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 /** Focus demo — a mini pomodoro ring that fills, completes, and resets. */
 export function DemoFocus() {
   const [progress, setProgress] = useState(0);
+  const done = progress >= 100;
 
   // Ring fills towards 100% on a fast loop.
   useEffect(() => {
     if (prefersReducedMotion()) {
-      setProgress(100);
-      return;
+      const raf = requestAnimationFrame(() => setProgress(100));
+      return () => cancelAnimationFrame(raf);
     }
     const id = setInterval(() => {
       setProgress((p) => (p >= 100 ? 100 : p + 2));
@@ -24,12 +25,10 @@ export function DemoFocus() {
 
   // Brief "Complete" pause, then restart the cycle.
   useEffect(() => {
-    if (progress < 100) return;
+    if (!done) return;
     const id = setTimeout(() => setProgress(0), 1800);
     return () => clearTimeout(id);
-  }, [progress >= 100]);
-
-  const done = progress >= 100;
+  }, [done]);
 
   return (
     <div className="flex items-center gap-3">

@@ -61,7 +61,7 @@ export function Hero() {
             className="mt-6 animate-rise-in text-sm text-muted-foreground"
             style={{ animationDelay: staggerDelay(4) }}
           >
-            Free during V1 · No required AI · Built for real universities
+            Free · Email or Google sign-in · Optional AI coach
           </p>
         </div>
 

@@ -13,8 +13,8 @@ export function DemoProgress() {
 
   useEffect(() => {
     if (prefersReducedMotion()) {
-      setCount(BARS.length);
-      return;
+      const raf = requestAnimationFrame(() => setCount(BARS.length));
+      return () => cancelAnimationFrame(raf);
     }
     const id = setInterval(() => {
       setCount((c) => (c >= BARS.length ? 0 : c + 1));

@@ -24,8 +24,7 @@ export default function SignupPage() {
         <CardHeader>
           <h1 className="text-xl font-bold tracking-tight text-foreground">Create your account</h1>
           <CardDescription>
-            Free during V1. Your student dashboard takes under a minute to set
-            up.
+            Free. Your student dashboard takes under a minute to set up.
           </CardDescription>
         </CardHeader>
         <CardContent>

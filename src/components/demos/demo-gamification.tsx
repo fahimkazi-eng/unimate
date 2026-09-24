@@ -10,13 +10,13 @@ const XP_TARGET = 48;
 /** Gamification demo — XP accrues, then a level-up chip pulses and resets. */
 export function DemoGamification() {
   const [xp, setXp] = useState(0);
-  const [leveled, setLeveled] = useState(false);
+  const leveled = xp >= XP_TARGET;
 
   // XP counts up towards the target.
   useEffect(() => {
     if (prefersReducedMotion()) {
-      setXp(XP_TARGET);
-      return;
+      const raf = requestAnimationFrame(() => setXp(XP_TARGET));
+      return () => cancelAnimationFrame(raf);
     }
     const id = setInterval(() => {
       setXp((v) => (v >= XP_TARGET ? v : v + 4));
@@ -26,14 +26,10 @@ export function DemoGamification() {
 
   // Hold the "Level 8!" pulse briefly, then restart the cycle.
   useEffect(() => {
-    if (xp < XP_TARGET) return;
-    setLeveled(true);
-    const id = setTimeout(() => {
-      setLeveled(false);
-      setXp(0);
-    }, 1100);
+    if (!leveled) return;
+    const id = setTimeout(() => setXp(0), 1100);
     return () => clearTimeout(id);
-  }, [xp >= XP_TARGET]);
+  }, [leveled]);
 
   return (
     <div className="w-full">

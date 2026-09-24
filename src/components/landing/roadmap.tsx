@@ -1,21 +1,7 @@
 import { Badge } from "@/components/ui/badge";
-import {
-  Briefcase,
-  CalendarRange,
-  Sparkles,
-} from "lucide-react";
+import { Briefcase, CircleCheck } from "lucide-react";
 
 const upcoming = [
-  {
-    icon: Sparkles,
-    title: "AI study tools",
-    description: "Notes to flashcards, auto-generated quizzes, and Explain This.",
-  },
-  {
-    icon: CalendarRange,
-    title: "Smart planner",
-    description: "Automatic task breakdown: ‘1500 words by Friday’ becomes a day-by-day plan.",
-  },
   {
     icon: Briefcase,
     title: "Career tools",
@@ -23,22 +9,31 @@ const upcoming = [
   },
 ];
 
+const shipped = [
+  "AI Study Coach",
+  "Smart planner",
+  "Calendar 2.0",
+  "Academics & GPA",
+  "Emergency mode",
+  "Google sign-in",
+];
+
 export function Roadmap() {
   return (
     <section id="roadmap" className="scroll-mt-16 border-t border-border bg-surface py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <Badge variant="outline">On the roadmap</Badge>
+          <Badge variant="outline">Still ahead</Badge>
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-foreground">
-            Built next — the long-term vision
+            One thing left on the list
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            We ship in version increments. These arrive in future versions — we
-            won&apos;t claim them before they exist.
+            We ship in version increments and we won&apos;t claim anything
+            before it exists — so here&apos;s the honest picture.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mx-auto mt-12 max-w-xl">
           {upcoming.map((item) => (
             <div
               key={item.title}
@@ -58,6 +53,23 @@ export function Roadmap() {
               </p>
             </div>
           ))}
+
+          <div className="mt-6 rounded-xl border border-border bg-background p-6">
+            <h3 className="text-sm font-semibold text-foreground">
+              Already shipped in V2
+            </h3>
+            <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+              {shipped.map((item) => (
+                <li
+                  key={item}
+                  className="flex items-center gap-2 text-sm text-muted-foreground"
+                >
+                  <CircleCheck className="h-4 w-4 shrink-0 text-success" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </section>

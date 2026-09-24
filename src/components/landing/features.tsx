@@ -8,13 +8,25 @@ import { DemoCourses } from "@/components/demos/demo-courses";
 import { DemoFocus } from "@/components/demos/demo-focus";
 import { DemoProgress } from "@/components/demos/demo-progress";
 import { DemoGamification } from "@/components/demos/demo-gamification";
+import { DemoCalendar } from "@/components/demos/demo-calendar";
+import { DemoPlanner } from "@/components/demos/demo-planner";
+import { DemoCoach } from "@/components/demos/demo-coach";
+import { DemoAcademics } from "@/components/demos/demo-academics";
+import { DemoEmergency } from "@/components/demos/demo-emergency";
+import { DemoAuth } from "@/components/demos/demo-auth";
 import {
   BookOpen,
+  CalendarRange,
   CheckSquare,
   Flame,
+  GraduationCap,
   LayoutDashboard,
+  Siren,
+  Sparkles,
   Timer,
   TrendingUp,
+  UserRound,
+  CalendarClock,
 } from "lucide-react";
 
 interface Feature {
@@ -24,7 +36,50 @@ interface Feature {
   description: string;
 }
 
+/** Shipped features (V1 + V2) — every card maps to a real page in the app. */
 const features: Feature[] = [
+  {
+    icon: Sparkles,
+    demo: DemoCoach,
+    title: "Study Coach",
+    description:
+      "An optional AI assistant that plans from your real tasks, courses and focus stats — and honestly says so when it's offline.",
+  },
+  {
+    icon: CalendarClock,
+    demo: DemoPlanner,
+    title: "Smart planner",
+    description:
+      "A deterministic 7-day plan from your open tasks. Advisory by design — it plans, it never silently moves your deadlines.",
+  },
+  {
+    icon: CalendarRange,
+    demo: DemoCalendar,
+    title: "Calendar 2.0",
+    description:
+      "Month, week and agenda views of your real deadlines — plus add-a-task on any day from the calendar itself.",
+  },
+  {
+    icon: GraduationCap,
+    demo: DemoAcademics,
+    title: "Academics",
+    description:
+      "Gradebook and a credit-weighted GPA from your actual grades — with honest status where university data isn't wired up yet.",
+  },
+  {
+    icon: Siren,
+    demo: DemoEmergency,
+    title: "Emergency mode",
+    description:
+      "One calm screen for crunch time: the single most urgent deadline, honest load math, and what can wait.",
+  },
+  {
+    icon: UserRound,
+    demo: DemoAuth,
+    title: "Sign-in & profile",
+    description:
+      "Email or Google sign-in, password strength hints, and a richer profile — your data stays yours.",
+  },
   {
     icon: LayoutDashboard,
     demo: DemoDashboard,
@@ -74,7 +129,7 @@ export function Features() {
     <section id="features" className="scroll-mt-16 py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <Badge>Included in V1</Badge>
+          <Badge>Included in V2</Badge>
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-foreground">
             Your semester, connected
           </h2>
@@ -86,7 +141,7 @@ export function Features() {
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, i) => (
-            <Reveal key={feature.title} delay={i * 70}>
+            <Reveal key={feature.title} delay={Math.min(i, 5) * 70}>
               <div className="flex h-full flex-col rounded-xl border border-border bg-surface p-5 shadow-card transition-shadow hover:shadow-card-hover">
                 <DemoFrame>
                   <feature.demo />

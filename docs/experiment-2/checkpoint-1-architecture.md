@@ -157,6 +157,56 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 24 — V2 Phase 10 applied (homepage: honest V2 showcase)
+
+The public landing was still describing V1 after P5–P9 shipped — features were
+the 6 V1 cards under an "Included in V1" badge, the roadmap listed **AI study
+tools** and **Smart planner** as "Coming soon" (both live since P5/P6), the FAQ
+answered "AI? Not in V1", and the hero said "Free during V1 · No required AI".
+Phase 10 fixed the honesty gap and promoted the V2 features:
+
+- **`features.tsx`:** grid grew 6 → 12 cards (`sm:grid-cols-2 lg:grid-cols-3`,
+  4 clean rows), badge → "Included in V2". Six new cards map to real V2 pages:
+  Study Coach, Smart planner, Calendar 2.0, Academics, Emergency mode,
+  Sign-in & profile. Order leads with the V2 marquee features, then the V1
+  core; every description is honest ("advisory by design", "honestly says so
+  when it's offline", "honest status where university data isn't wired up").
+  Reveal stagger capped at `Math.min(i, 5) * 70` — a 12-card grid must not
+  sit invisible up to 770 ms.
+- **Six new demos** in `src/components/demos/`, same pattern as the V1 set
+  (client, `prefersReducedMotion()` guard, token-based, transform/opacity
+  only): `demo-coach` (chat exchange), `demo-planner` (7-day advisory bar
+  chart with ≈ min labels), `demo-calendar` (week strip + agenda line),
+  `demo-academics` (gradebook rows + GPA chip), `demo-emergency` (crisis
+  headline cycling to a calm "All clear" state), `demo-auth` (Google/email
+  paths). All use demo data pre-login only (rule 10).
+- **`roadmap.tsx`:** rewritten — one honest "Still ahead" card (Career tools)
+  + a "Already shipped in V2" checklist (6 items, `CircleCheck`). Heading is
+  now "One thing left on the list".
+- **`faq.tsx`:** AI answer rewritten — Study Coach is optional, runs off an
+  operator-supplied server-side key, and "without one it simply says so and
+  stays offline; core tools never depend on it". "Free" answer dropped the
+  V1 reference.
+- **`hero.tsx` / `signup/page.tsx`:** stale "Free during V1 · No required
+  AI" → "Free · Email or Google sign-in · Optional AI coach"; signup blurb
+  drops "during V1".
+- **`README.md`:** intro lead updated to V2 ("plus an AI Study Coach, smart
+  planner, gradebook, and calendar"); V1 feature table retained as shipped
+  history, V2 table already present.
+- **Lint:** the newer `react-hooks/set-state-in-effect` rule now flags the
+  V1 demos' `if (prefersReducedMotion()) { setX(...); return; }` pattern.
+  All demo files fixed with a deferred `requestAnimationFrame` terminal state
+  (still displays instantly, satisfies the rule) + derived booleans for
+  reset effects (`demo-focus`, `demo-gamification`, `demo-progress`,
+  `demo-tasks`, `demo-emergency`). `creator-video.tsx` keeps two pre-existing
+  `no-img-element` warnings (deliberate lazy `<img>` poster — out of scope).
+- **Verified:** `npm run build` green; rendered HTML contains every new
+  section/string and none of the stale ones; `/signup` copy updated.
+
+Remaining from the V2 spec: Phase 11 final audit/security (and the
+user-deferred items: v5 gradebook migration run, dashboard screenshot
+re-shoot).
+
 ## Checkpoint 23 — V2 Phase 9 applied (motion polish + optimistic tasks)
 
 The task-complete/task-creation rework promised for P9/P10 (spec 15) — the

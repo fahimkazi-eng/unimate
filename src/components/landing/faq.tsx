@@ -7,12 +7,12 @@ const faqs = [
   {
     question: "Does UniMate use AI?",
     answer:
-      "Not in V1. Tasks, deadlines, focus sessions and progress run on plain, predictable software. AI study tools are planned for a later version.",
+      "There's an optional AI Study Coach that plans from your real tasks, courses and focus stats. It runs off an operator-supplied server-side key, and without one it simply says so and stays offline — your core tools never depend on it.",
   },
   {
     question: "Is it free?",
     answer:
-      "UniMate is free while we build and validate V1. A Pro tier may appear later, but the core student tools stay free.",
+      "UniMate is free while we build and validate it. A Pro tier may appear later, but the core student tools stay free.",
   },
   {
     question: "Is my data private?",

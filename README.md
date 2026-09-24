@@ -3,9 +3,10 @@
 > Your student operating system — plan your semester, manage deadlines, study
 > smarter, all in one place.
 
-UniMate is a student productivity app in active development (V1). Tasks,
-deadlines, courses, a pomodoro focus timer, and quiet gamification (XP, levels,
-streaks) — built to be fast, calm, and useful on day one.
+UniMate is a student productivity app in active development (V2). Tasks,
+deadlines, courses, a pomodoro focus timer, quiet gamification (XP, levels,
+streaks) — plus an AI Study Coach, smart planner, gradebook, and calendar —
+built to be fast, calm, and useful on day one.
 
 ## ✨ Features (V1)
 
