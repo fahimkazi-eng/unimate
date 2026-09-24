@@ -99,11 +99,17 @@ export function Sidebar({ name, level, xp, photoUrl }: SidebarProps) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
 
-  // Persisted collapsed preference (read after mount to avoid hydration drift).
+  // Persisted collapsed preference. Read after mount (deferred one frame via
+  // rAF, same pattern as the demos) so SSR and hydration both render expanded
+  // and there's no hydration drift — this is a defers-body setState, not a
+  // render-synchronous one.
   useEffect(() => {
-    if (window.localStorage.getItem(COLLAPSE_KEY) === "1") {
-      setCollapsed(true);
-    }
+    const raf = requestAnimationFrame(() => {
+      if (window.localStorage.getItem(COLLAPSE_KEY) === "1") {
+        setCollapsed(true);
+      }
+    });
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   const toggleCollapsed = () => {

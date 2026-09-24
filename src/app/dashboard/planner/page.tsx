@@ -30,7 +30,7 @@ import {
   Inbox,
   Sparkles,
 } from "lucide-react";
-import type { TaskWithCourse, TaskPriority } from "@/lib/database.types";
+import type { TaskPriority } from "@/lib/database.types";
 import { cn } from "@/lib/utils";
 
 export const metadata = {

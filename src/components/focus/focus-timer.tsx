@@ -43,6 +43,8 @@ export function FocusTimer({ courses, initialCourseId }: FocusTimerProps) {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startedAtRef = useRef<string | null>(null);
   const recordingRef = useRef(false);
+  // Mirror of recordingRef for rendering (refs must not be read during render).
+  const [recording, setRecording] = useState(false);
 
   const totalSeconds = preset * 60;
   const focusedSeconds = totalSeconds - secondsLeft;
@@ -60,6 +62,7 @@ export function FocusTimer({ courses, initialCourseId }: FocusTimerProps) {
     stopTicking();
     if (recordingRef.current) return; // guard against double submission
     recordingRef.current = true;
+    setRecording(true);
 
     const result = await recordFocusSession({
       durationMinutes: minutes,
@@ -68,6 +71,7 @@ export function FocusTimer({ courses, initialCourseId }: FocusTimerProps) {
     });
 
     recordingRef.current = false;
+    setRecording(false);
     if (result.ok) {
       setMessage(`🎉 Recorded ${minutes} min of focused study.`);
       router.refresh();
@@ -221,7 +225,7 @@ export function FocusTimer({ courses, initialCourseId }: FocusTimerProps) {
             Pause
           </Button>
         ) : (
-          <Button onClick={start} disabled={recordingRef.current}>
+          <Button onClick={start} disabled={recording}>
             <Play className="h-4 w-4" />
             {idle ? "Start" : "Resume"}
           </Button>

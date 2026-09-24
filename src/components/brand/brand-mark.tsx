@@ -35,6 +35,7 @@ export function BrandMark({ className }: { className?: string }) {
   }
 
   return (
+    // eslint-disable-next-line @next/next/no-img-element -- deliberate: 32px static logo, SSR-safe onError fallback
     <img
       src="/logo.jpeg"
       alt=""

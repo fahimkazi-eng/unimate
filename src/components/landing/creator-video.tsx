@@ -57,6 +57,7 @@ export function CreatorVideo({ src, poster, available }: CreatorVideoProps) {
   if (!available || failed) {
     return (
       <div className={cn(panel, "group")}>
+        {/* eslint-disable-next-line @next/next/no-img-element -- deliberate: tiny SVG poster shown pre-play, not a bandwidth-heavy image. */}
         <img
           src={poster}
           alt=""
@@ -101,6 +102,7 @@ export function CreatorVideo({ src, poster, available }: CreatorVideoProps) {
           aria-label="Play the UniMate product tour"
           className="group absolute inset-0 flex items-center justify-center focus-visible:outline-none"
         >
+          {/* eslint-disable-next-line @next/next/no-img-element -- deliberate: tiny SVG poster shown pre-play, not a bandwidth-heavy image. */}
           <img
             src={poster}
             alt=""

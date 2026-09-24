@@ -27,8 +27,9 @@ export function Reveal({ children, delay = 0, className }: RevealProps) {
 
     if (typeof IntersectionObserver === "undefined") {
       // No observer support (very old engines) — just show the content.
-      setVisible(true);
-      return;
+      // Deferred one frame so this is not a render-synchronous setState.
+      const raf = requestAnimationFrame(() => setVisible(true));
+      return () => cancelAnimationFrame(raf);
     }
 
     const observer = new IntersectionObserver(

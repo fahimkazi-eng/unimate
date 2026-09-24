@@ -31,6 +31,13 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-surface focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-foreground focus:shadow-lg"
+      >
+        Skip to content
+      </a>
+
       <Sidebar
         name={name}
         level={profile?.level ?? 1}
@@ -47,7 +54,7 @@ export default async function DashboardLayout({
           <AppNav />
         </div>
 
-        <main className="w-full px-4 pb-28 pt-10 sm:px-6 lg:pb-10">
+        <main id="main-content" className="w-full scroll-mt-4 px-4 pb-28 pt-10 sm:px-6 lg:pb-10">
           <PageTransition>{children}</PageTransition>
         </main>
       </div>

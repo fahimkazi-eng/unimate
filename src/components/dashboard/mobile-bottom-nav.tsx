@@ -9,7 +9,6 @@ import {
   CalendarDays,
   CalendarClock,
   GraduationCap,
-  LayoutDashboard,
   ListChecks,
   LogOut,
   MoreHorizontal,

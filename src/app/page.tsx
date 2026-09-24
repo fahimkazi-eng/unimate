@@ -12,8 +12,14 @@ import { Reveal } from "@/components/ui/reveal";
 export default function Home() {
   return (
     <>
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-surface focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-foreground focus:shadow-lg"
+      >
+        Skip to content
+      </a>
       <Navbar />
-      <main className="flex-1">
+      <main id="main-content" className="flex-1 scroll-mt-4">
         <Hero />
         {/* Features animates its own cards; the rest cascade on scroll. */}
         <Reveal>

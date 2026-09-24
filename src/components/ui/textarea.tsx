@@ -1,8 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-export interface TextareaProps
-  extends React.ComponentProps<"textarea"> {}
+export type TextareaProps = React.ComponentProps<"textarea">;
 
 export function Textarea({
   className,

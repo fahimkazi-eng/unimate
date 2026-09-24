@@ -89,20 +89,30 @@ export function CommandPalette() {
     );
   }, [query]);
 
-  /* Focus + reset whenever the palette opens. */
-  useEffect(() => {
+  // Reset query/index whenever the palette opens. Adjusted during render
+  // (React's documented pattern for deriving state from a value change) so
+  // the reset lands in the same commit instead of a second effect render.
+  const [prevOpen, setPrevOpen] = useState(false);
+  if (open !== prevOpen) {
+    setPrevOpen(open);
     if (open) {
       setQuery("");
       setIndex(0);
+    }
+  }
+
+  /* Focus the input after the palette mounts. */
+  useEffect(() => {
+    if (open) {
       requestAnimationFrame(() => inputRef.current?.focus());
     }
   }, [open]);
 
-  useEffect(() => {
-    setIndex((i) => Math.min(i, Math.max(0, items.length - 1)));
-  }, [items.length]);
-
   if (!open) return null;
+
+  // The keyboard handlers clamp `index` themselves; render-time clamp
+  // protects against selection drifting past the filtered list.
+  const activeIndex = Math.min(index, Math.max(0, items.length - 1));
 
   const go = (href: string) => {
     setOpen(false);
@@ -118,7 +128,7 @@ export function CommandPalette() {
       setIndex((i) => Math.max(i - 1, 0));
     } else if (event.key === "Enter") {
       event.preventDefault();
-      const item = items[index];
+      const item = items[activeIndex];
       if (item) go(item.href);
     } else if (event.key === "Escape") {
       event.preventDefault();
@@ -154,7 +164,7 @@ export function CommandPalette() {
             aria-expanded="true"
             aria-controls="palette-list"
             aria-activedescendant={
-              items[index] ? `palette-option-${index}` : undefined
+              items[activeIndex] ? `palette-option-${activeIndex}` : undefined
             }
             className="h-12 w-full rounded-md bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
           />
@@ -179,18 +189,18 @@ export function CommandPalette() {
                 key={item.href}
                 id={`palette-option-${i}`}
                 role="option"
-                aria-selected={i === index}
+                aria-selected={i === activeIndex}
                 onMouseEnter={() => setIndex(i)}
                 onClick={() => go(item.href)}
                 className={cn(
                   "flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
-                  i === index
+                  i === activeIndex
                     ? "bg-primary-soft text-foreground"
                     : "text-muted-foreground"
                 )}
               >
                 <item.icon
-                  className={cn("h-4 w-4", i === index && "text-primary")}
+                  className={cn("h-4 w-4", i === activeIndex && "text-primary")}
                 />
                 {item.label}
               </li>

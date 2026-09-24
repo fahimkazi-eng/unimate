@@ -10,7 +10,7 @@ import {
   pointsForLetter,
 } from "@/lib/grades";
 import { formatDueLabel } from "@/lib/dates";
-import { addGrade, deleteGrade } from "@/app/actions/grades";
+import { deleteGrade } from "@/app/actions/grades";
 import { GradeForm } from "@/components/academics/grade-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

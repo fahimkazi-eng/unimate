@@ -157,6 +157,55 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 25 — V2 Phase 11 applied (final audit + security)
+
+The last V2 phase: make the whole repo lint-clean under the modern
+`react-hooks` rules, close the remaining a11y gap, and re-verify security.
+
+- **Lint — `eslint.config.mjs`:** added `@typescript-eslint/no-unused-vars`
+  with `argsIgnorePattern/varsIgnorePattern/caughtErrorsIgnorePattern: "^_"`
+  (server-action signatures require `(_prevState, _formData)` — underscore is
+  the conventional "intentionally unused" marker, not cruft) and turned off
+  `no-require-imports` for `scripts/**/*.cjs` (plain Node scripts legitimately
+  use `require`). Net effect: 11 errors + 12 warnings → 0 / 0.
+- **`command-palette.tsx`:** dropped both `set-state-in-effect` effects. The
+  open-reset is now done **during render** via React's documented
+  "adjust state when a value changes" pattern (`prevOpen` comparison), and
+  the index clamp is a render-derived `activeIndex =
+  Math.min(index, Math.max(0, items.length - 1))` used everywhere the list is
+  read (Enter, `aria-activedescendant`, listbox selection). Keyboard handlers
+  keep their own clamps.
+- **`sidebar.tsx` / `ui/reveal.tsx`:** post-mount reads (localStorage
+  collapse pref; non-IntersectionObserver fallback) deferred one frame via
+  `requestAnimationFrame` + `cancelAnimationFrame` cleanup — same display
+  behavior, satisfies `set-state-in-effect`.
+- **`focus-timer.tsx`:** `recordingRef.current` was read during render (new
+  `refs-during-render` rule) — added a `recording` state mirror for the
+  Start-button `disabled` prop; the ref still guards double submission around
+  the async server action.
+- **`ui/input.tsx`, `ui/textarea.tsx`, `auth/password-input.tsx`:**
+  empty `interface X extends React.ComponentProps<...> {}` →
+  `type X = React.ComponentProps<...>` (`no-empty-object-type`).
+- **Unused imports removed:** `Link` (check-email), `addGrade`
+  (academics — the `GradeForm` binds that action), `TaskWithCourse`
+  (planner), `LayoutDashboard` (mobile-bottom-nav).
+- **Deliberate `<img>` kept** with rationale disables: `brand-mark.tsx`
+  (SSR-safe 32px logo with onError fallback — `next/image` would change that
+  behavior) and `creator-video.tsx` ×2 (tiny SVG posters).
+- **A11y:** added **skip-to-content links** on the landing page and the
+  dashboard layout (`href="#main-content"`, `sr-only` until focused; `main`
+  elements now carry `id="main-content"` + `scroll-mt-4`). Re-verified: every
+  dashboard and auth page has a real `h1`; forms/labels/aria-labels present
+  (goal, grade, planner budget, assistant chat); global `focus-visible` ring
+  (C13) still covers the V2 interactive elements.
+- **Security re-check (all pass):** no secrets in `src` (supported-key grep
+  clean), `.env*` gitignored, AI key behind `import "server-only"` in
+  `lib/assistant.ts`, RLS scopes every table to `auth.uid()` (v1 tasks/
+  courses/sessions/profiles, v3 goals, v5 grades), `proxy.ts` guards
+  `/dashboard`, Google OAuth redirect locked to the Supabase allowlist.
+- **Verified:** `npm run lint` exits 0 with zero warnings; `npm run build`
+  green; dev server restarted.
+
 ## Checkpoint 24 — V2 Phase 10 applied (homepage: honest V2 showcase)
 
 The public landing was still describing V1 after P5–P9 shipped — features were
@@ -203,9 +252,9 @@ Phase 10 fixed the honesty gap and promoted the V2 features:
 - **Verified:** `npm run build` green; rendered HTML contains every new
   section/string and none of the stale ones; `/signup` copy updated.
 
-Remaining from the V2 spec: Phase 11 final audit/security (and the
-user-deferred items: v5 gradebook migration run, dashboard screenshot
-re-shoot).
+Remaining from the V2 spec: only the user-deferred items (v5 gradebook
+migration run, dashboard screenshot re-shoot — see Checkpoint 25). Phase 11
+final audit shipped above.
 
 ## Checkpoint 23 — V2 Phase 9 applied (motion polish + optimistic tasks)
 

@@ -5,8 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-interface PasswordInputProps
-  extends React.ComponentProps<"input"> {}
+type PasswordInputProps = React.ComponentProps<"input">;
 
 /**
  * V2 Phase 3 (spec 25) — password field with a show/hide toggle.
