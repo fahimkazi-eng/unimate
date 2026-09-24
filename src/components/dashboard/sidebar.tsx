@@ -10,9 +10,13 @@ import {
   CalendarClock,
   ChevronsLeft,
   ChevronsRight,
+  FolderOpen,
   GraduationCap,
   LayoutDashboard,
+  Library,
+  LifeBuoy,
   ListChecks,
+  MessageSquareText,
   NotebookPen,
   Search,
   Settings,
@@ -64,6 +68,10 @@ const mainItems: SidebarItem[] = [
 /** Planned features — visible but honestly marked (no dead links). */
 const plannedItems: SidebarItem[] = [
   { label: "Notes", icon: NotebookPen },
+  { label: "Study Library", icon: Library },
+  { label: "Resources", icon: FolderOpen },
+  { label: "Help", icon: LifeBuoy },
+  { label: "Feedback", icon: MessageSquareText },
   { label: "Settings", icon: Settings },
 ];
 
@@ -210,7 +218,15 @@ export function Sidebar({ name, level, xp, photoUrl }: SidebarProps) {
 
         {/* Planned features — honestly marked, not linked */}
         <div className="mx-5 my-3 h-px bg-border" aria-hidden />
-        <ul className="flex flex-col gap-1 px-2" aria-label="Coming soon">
+        <p
+          className={cn(
+            "px-3 pb-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground",
+            collapsed ? "sr-only" : "block"
+          )}
+        >
+          More from UniMate
+        </p>
+        <ul className="flex flex-col gap-1 px-2" aria-label="More from UniMate">
           {plannedItems.map((item) => (
             <li key={item.label} className="group relative">
               <span

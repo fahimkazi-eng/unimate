@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ProfileForm } from "@/components/dashboard/profile-form";
+import { SignOutDialog } from "@/components/dashboard/sign-out-dialog";
 import { Flame, GraduationCap, Timer, TrendingUp, Trophy } from "lucide-react";
 
 export const metadata = {
@@ -127,6 +128,18 @@ export default async function ProfilePage() {
               value={`${studyStats.minutes}m`}
             />
           </dl>
+        </CardContent>
+      </Card>
+
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle>Session</CardTitle>
+          <CardDescription>
+            Signing out keeps your data intact — you can come back anytime.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <SignOutDialog />
         </CardContent>
       </Card>
     </div>

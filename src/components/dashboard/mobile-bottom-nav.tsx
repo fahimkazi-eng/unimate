@@ -3,15 +3,19 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { logout } from "@/app/actions/auth";
 import {
   BookOpen,
   CalendarDays,
   CalendarClock,
+  FolderOpen,
   GraduationCap,
+  Library,
+  LifeBuoy,
   ListChecks,
-  LogOut,
+  MessageSquareText,
   MoreHorizontal,
+  NotebookPen,
+  Settings,
   Siren,
   Sparkles,
   Target,
@@ -24,9 +28,10 @@ import { cn } from "@/lib/utils";
 
 /**
  * Checkpoint 12 — mobile bottom navigation.
- * Five primary destinations + a "More" sheet for the long tail (and logout,
- * which desktop gets from the sidebar). Fixed bar with safe-area padding;
- * every target is ≥ 44px. Desktop (lg+) is untouched — the sidebar owns it.
+ * Five primary destinations + a "More" sheet for the long tail. Fixed bar
+ * with safe-area padding; every target is ≥ 44px. Desktop (lg+) is
+ * untouched — the sidebar owns it. Logout lives only on the Profile page
+ * (V3 Phase D), so this sheet never signs you out by accident.
  */
 
 const PRIMARY = [
@@ -46,6 +51,16 @@ const MORE = [
   { href: "/dashboard/achievements", label: "Achievements", icon: Trophy },
   { href: "/dashboard/assistant", label: "Assistant", icon: Sparkles },
   { href: "/dashboard/profile", label: "Profile", icon: UserRound },
+];
+
+/** Planned — visible, honestly marked, never dead links. */
+const MORE_SOON = [
+  { label: "Notes", icon: NotebookPen },
+  { label: "Study Library", icon: Library },
+  { label: "Resources", icon: FolderOpen },
+  { label: "Help", icon: LifeBuoy },
+  { label: "Feedback", icon: MessageSquareText },
+  { label: "Settings", icon: Settings },
 ];
 
 function isActive(href: string, pathname: string): boolean {
@@ -73,7 +88,7 @@ export function MobileBottomNav() {
         >
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-fade-in" aria-hidden />
           <div
-            className="absolute inset-x-3 bottom-24 rounded-2xl border border-border bg-surface p-2 shadow-2xl animate-scale-in"
+            className="absolute inset-x-3 bottom-24 max-h-[70vh] overflow-y-auto rounded-2xl border border-border bg-surface p-2 shadow-2xl animate-scale-in"
             onClick={(event) => event.stopPropagation()}
           >
             <p className="px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -102,15 +117,23 @@ export function MobileBottomNav() {
               );
             })}
 
-            <form action={logout} className="mt-1 border-t border-border pt-1">
-              <button
-                type="submit"
-                className="flex h-12 w-full items-center gap-3 rounded-lg px-3 text-sm font-medium text-danger transition-colors hover:bg-danger/10"
+            <div className="my-1 h-px bg-border" aria-hidden />
+
+            <p className="px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              More from UniMate
+            </p>
+            {MORE_SOON.map((item) => (
+              <div
+                key={item.label}
+                className="flex h-12 items-center gap-3 rounded-lg px-3 text-sm font-medium text-muted-foreground"
               >
-                <LogOut className="h-4 w-4" />
-                Log out
-              </button>
-            </form>
+                <item.icon className="h-4 w-4 opacity-60" />
+                <span className="truncate">{item.label}</span>
+                <span className="ml-auto rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Soon
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       ) : null}

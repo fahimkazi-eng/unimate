@@ -5,12 +5,10 @@ import Link from "next/link";
 import {
   ChevronUp,
   GraduationCap,
-  LogOut,
   Palette,
   Settings,
   UserRound,
 } from "lucide-react";
-import { logout } from "@/app/actions/auth";
 import { cn } from "@/lib/utils";
 
 export interface AccountMenuProps {
@@ -161,19 +159,6 @@ export function AccountMenu({
               </span>
             </div>
           ))}
-
-          <div className="my-1 h-px bg-border" />
-
-          <form action={logout}>
-            <button
-              type="submit"
-              role="menuitem"
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-danger transition-colors hover:bg-muted"
-            >
-              <LogOut className="h-4 w-4" />
-              Log out
-            </button>
-          </form>
         </div>
       )}
     </div>
