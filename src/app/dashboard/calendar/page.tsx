@@ -1,5 +1,10 @@
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, CalendarDays } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  CalendarDays,
+  Plus,
+} from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { getDatedTasks } from "@/lib/queries";
 import type { TaskWithCourse } from "@/lib/database.types";
@@ -11,7 +16,25 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import {
+  MONTHS,
+  WEEKDAYS,
+  addDays,
+  bucketByDay,
+  dayKey,
+  daysFromToday,
+  formatDayHeading,
+  formatDayShort,
+  formatWeekRange,
+  monthCells,
+  monthParam,
+  parseDayParam,
+  parseMonthParam,
+  parseViewParam,
+  weekCells,
+} from "@/lib/calendar";
 
 export const metadata = {
   title: "Calendar — UniMate",
@@ -19,99 +42,169 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
-];
+/* ---------- Shared bits ---------- */
 
-/** Local yyyy-mm-dd key used to bucket tasks onto calendar days. */
-function dayKey(d: Date): string {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
+function ViewSwitcher({ view }: { view: "month" | "week" | "agenda" }) {
+  const items = [
+    { id: "month" as const, label: "Month" },
+    { id: "week" as const, label: "Week" },
+    { id: "agenda" as const, label: "Agenda" },
+  ];
+  return (
+    <nav
+      aria-label="Calendar view"
+      className="inline-flex items-center rounded-lg border border-border bg-surface p-0.5"
+    >
+      {items.map((item) => (
+        <Link
+          key={item.id}
+          href={`/dashboard/calendar${view === item.id ? "" : `?view=${item.id}`}`}
+          aria-current={view === item.id ? "page" : undefined}
+          className={cn(
+            "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+            view === item.id
+              ? "bg-primary-soft text-foreground shadow-glow-primary"
+              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+          )}
+        >
+          {item.label}
+        </Link>
+      ))}
+    </nav>
+  );
 }
 
-function parseMonthParam(value: string | string[] | undefined): {
-  year: number;
-  month: number; // 0-based
-} | null {
-  if (typeof value !== "string") return null;
-  const match = /^(\d{4})-(\d{2})$/.exec(value);
-  if (!match) return null;
-  const year = Number(match[1]);
-  const month = Number(match[2]) - 1;
-  if (year < 2000 || year > 2100 || month < 0 || month > 11) return null;
-  return { year, month };
+/** A task row shared by the day panel and the agenda. */
+function TaskLink({ task }: { task: TaskWithCourse }) {
+  return (
+    <Link
+      href={`/dashboard/tasks/${task.id}/edit`}
+      className="flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3 transition-colors hover:border-primary/40"
+    >
+      <span
+        className="h-9 w-1.5 shrink-0 rounded-full"
+        style={{ backgroundColor: task.course?.color ?? "var(--color-primary)" }}
+        aria-hidden
+      />
+      <div className="min-w-0 flex-1">
+        <p
+          className={cn(
+            "truncate text-sm font-medium",
+            task.status === "completed"
+              ? "text-muted-foreground line-through"
+              : "text-foreground"
+          )}
+        >
+          {task.title}
+        </p>
+        <p className="truncate text-xs text-muted-foreground">
+          {task.course?.name ?? "No course"} · due{" "}
+          {task.due_date
+            ? new Date(task.due_date).toLocaleTimeString(undefined, {
+                hour: "numeric",
+                minute: "2-digit",
+              })
+            : ""}
+        </p>
+      </div>
+      <Badge
+        variant={
+          task.priority === "high"
+            ? "danger"
+            : task.priority === "medium"
+              ? "warning"
+              : "outline"
+        }
+      >
+        {task.priority}
+      </Badge>
+    </Link>
+  );
 }
 
-function parseDayParam(value: string | string[] | undefined): string | null {
-  if (typeof value !== "string") return null;
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
-  return value;
-}
-
-function monthParam(year: number, month: number): string {
-  return `${year}-${String(month + 1).padStart(2, "0")}`;
-}
-
-/** Tasks bucketed by local day key (same tz as the calendar). */
-function bucketByDay(tasks: TaskWithCourse[]): Map<string, TaskWithCourse[]> {
-  const map = new Map<string, TaskWithCourse[]>();
-  for (const task of tasks) {
-    if (!task.due_date) continue;
-    const key = dayKey(new Date(task.due_date));
-    const list = map.get(key) ?? [];
-    list.push(task);
-    map.set(key, list);
-  }
-  return map;
-}
+/* ---------- Page ---------- */
 
 export default async function CalendarPage({
   searchParams,
 }: {
-  searchParams: Promise<{ month?: string | string[]; day?: string | string[] }>;
+  searchParams: Promise<{
+    view?: string;
+    month?: string;
+    day?: string;
+  }>;
 }) {
   const user = await requireUser();
   const params = await searchParams;
 
   const now = new Date();
   const todayKey = dayKey(now);
-  const visible =
+  const view = parseViewParam(params.view);
+  const month =
     parseMonthParam(params.month) ??
     ({ year: now.getFullYear(), month: now.getMonth() } as const);
 
   const byDay = bucketByDay(await getDatedTasks(user.id));
 
-  // Monday-first grid: 6 weeks × 7 days.
-  const firstOfMonth = new Date(visible.year, visible.month, 1);
-  const startOffset = (firstOfMonth.getDay() + 6) % 7;
-  const gridStart = new Date(visible.year, visible.month, 1 - startOffset);
-  const cells = Array.from({ length: 42 }, (_, i) => {
-    const date = new Date(
-      gridStart.getFullYear(),
-      gridStart.getMonth(),
-      gridStart.getDate() + i
-    );
-    return {
-      date,
-      key: dayKey(date),
-      inMonth: date.getMonth() === visible.month,
-      isToday: dayKey(date) === todayKey,
-      tasks: byDay.get(dayKey(date)) ?? [],
-    };
-  });
+  // Selected day for the grid views (?day= or a sensible default).
+  let selectedKey: string | null = null;
+  if (view === "month" || view === "week") {
+    selectedKey = parseDayParam(params.day);
+    if (!selectedKey) {
+      if (view === "month") {
+        const cells = monthCells(month.year, month.month, todayKey);
+        selectedKey = cells.some((c) => c.inMonth && c.isToday)
+          ? todayKey
+          : `${monthParam(month.year, month.month)}-01`;
+      } else {
+        selectedKey = todayKey;
+      }
+    }
+  }
 
-  // Selected day: ?day= or today (when in view) or the 1st of the month.
-  const selectedKey =
-    parseDayParam(params.day) ??
-    (cells.some((c) => c.inMonth && c.isToday) ? todayKey : `${monthParam(visible.year, visible.month)}-01`);
-  const selectedTasks = byDay.get(selectedKey) ?? [];
+  const selectedKeySafe = selectedKey ?? todayKey;
 
-  const prev = new Date(visible.year, visible.month - 1, 1);
-  const next = new Date(visible.year, visible.month + 1, 1);
+  const monthCellsForView =
+    view === "month"
+      ? monthCells(month.year, month.month, todayKey).map((cell) => ({
+          ...cell,
+          tasks: byDay.get(cell.key) ?? [],
+        }))
+      : [];
+
+  const weekCellsForView =
+    view === "week"
+      ? weekCells(selectedKeySafe, todayKey).map((cell) => ({
+          ...cell,
+          tasks: byDay.get(cell.key) ?? [],
+        }))
+      : [];
+
+  const selectedTasks = selectedKey ? byDay.get(selectedKey) ?? [] : [];
+  const agendaDays = view === "agenda" ? Array.from(byDay.entries()) : [];
+
+  const prev =
+    view === "month"
+      ? monthCellsForView.length > 0
+        ? new Date(month.year, month.month - 1, 1)
+        : null
+      : null;
+  const next =
+    view === "month"
+      ? new Date(month.year, month.month + 1, 1)
+      : null;
+
+  const navPrevHref =
+    view === "month" && prev
+      ? `/dashboard/calendar?view=month&month=${monthParam(prev.getFullYear(), prev.getMonth())}`
+      : view === "week"
+        ? `/dashboard/calendar?view=week&day=${addDays(selectedKeySafe, -7)}`
+        : null;
+  const navNextHref =
+    view === "month" && next
+      ? `/dashboard/calendar?view=month&month=${monthParam(next.getFullYear(), next.getMonth())}`
+      : view === "week"
+        ? `/dashboard/calendar?view=week&day=${addDays(selectedKeySafe, 7)}`
+        : null;
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -124,168 +217,291 @@ export default async function CalendarPage({
           </p>
         </div>
 
-        <div className="flex items-center gap-1">
-          <Link
-            href="/dashboard/calendar"
-            aria-label="Jump to today"
-            className="rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-          >
-            Today
-          </Link>
-          <Link
-            href={`/dashboard/calendar?month=${monthParam(prev.getFullYear(), prev.getMonth())}`}
-            aria-label="Previous month"
-            className="rounded-lg border border-border p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Link>
-          <Link
-            href={`/dashboard/calendar?month=${monthParam(next.getFullYear(), next.getMonth())}`}
-            aria-label="Next month"
-            className="rounded-lg border border-border p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <ViewSwitcher view={view} />
+
+          {view !== "agenda" ? (
+            <div className="ml-1 flex items-center gap-1">
+              <Link
+                href={
+                  view === "week"
+                    ? "/dashboard/calendar?view=week"
+                    : "/dashboard/calendar?view=month"
+                }
+                aria-label="Jump to today"
+                className="rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              >
+                Today
+              </Link>
+              {navPrevHref ? (
+                <Link
+                  href={navPrevHref}
+                  aria-label="Previous"
+                  className="rounded-lg border border-border p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Link>
+              ) : null}
+              {navNextHref ? (
+                <Link
+                  href={navNextHref}
+                  aria-label="Next"
+                  className="rounded-lg border border-border p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       </header>
 
-      <Card className="mt-6">
-        <CardHeader className="flex-row items-center justify-between gap-2">
-          <CardTitle className="flex items-center gap-2">
-            <CalendarDays className="h-4 w-4 text-primary" />
-            {MONTHS[visible.month]} {visible.year}
-          </CardTitle>
-          <CardDescription>Monday-first · tap a day for its tasks.</CardDescription>
-        </CardHeader>
+      {/* Month grid */}
+      {view === "month" ? (
+        <Card className="mt-6">
+          <CardHeader className="flex-row items-center justify-between gap-2">
+            <CardTitle className="flex items-center gap-2">
+              <CalendarDays className="h-4 w-4 text-primary" />
+              {MONTHS[month.month]} {month.year}
+            </CardTitle>
+            <CardDescription>Monday-first · tap a day for its tasks.</CardDescription>
+          </CardHeader>
 
-        <CardContent>
-          <div
-            className="grid grid-cols-7 gap-1"
-            role="grid"
-            aria-label={`${MONTHS[visible.month]} ${visible.year} calendar`}
-          >
-            {WEEKDAYS.map((label) => (
-              <div
-                key={label}
-                className="pb-2 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground"
-              >
-                {label}
-              </div>
-            ))}
+          <CardContent>
+            <div
+              className="grid grid-cols-7 gap-1"
+              role="grid"
+              aria-label={`${MONTHS[month.month]} ${month.year} calendar`}
+            >
+              {WEEKDAYS.map((label) => (
+                <div
+                  key={label}
+                  className="pb-2 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+                >
+                  {label}
+                </div>
+              ))}
 
-            {cells.map((cell) => (
-              <Link
-                key={cell.key}
-                href={`/dashboard/calendar?month=${monthParam(visible.year, visible.month)}&day=${cell.key}`}
-                role="gridcell"
-                aria-label={`${cell.date.toLocaleDateString()} — ${cell.tasks.length} task${cell.tasks.length === 1 ? "" : "s"}`}
-                aria-selected={cell.key === selectedKey}
-                className={cn(
-                  "flex min-h-[64px] flex-col rounded-lg border p-1.5 transition-colors sm:min-h-[84px]",
-                  cell.inMonth
-                    ? "border-border bg-surface"
-                    : "border-transparent bg-muted/40",
-                  cell.isToday && "border-primary/60",
-                  cell.key === selectedKey &&
-                    "ring-2 ring-primary ring-offset-2 ring-offset-background"
-                )}
-              >
-                <span
+              {monthCellsForView.map((cell) => (
+                <Link
+                  key={cell.key}
+                  href={`/dashboard/calendar?view=month&month=${monthParam(month.year, month.month)}&day=${cell.key}`}
+                  role="gridcell"
+                  aria-label={`${cell.date.toLocaleDateString()} — ${cell.tasks.length} task${cell.tasks.length === 1 ? "" : "s"}`}
+                  aria-selected={cell.key === selectedKey}
                   className={cn(
-                    "flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium",
-                    cell.isToday
-                      ? "bg-primary text-primary-foreground"
-                      : cell.inMonth
-                        ? "text-foreground"
-                        : "text-muted-foreground/50"
+                    "flex min-h-[64px] flex-col rounded-lg border p-1.5 transition-colors sm:min-h-[84px]",
+                    cell.inMonth
+                      ? "border-border bg-surface"
+                      : "border-transparent bg-muted/40",
+                    cell.isToday && "border-primary/60",
+                    cell.key === selectedKey &&
+                      "ring-2 ring-primary ring-offset-2 ring-offset-background"
                   )}
                 >
-                  {cell.date.getDate()}
-                </span>
-
-                <div className="mt-auto flex flex-wrap gap-0.5">
-                  {cell.tasks.slice(0, 3).map((task) => (
-                    <span
-                      key={task.id}
-                      className="h-1.5 w-1.5 rounded-full"
-                      style={{ backgroundColor: task.course?.color ?? "var(--color-primary)" }}
-                      aria-hidden
-                    />
-                  ))}
-                  {cell.tasks.length > 3 ? (
-                    <span className="text-[10px] font-medium text-muted-foreground">
-                      +{cell.tasks.length - 3}
-                    </span>
-                  ) : null}
-                </div>
-              </Link>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Day detail */}
-      <Card className="mt-6">
-        <CardHeader>
-          <CardTitle>
-            {new Date(`${selectedKey}T12:00:00`).toLocaleDateString(undefined, {
-              weekday: "long",
-              month: "long",
-              day: "numeric",
-            })}
-          </CardTitle>
-          <CardDescription>
-            {selectedTasks.length === 0
-              ? "Nothing due — enjoy the day."
-              : `${selectedTasks.length} task${selectedTasks.length === 1 ? "" : "s"} due.`}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          {selectedTasks.length === 0 ? (
-            <p className="rounded-xl border border-dashed border-border bg-surface px-4 py-8 text-center text-sm text-muted-foreground">
-              No tasks scheduled here. ✨
-            </p>
-          ) : (
-            selectedTasks.map((task) => (
-              <Link
-                key={task.id}
-                href={`/dashboard/tasks/${task.id}/edit`}
-                className="flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3 transition-colors hover:border-primary/40"
-              >
-                <span
-                  className="h-9 w-1.5 shrink-0 rounded-full"
-                  style={{ backgroundColor: task.course?.color ?? "var(--color-primary)" }}
-                  aria-hidden
-                />
-                <div className="min-w-0 flex-1">
-                  <p
+                  <span
                     className={cn(
-                      "truncate text-sm font-medium",
-                      task.status === "completed"
-                        ? "text-muted-foreground line-through"
+                      "flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium",
+                      cell.isToday
+                        ? "bg-primary text-primary-foreground"
+                        : cell.inMonth
+                          ? "text-foreground"
+                          : "text-muted-foreground/50"
+                    )}
+                  >
+                    {cell.date.getDate()}
+                  </span>
+
+                  <div className="mt-auto flex flex-wrap gap-0.5">
+                    {cell.tasks.slice(0, 3).map((task) => (
+                      <span
+                        key={task.id}
+                        className="h-1.5 w-1.5 rounded-full"
+                        style={{ backgroundColor: task.course?.color ?? "var(--color-primary)" }}
+                        aria-hidden
+                      />
+                    ))}
+                    {cell.tasks.length > 3 ? (
+                      <span className="text-[10px] font-medium text-muted-foreground">
+                        +{cell.tasks.length - 3}
+                      </span>
+                    ) : null}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {/* Week view */}
+      {view === "week" ? (
+        <Card className="mt-6">
+          <CardHeader className="flex-row items-center justify-between gap-2">
+            <CardTitle className="flex items-center gap-2">
+              <CalendarDays className="h-4 w-4 text-primary" />
+              {formatWeekRange(weekCellsForView)}
+            </CardTitle>
+            <CardDescription>Monday-first · tap a day for its tasks.</CardDescription>
+          </CardHeader>
+
+          <CardContent>
+            <div
+              className="grid min-w-[560px] grid-cols-7 gap-1 overflow-x-auto"
+              role="grid"
+              aria-label={`Week of ${formatWeekRange(weekCellsForView)}`}
+            >
+              {WEEKDAYS.map((label) => (
+                <div
+                  key={label}
+                  className="pb-2 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+                >
+                  {label}
+                </div>
+              ))}
+
+              {weekCellsForView.map((cell) => (
+                <Link
+                  key={cell.key}
+                  href={`/dashboard/calendar?view=week&day=${cell.key}`}
+                  role="gridcell"
+                  aria-label={`${formatDayHeading(cell.key)} — ${cell.tasks.length} task${cell.tasks.length === 1 ? "" : "s"}`}
+                  aria-selected={cell.key === selectedKey}
+                  className={cn(
+                    "flex min-h-[120px] flex-col rounded-lg border bg-surface p-1.5 transition-colors",
+                    cell.isToday ? "border-primary/60" : "border-border",
+                    cell.key === selectedKey &&
+                      "ring-2 ring-primary ring-offset-2 ring-offset-background"
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "mx-auto flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold",
+                      cell.isToday
+                        ? "bg-primary text-primary-foreground"
                         : "text-foreground"
                     )}
                   >
-                    {task.title}
-                  </p>
-                  <p className="truncate text-xs text-muted-foreground">
-                    {task.course?.name ?? "No course"} · due{" "}
-                    {task.due_date
-                      ? new Date(task.due_date).toLocaleTimeString(undefined, {
-                          hour: "numeric",
-                          minute: "2-digit",
-                        })
-                      : ""}
-                  </p>
-                </div>
-                <Badge variant={task.priority === "high" ? "danger" : task.priority === "medium" ? "warning" : "outline"}>
-                  {task.priority}
-                </Badge>
-              </Link>
-            ))
-          )}
-        </CardContent>
-      </Card>
+                    {cell.date.getDate()}
+                  </span>
+
+                  <div className="mt-2 flex flex-col gap-1">
+                    {cell.tasks.slice(0, 3).map((task) => (
+                      <span
+                        key={task.id}
+                        className="flex items-center gap-1 truncate text-[10px] font-medium text-muted-foreground"
+                      >
+                        <span
+                          className="h-1.5 w-1.5 shrink-0 rounded-full"
+                          style={{ backgroundColor: task.course?.color ?? "var(--color-primary)" }}
+                          aria-hidden
+                        />
+                        <span className="truncate">{task.title}</span>
+                      </span>
+                    ))}
+                    {cell.tasks.length > 3 ? (
+                      <span className="text-[10px] font-medium text-muted-foreground">
+                        +{cell.tasks.length - 3} more
+                      </span>
+                    ) : null}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {/* Agenda view */}
+      {view === "agenda" ? (
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <CalendarDays className="h-4 w-4 text-primary" />
+              Upcoming deadlines
+            </CardTitle>
+            <CardDescription>
+              Everything with a due date, in order. Overdue first.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {agendaDays.length === 0 ? (
+              <p className="rounded-xl border border-dashed border-border bg-surface px-4 py-8 text-center text-sm text-muted-foreground">
+                Nothing scheduled yet — add a task with a due date. ✨
+              </p>
+            ) : (
+              agendaDays.map(([key, tasks]) => {
+                const days = daysFromToday(key);
+                const tag =
+                  days < 0
+                    ? "Overdue"
+                    : days === 0
+                      ? "Today"
+                      : days === 1
+                        ? "Tomorrow"
+                        : null;
+                return (
+                  <section key={key} aria-labelledby={`day-${key}`}>
+                    <div className="mb-2 flex items-center gap-2">
+                      <h2
+                        id={`day-${key}`}
+                        className="text-sm font-semibold tracking-wide text-foreground"
+                      >
+                        {formatDayHeading(key)}
+                      </h2>
+                      {tag ? (
+                        <Badge variant={days < 0 ? "danger" : "default"}>{tag}</Badge>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">
+                          {formatDayShort(key)}
+                        </span>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      {tasks.map((task) => (
+                        <TaskLink key={task.id} task={task} />
+                      ))}
+                    </div>
+                  </section>
+                );
+              })
+            )}
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {/* Day detail (grid views only) */}
+      {view === "month" || view === "week" ? (
+        <Card className="mt-6">
+          <CardHeader className="flex-row flex-wrap items-center justify-between gap-2">
+            <div>
+              <CardTitle>
+                {formatDayHeading(selectedKeySafe)}
+              </CardTitle>
+              <CardDescription>
+                {selectedTasks.length === 0
+                  ? "Nothing due — enjoy the day."
+                  : `${selectedTasks.length} task${selectedTasks.length === 1 ? "" : "s"} due.`}
+              </CardDescription>
+            </div>
+            <Button href={`/dashboard/tasks?due=${selectedKeySafe}`} size="sm">
+              <Plus className="h-4 w-4" />
+              Add task on this day
+            </Button>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {selectedTasks.length === 0 ? (
+              <p className="rounded-xl border border-dashed border-border bg-surface px-4 py-8 text-center text-sm text-muted-foreground">
+                No tasks scheduled here. ✨
+              </p>
+            ) : (
+              selectedTasks.map((task) => (
+                <TaskLink key={task.id} task={task} />
+              ))
+            )}
+          </CardContent>
+        </Card>
+      ) : null}
     </div>
   );
 }

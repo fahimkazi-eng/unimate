@@ -157,6 +157,58 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 18 — V2 Phase 4 applied (calendar 2.0)
+
+Calendar 2.0 upgrades C11's month grid *in place* — no rebuild, everything
+still server-driven links (`?view&month&day`) so it stays keyboard/AT
+accessible and works without JS:
+
+- **`src/lib/calendar.ts`** (new, pure, server-safe): calendar math extracted
+  from the page so views stay thin — param parsing (`view/month/day`, with
+  real-date validation that rejects Feb 30), `monthCells` (Monday-first 6×7),
+  `weekCells` (7 columns around an anchor day), `bucketByDay` (clock-order
+  preserving), headings/relative tags (`daysFromToday`), `formatWeekRange`,
+  `addDays`.
+- **Three views** via `?view=`:
+  - *Month* — the existing grid (refactored onto `calendar.ts`).
+  - *Week* — 7 columns for the week containing the selected day; each column
+    shows the date (today filled), up to 3 course-colored task chips + "+N
+    more"; prev/next week and Today nav.
+  - *Agenda* — chronological, grouped-by-day list with relative tags
+    (Overdue/Today/Tomorrow) and day headers; reuses the day-detail task row.
+- **Segmented view switcher** (Month/Week/Agenda) with `aria-current`; view
+  switches keep sensible context (week anchors on the selected day, month
+  switches land on that day's month).
+- **Explicit add-on-day** (spec 37 — no silent scheduling): the day-detail
+  panel gets an "Add task on this day" button → `/dashboard/tasks?due=yyyy-mm-dd`;
+  `tasks/page.tsx` validates the param and `task-form.tsx` prefills the due
+  date. The user still explicitly reviews and saves — nothing is scheduled
+  silently.
+- Day detail + empty states shared across grid views.
+
+## Checkpoint 17 — V2 Phase 3 applied (auth UX)
+
+- **`password-input.tsx`** (spec 25): show/hide toggle inside the password
+  field (login/signup/reset), `aria-label` Show/Hide, `type="button"`,
+  180ms-fast icon crossfade (`animate-fade-in-fast`).
+- **`password-strength.tsx`** (spec 26): compact Weak/Fair/Strong 3-segment
+  meter while typing (signup + reset); matches the server rule (8+ chars,
+  case mix, digit, symbol).
+- **Forgot/reset flow** (spec 24): `/forgot-password` (public card) →
+  `sendPasswordReset` (anon `resetPasswordForEmail` with `redirectTo` back to
+  `/auth/callback?next=/reset-password`) → generic reply so we never leak
+  whether an email exists → `/reset-password` (session-guarded; cold visits
+  bounce to `/forgot-password`) → `updatePassword` → `/dashboard`.
+- **Profile page** `/dashboard/profile` (spec 28): avatar/name/email header,
+  live level/XP/streak stats, editable nickname + university/department/
+  semester (1–16 select)/academic year. `supabase/v4_profile_fields.sql`
+  adds the four academic columns. `updateProfile` probes the extended columns
+  and falls back to V1-safe `display_name` until the v2/v4 migrations run —
+  saving never breaks pre-migration.
+- Nav: Profile moved from "Soon" to live in sidebar, account menu, mobile
+  More sheet. Spec 27 (fast login→dashboard) needed no code: the 180ms
+  route fade from P1 already delivers the instant feel.
+
 ## Checkpoint 16 — V2 Phase 2 applied (brand, complete)
 
 - **Asset** — the real logo (dark glow-tile, 1254×1254) is at

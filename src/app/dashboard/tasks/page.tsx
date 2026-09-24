@@ -17,8 +17,18 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function TasksPage() {
+export default async function TasksPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ due?: string | string[] }>;
+}) {
   const user = await requireUser();
+  const params = await searchParams;
+  const due =
+    typeof params.due === "string" && /^\d{4}-\d{2}-\d{2}$/.test(params.due)
+      ? params.due
+      : undefined;
+
   const [tasks, courses] = await Promise.all([
     getTasks(user.id),
     getCourses(user.id),
@@ -47,7 +57,7 @@ export default async function TasksPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <TaskForm courses={courses} />
+          <TaskForm courses={courses} defaultDue={due} />
         </CardContent>
       </Card>
 

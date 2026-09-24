@@ -18,13 +18,15 @@ import type { Course, TaskWithCourse } from "@/lib/database.types";
 interface TaskFormProps {
   courses: Course[];
   task?: TaskWithCourse;
+  /** V2 Phase 4 — calendar "add on this day" prefill (?due=yyyy-mm-dd). */
+  defaultDue?: string;
 }
 
 /**
  * Add/edit form shared by both pages. When `task` is set it binds the
  * update action; otherwise it creates a new task.
  */
-export function TaskForm({ courses, task }: TaskFormProps) {
+export function TaskForm({ courses, task, defaultDue }: TaskFormProps) {
   const router = useRouter();
   const action = task ? updateTask.bind(null, task.id) : createTask;
   const [state, formAction, pending] = useActionState<TaskState, FormData>(
@@ -108,7 +110,7 @@ export function TaskForm({ courses, task }: TaskFormProps) {
             id="due_date"
             name="due_date"
             type="date"
-            defaultValue={task?.due_date?.slice(0, 10) ?? ""}
+            defaultValue={task?.due_date?.slice(0, 10) ?? defaultDue ?? ""}
             aria-invalid={Boolean(error("due_date"))}
           />
           {error("due_date") ? (
