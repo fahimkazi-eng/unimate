@@ -157,6 +157,19 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 12 — applied (mobile polish)
+
+- `src/components/dashboard/mobile-bottom-nav.tsx`: fixed bottom nav on <lg —
+  5 primary destinations (Overview, Tasks, Calendar, Focus, Progress) with
+  top indicator pill + a "More" sheet for Courses/Goals/Achievements and
+  Log out (mobile finally has logout everywhere, not just the dashboard).
+  Safe-area padding, ≥44px targets, backdrop-blur surface.
+- `app-nav.tsx` → slim brand-only header (the scrolling tab strip is gone —
+  bottom nav owns mobile navigation, no dueling navs).
+- Dashboard stat cards: swipeable snap-scroll rail on mobile
+  (min-w cards + `snap-x`), full grid from `sm` up.
+- `<main>` gains `pb-28 lg:pb-10` so content clears the fixed bar.
+
 ## Checkpoint 11 — applied (calendar / goals / command palette)
 
 - **Calendar** (`/dashboard/calendar`): Monday-first month grid derived from

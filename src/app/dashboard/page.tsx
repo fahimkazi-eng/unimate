@@ -157,11 +157,12 @@ export default async function DashboardPage() {
         <LogoutButton />
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      {/* C12: swipeable stat rail on mobile, full grid from sm up */}
+      <div className="mt-8 -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:px-0 lg:grid-cols-3 xl:grid-cols-5 [&::-webkit-scrollbar]:hidden">
         {stats.map((stat, i) => (
           <div
             key={stat.label}
-            className="animate-rise-in"
+            className="min-w-[230px] shrink-0 snap-start sm:min-w-0 sm:shrink animate-rise-in"
             style={{ animationDelay: staggerDelay(i) }}
           >
             <StatCard {...stat} />

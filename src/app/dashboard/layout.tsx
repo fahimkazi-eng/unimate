@@ -5,6 +5,7 @@ import { AppNav } from "@/components/dashboard/app-nav";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { PageTransition } from "@/components/dashboard/page-transition";
 import { CommandPalette } from "@/components/dashboard/command-palette";
+import { MobileBottomNav } from "@/components/dashboard/mobile-bottom-nav";
 
 export const dynamic = "force-dynamic";
 
@@ -46,10 +47,13 @@ export default async function DashboardLayout({
           <AppNav />
         </div>
 
-        <main className="w-full px-4 py-10 sm:px-6">
+        <main className="w-full px-4 pb-28 pt-10 sm:px-6 lg:pb-10">
           <PageTransition>{children}</PageTransition>
         </main>
       </div>
+
+      {/* Checkpoint 12 — mobile bottom navigation (desktop uses the sidebar) */}
+      <MobileBottomNav />
     </div>
   );
 }
