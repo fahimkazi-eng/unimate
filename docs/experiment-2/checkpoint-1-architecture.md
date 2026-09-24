@@ -157,6 +157,25 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 14 — applied (final polish + screenshots)
+
+- **Re-shoot tooling**: `scripts/shoot-screenshots.cjs` + `npm run screenshots`
+  — drives the system Chrome via `playwright-core` (dev dep, no browser
+  download) with `prefers-reduced-motion` emulated so captures are stable.
+  Public shots worked immediately (no session needed).
+- **README**: dark homepage hero + login/signup/check-email shots replace the
+  stale V1 light-theme dashboard screenshots (deleted — they no longer
+  reflect the shipped product). Dashboard shots pending a logged-in session:
+  `UNIMATE_SESSION` + `npm run screenshots -- --dashboard`.
+- **Verified dark**: pixel-sampled the new PNGs (avg luminance 14–27 vs
+  248–251 for the old light set).
+- **Status**: project redeploys on `main` push (Vercel). Pending user-owned
+  steps: Supabase v2/v3 migrations + Google provider config (C9/C11), and
+  optionally re-shooting dashboard shots with real data.
+- Probe note: two unconfirmed throwaway auth users were created during C14
+  (`unimate.shot+…`, `rawprobe+…` @gmail) — safe to purge in Supabase →
+  Auth → Users.
+
 ## Checkpoint 13 — applied (audit)
 
 - **A11y — keyboard focus**: global `a/button/[role=button]:focus-visible`
