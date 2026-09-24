@@ -140,6 +140,46 @@
   --shadow-glow-accent: 0 0 28px -6px rgb(168 85 247 / 0.4);
 }
 
+/* ---- Motion system (Checkpoint 5) ----
+   Entrance animations are transform/opacity only (GPU-friendly).
+   Keyframes are emitted on demand when an `animate-*` utility is used. */
+@theme inline {
+  --animate-fade-in: fade-in 300ms var(--ease-out-quart) both;
+  --animate-rise-in: rise-in 500ms var(--ease-out-quart) both;
+  --animate-scale-in: scale-in 350ms var(--ease-out-expo) both;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -161,5 +201,43 @@
   ::selection {
     background: var(--color-primary-soft);
     color: var(--color-foreground);
+  }
+}
+
+/* ---- Reveal (IntersectionObserver-triggered entrance) ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 550ms var(--ease-out-quart),
+    transform 550ms var(--ease-out-quart);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---- Reduced motion (spec §56 — honored globally) ----
+   collapses every animation/transition to a rounding error without
+   removing the visible end-state, and force-reveals scroll reveals. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

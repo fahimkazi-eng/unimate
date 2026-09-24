@@ -3,6 +3,7 @@ import { requireUser } from "@/lib/auth";
 import { getOrCreateProfile } from "@/lib/queries";
 import { AppNav } from "@/components/dashboard/app-nav";
 import { Sidebar } from "@/components/dashboard/sidebar";
+import { PageTransition } from "@/components/dashboard/page-transition";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +40,9 @@ export default async function DashboardLayout({
           <AppNav />
         </div>
 
-        <main className="w-full px-4 py-10 sm:px-6">{children}</main>
+        <main className="w-full px-4 py-10 sm:px-6">
+          <PageTransition>{children}</PageTransition>
+        </main>
       </div>
     </div>
   );

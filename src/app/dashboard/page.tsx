@@ -15,7 +15,9 @@ import { StatCard } from "@/components/dashboard/stat-card";
 import { DeadlineList } from "@/components/dashboard/deadline-list";
 import { NextMoveWidget } from "@/components/dashboard/next-move";
 import { WeeklyChart } from "@/components/progress/weekly-chart";
+import { Reveal } from "@/components/ui/reveal";
 import { formatDueLabel } from "@/lib/dates";
+import { staggerDelay } from "@/lib/motion";
 import { pickNextMove } from "@/lib/next-move";
 import {
   getCourses,
@@ -87,6 +89,46 @@ export default async function DashboardPage() {
   const streakBadge: BadgeVariant =
     (profile?.streak ?? 0) > 0 ? "warning" : "outline";
 
+  const stats = [
+    {
+      icon: CalendarClock,
+      label: "Next deadline",
+      value: nextDeadline?.due_date
+        ? formatDueLabel(nextDeadline.due_date)
+        : "—",
+      hint: nextDeadline?.title ?? "No deadlines yet",
+    },
+    {
+      icon: ListChecks,
+      label: "Due today",
+      value: String(overdue.length + dueToday.length),
+      hint: overdue.length > 0 ? `${overdue.length} overdue` : "No overdue tasks",
+    },
+    {
+      icon: BookOpen,
+      label: "Courses",
+      value: String(courses.length),
+      hint:
+        courses.length === 1
+          ? "1 course this term"
+          : `${courses.length} courses this term`,
+    },
+    {
+      icon: TrendingUp,
+      label: "Progress",
+      value: `${progress}%`,
+      hint: `${taskStats.completed}/${taskStats.total} tasks complete`,
+    },
+    {
+      icon: Clock3,
+      label: "Studied this week",
+      value: `${studyStats.minutes}m`,
+      hint: `${studyStats.sessions} focus ${
+        studyStats.sessions === 1 ? "session" : "sessions"
+      }`,
+    },
+  ];
+
   return (
     <div className="mx-auto max-w-6xl">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -115,50 +157,29 @@ export default async function DashboardPage() {
       </div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-        <StatCard
-          icon={CalendarClock}
-          label="Next deadline"
-          value={nextDeadline?.due_date ? formatDueLabel(nextDeadline.due_date) : "—"}
-          hint={nextDeadline?.title ?? "No deadlines yet"}
-        />
-        <StatCard
-          icon={ListChecks}
-          label="Due today"
-          value={String(overdue.length + dueToday.length)}
-          hint={
-            overdue.length > 0
-              ? `${overdue.length} overdue`
-              : "No overdue tasks"
-          }
-        />
-        <StatCard
-          icon={BookOpen}
-          label="Courses"
-          value={String(courses.length)}
-          hint={courses.length === 1 ? "1 course this term" : `${courses.length} courses this term`}
-        />
-        <StatCard
-          icon={TrendingUp}
-          label="Progress"
-          value={`${progress}%`}
-          hint={`${taskStats.completed}/${taskStats.total} tasks complete`}
-        />
-        <StatCard
-          icon={Clock3}
-          label="Studied this week"
-          value={`${studyStats.minutes}m`}
-          hint={`${studyStats.sessions} focus ${
-            studyStats.sessions === 1 ? "session" : "sessions"
-          }`}
-        />
+        {stats.map((stat, i) => (
+          <div
+            key={stat.label}
+            className="animate-rise-in"
+            style={{ animationDelay: staggerDelay(i) }}
+          >
+            <StatCard {...stat} />
+          </div>
+        ))}
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-5">
-        <div className="lg:col-span-3">
+        <div
+          className="animate-rise-in lg:col-span-3"
+          style={{ animationDelay: staggerDelay(5) }}
+        >
           <NextMoveWidget task={nextMove} />
         </div>
 
-        <div className="lg:col-span-2">
+        <div
+          className="animate-rise-in lg:col-span-2"
+          style={{ animationDelay: staggerDelay(6) }}
+        >
           <Card className="h-full">
             <CardHeader>
               <CardTitle>Today&apos;s focus</CardTitle>
@@ -175,28 +196,32 @@ export default async function DashboardPage() {
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Weekly activity</CardTitle>
-            <CardDescription>Focus minutes, last 7 days.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <WeeklyChart days={weekly} />
-          </CardContent>
-        </Card>
+        <Reveal>
+          <Card>
+            <CardHeader>
+              <CardTitle>Weekly activity</CardTitle>
+              <CardDescription>Focus minutes, last 7 days.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <WeeklyChart days={weekly} />
+            </CardContent>
+          </Card>
+        </Reveal>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Upcoming deadlines</CardTitle>
-            <CardDescription>The next tasks on your horizon.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <DeadlineList
-              tasks={upcoming.slice(0, 4)}
-              empty="No upcoming deadlines — enjoy the calm."
-            />
-          </CardContent>
-        </Card>
+        <Reveal delay={80}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Upcoming deadlines</CardTitle>
+              <CardDescription>The next tasks on your horizon.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <DeadlineList
+                tasks={upcoming.slice(0, 4)}
+                empty="No upcoming deadlines — enjoy the calm."
+              />
+            </CardContent>
+          </Card>
+        </Reveal>
       </div>
     </div>
   );

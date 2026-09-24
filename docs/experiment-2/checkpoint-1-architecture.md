@@ -157,6 +157,23 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 5 — applied (motion system)
+
+- `globals.css`: entrance tokens — `--animate-fade-in` (300ms), `--animate-rise-in`
+  (500ms), `--animate-scale-in` (350ms) with hoisted `@keyframes`; all
+  transform/opacity only (compositor-friendly). Global
+  **`@media (prefers-reduced-motion: reduce)`** collapse (durations ≈ 0,
+  `scroll-behavior: auto`, force-reveal) and `.reveal` / `.reveal.is-visible`
+  transition rules.
+- `src/lib/motion.ts`: `staggerDelay(index, stepMs)` for CSP-safe staggered
+  entrances.
+- `src/components/ui/reveal.tsx`: `Reveal` (IntersectionObserver) — toggles
+  `.is-visible` on scroll into view; reduced-motion handled purely in CSS.
+- `src/components/dashboard/page-transition.tsx`: keyed fade on route change,
+  wired around `<main>` in the dashboard layout (sidebar never remounts).
+- Dashboard page choreography: stats stagger-rise (60ms steps), Next move +
+  Today's focus follow, Weekly activity + Upcoming deadlines reveal on scroll.
+
 ## Checkpoint 4 — applied (dashboard upgrade)
 
 - `src/lib/next-move.ts`: deterministic **"Your next move"** picker (spec §26) —
