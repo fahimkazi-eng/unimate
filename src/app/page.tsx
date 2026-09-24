@@ -4,6 +4,7 @@ import { Hero } from "@/components/landing/hero";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { Features } from "@/components/landing/features";
 import { Roadmap } from "@/components/landing/roadmap";
+import { CreatorSection } from "@/components/landing/creator-section";
 import { Faq } from "@/components/landing/faq";
 import { Cta } from "@/components/landing/cta";
 import { Reveal } from "@/components/ui/reveal";
@@ -19,6 +20,7 @@ export default function Home() {
           <HowItWorks />
         </Reveal>
         <Features />
+        <CreatorSection />
         <Reveal delay={60}>
           <Roadmap />
         </Reveal>

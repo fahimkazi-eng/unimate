@@ -157,6 +157,25 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 8 — applied (creator video + semester timeline)
+
+- `public/videos/poster.svg`: branded 16:9 poster (glow orbs, mortarboard,
+  "UNIMATE // PRODUCT TOUR"); doubles as the video poster and the coming-soon
+  backdrop.
+- `src/components/landing/creator-video.tsx`: lazy player — the clip is *not*
+  loaded until the user presses play (zero upfront bandwidth), then loops
+  muted with glass mute/replay controls; reduced motion only ever plays after
+  an explicit gesture. If the MP4 is missing it renders an honest
+  "Creator video coming soon" panel.
+- `src/components/landing/creator-section.tsx`: server component checks
+  `public/videos/creator-loop.mp4` via `fs.existsSync` at render/build time
+  and passes `available` down. Drop a real `creator-loop.mp4` into
+  `public/videos/` and the section goes live with no other change.
+- `src/components/landing/semester-timeline.tsx`: "Your semester, at a glance"
+  — Week 1 → Finals timeline with glow milestone dots, staggered Reveal.
+- Wired between Features and Roadmap (`/`). Completes the C6–C8 missing list
+  (ambient bg · live preview · demos · timeline · scroll reveals · video).
+
 ## Checkpoint 7 — applied (feature demo system)
 
 - `src/components/demos/demo-frame.tsx`: shared fixed-height "Live demo"
