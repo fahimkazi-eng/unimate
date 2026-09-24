@@ -157,22 +157,27 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
-## Checkpoint 16 — V2 Phase 2 staged (brand, awaiting logo asset)
+## Checkpoint 16 — V2 Phase 2 applied (brand, complete)
 
-- **`src/components/brand/brand-mark.tsx`** — single source of truth for the
-  UniMate mark everywhere (navbar, footer, /login, /signup, sidebar, mobile
-  header). Renders `public/logo.svg` the instant the asset exists (hidden
-  while loading — never a broken-image flash); falls back to the current
-  indigo graduation-cap placeholder until then. Drop the file at
-  `public/logo.svg` and the entire brand upgrades with zero component edits.
-- **Interim favicon** — `src/app/icon.tsx` (`next/og` ImageResponse, 64px
-  PNG): indigo rounded mark + white cap glyph. Swap the glyph for the real
-  logo's simplified mark when the asset lands.
-- **Subtle entrance** — the landing navbar + auth-page brand marks get the
-  existing `animate-scale-in` (spec 5: calm, not bouncy).
-- **Still queued once the asset lands**: final favicon/app-icon derived from
-  the real logo, logo entrance glow choreography if the mark benefits from
-  it, and a screenshot check that branding is consistent in both themes.
+- **Asset** — the real logo (dark glow-tile, 1254×1254) is at
+  `public/logo.jpeg` (copied from `C:\Users\Public\Pictures\UniMate logo.jpeg`).
+- **`src/components/brand/brand-mark.tsx`** — the single source of truth for
+  the UniMate mark, used by navbar, footer, /login, /signup, sidebar and the
+  mobile header. Renders the logo directly (`rounded-lg object-cover` dark
+  tile = premium on both themes); falls back to the indigo cap placeholder
+  only on image error. Deliberately no reveal-on-load: on SSR pages the
+  browser can fire `load` before hydration and leave the logo hidden (fixed
+  after the verify probe caught it 0×0).
+- **Favicon** — `src/app/icon.tsx` serves the real logo tile as a 64×64 PNG
+  (embedded from disk as a data URL); verified transparent rounded corners +
+  dark tile pixels. Replaces the interim cap glyph.
+- **Entrance** — landing navbar + auth brand marks get `animate-scale-in`
+  (spec 5: calm, not bouncy). The asset carries its own purple glow.
+- Light-theme screenshot check deferred: light mode isn't user-selectable yet
+  (appearance toggle lands with the theme system, spec 63); the dark tile
+  design is theme-proof by construction.
+- **Deferred deliberately**: app-icon/apple-icon follow the theme system
+  phase too — the favicon already brands the browser tab everywhere.
 
 ## Checkpoint 15 — V2 Phase 1 applied (performance foundation)
 
