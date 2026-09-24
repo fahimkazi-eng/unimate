@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { deleteCourse } from "@/app/actions/courses";
 import { requireUser } from "@/lib/auth";
-import { AppNav } from "@/components/dashboard/app-nav";
 import {
   Card,
   CardContent,
@@ -36,9 +35,7 @@ export default async function CoursesPage() {
   }, {});
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-      <AppNav />
-
+    <div className="mx-auto max-w-4xl">
       <header>
         <h1 className="text-2xl font-bold text-foreground">Your courses</h1>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -106,6 +103,6 @@ export default async function CoursesPage() {
           ))}
         </div>
       )}
-    </main>
+    </div>
   );
 }

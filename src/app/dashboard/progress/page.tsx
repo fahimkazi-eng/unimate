@@ -12,7 +12,6 @@ import {
   getTaskStats,
   getWeeklyStudyByDay,
 } from "@/lib/queries";
-import { AppNav } from "@/components/dashboard/app-nav";
 import {
   Card,
   CardContent,
@@ -52,9 +51,7 @@ export default async function ProgressPage() {
   const streak = profile?.streak ?? 0;
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <AppNav />
-
+    <div className="mx-auto max-w-6xl">
       <header>
         <h1 className="text-2xl font-bold text-foreground">Your progress</h1>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -120,6 +117,6 @@ export default async function ProgressPage() {
           <CourseProgressList courses={courses} />
         </CardContent>
       </Card>
-    </main>
+    </div>
   );
 }

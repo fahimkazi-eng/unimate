@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { LogoutButton } from "@/components/auth/logout-button";
-import { AppNav } from "@/components/dashboard/app-nav";
 import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatCard } from "@/components/dashboard/stat-card";
@@ -69,8 +68,7 @@ export default async function DashboardPage() {
   const streakBadge: BadgeVariant = (profile?.streak ?? 0) > 0 ? "warning" : "outline";
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <AppNav />
+    <div className="mx-auto max-w-6xl">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="flex flex-wrap items-center gap-3">
@@ -156,6 +154,6 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
       </div>
-    </main>
+    </div>
   );
 }

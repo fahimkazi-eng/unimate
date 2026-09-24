@@ -108,5 +108,7 @@ export async function login(
 export async function logout() {
   const supabase = await createClient();
   await supabase.auth.signOut();
-  redirect("/login");
+  // Experiment #2 rule 14: signing out returns to the public homepage,
+  // which shows the demo experience (never private data after logout).
+  redirect("/");
 }

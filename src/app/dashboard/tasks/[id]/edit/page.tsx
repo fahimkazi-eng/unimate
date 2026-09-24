@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth";
-import { AppNav } from "@/components/dashboard/app-nav";
 import {
   Card,
   CardContent,
@@ -37,8 +36,7 @@ export default async function EditTaskPage({
   }
 
   return (
-    <main className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
-      <AppNav />
+    <div className="mx-auto max-w-2xl">
       <Card>
         <CardHeader>
           <CardTitle>Edit task</CardTitle>
@@ -48,6 +46,6 @@ export default async function EditTaskPage({
           <TaskForm courses={courses} task={task} />
         </CardContent>
       </Card>
-    </main>
+    </div>
   );
 }

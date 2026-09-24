@@ -157,6 +157,26 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 3 — applied (premium app shell)
+
+- New `src/app/dashboard/layout.tsx`: server layout renders the shell for all
+  dashboard routes — **`Sidebar` on desktop** (`lg:`), the existing `AppNav`
+  (brand + tabs) as the mobile shell until C12. Pages render their own inner
+  content with their own `max-w-*` (widths preserved); the layout supplies the
+  `main` padding.
+- `src/components/dashboard/sidebar.tsx`: collapsible sidebar (`w-64` ↔
+  `w-[72px]`, persisted in localStorage), **animated active pill** that slides
+  between items (`translateY`, 300ms `ease-out-quart`, GPU-friendly), hover
+  icon scale, custom tooltips when collapsed, and honestly-marked **"Soon"**
+  entries for Calendar / Goals / Notes / Profile / Settings (no dead links).
+- `src/components/dashboard/account-menu.tsx`: bottom account area — initials
+  avatar (gradient brand), nickname, Level · XP; opens a menu (Profile /
+  Settings / Appearance marked Soon, working **Log out**). Click-outside +
+  Escape close.
+- **Logout now redirects to `/`** (public homepage demo) per spec rule 14,
+  instead of `/login`.
+- All 7 dashboard pages dropped their own `<main>` + `<AppNav />` wrappers.
+
 ## Checkpoint 2 — applied (design system)
 
 - **Fonts:** Plus Jakarta Sans (via `next/font/google`, `--font-plus-jakarta-sans`)

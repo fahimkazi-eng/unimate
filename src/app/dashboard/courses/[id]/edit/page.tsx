@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth";
-import { AppNav } from "@/components/dashboard/app-nav";
 import {
   Card,
   CardContent,
@@ -31,8 +30,7 @@ export default async function EditCoursePage({
   }
 
   return (
-    <main className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
-      <AppNav />
+    <div className="mx-auto max-w-2xl">
       <Card>
         <CardHeader>
           <CardTitle>Edit course</CardTitle>
@@ -42,6 +40,6 @@ export default async function EditCoursePage({
           <CourseForm course={course} />
         </CardContent>
       </Card>
-    </main>
+    </div>
   );
 }

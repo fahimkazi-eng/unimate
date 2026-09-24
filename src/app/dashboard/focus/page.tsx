@@ -1,5 +1,4 @@
 import { requireUser } from "@/lib/auth";
-import { AppNav } from "@/components/dashboard/app-nav";
 import {
   Card,
   CardContent,
@@ -25,9 +24,7 @@ export default async function FocusPage() {
   ]);
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
-      <AppNav />
-
+    <div className="mx-auto max-w-5xl">
       <header>
         <h1 className="text-2xl font-bold text-foreground">Focus timer</h1>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -58,6 +55,6 @@ export default async function FocusPage() {
           </CardContent>
         </Card>
       </div>
-    </main>
+    </div>
   );
 }
