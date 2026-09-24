@@ -2,6 +2,7 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Hero } from "@/components/landing/hero";
 import { HowItWorks } from "@/components/landing/how-it-works";
+import { AiDemo } from "@/components/landing/ai-demo";
 import { Features } from "@/components/landing/features";
 import { Roadmap } from "@/components/landing/roadmap";
 import { CreatorSection } from "@/components/landing/creator-section";
@@ -25,6 +26,7 @@ export default function Home() {
         <Reveal>
           <HowItWorks />
         </Reveal>
+        <AiDemo />
         <Features />
         <CreatorSection />
         <Reveal delay={60}>
