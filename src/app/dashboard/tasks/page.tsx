@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { TaskForm } from "@/components/tasks/task-form";
-import { TaskRow } from "@/components/tasks/task-row";
+import { TaskList } from "@/components/tasks/task-list";
 import { getCourses, getTasks } from "@/lib/queries";
 
 export const metadata = {
@@ -73,17 +73,10 @@ export default async function TasksPage({
               <CardDescription>Everything still on your plate.</CardDescription>
             </CardHeader>
             <CardContent>
-              {active.length === 0 ? (
-                <p className="px-4 py-8 text-center text-sm text-muted-foreground">
-                  All clear — nothing active. 🎉
-                </p>
-              ) : (
-                <ul className="divide-y divide-border">
-                  {active.map((task) => (
-                    <TaskRow key={task.id} task={task} />
-                  ))}
-                </ul>
-              )}
+              <TaskList
+                tasks={active}
+                emptyLabel="All clear — nothing active. 🎉"
+              />
             </CardContent>
           </Card>
 
@@ -96,11 +89,7 @@ export default async function TasksPage({
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="divide-y divide-border">
-                  {completed.map((task) => (
-                    <TaskRow key={task.id} task={task} />
-                  ))}
-                </ul>
+                <TaskList tasks={completed} emptyLabel="Nothing completed yet." />
               </CardContent>
             </Card>
           ) : null}

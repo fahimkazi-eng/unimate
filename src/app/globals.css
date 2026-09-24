@@ -180,6 +180,33 @@
     }
   }
 
+  /* V2 Phase 9 — task list rows: a soft slide-in for new entries and a quick
+     fade-out for optimistic deletes/toggles (transform/opacity only). */
+  --animate-row-in: row-in 200ms var(--ease-out-quart) both;
+  --animate-row-exit: row-exit 160ms var(--ease-out-quart) both;
+
+  @keyframes row-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes row-exit {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(6px);
+    }
+  }
+
   /* Ambient background orbs (slow drift, transform-only) */
   --animate-drift-1: drift-1 22s ease-in-out infinite;
   --animate-drift-2: drift-2 26s ease-in-out infinite;
@@ -317,6 +344,13 @@
   .reveal {
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  /* Staggered entrances collapse with everything else — a delayed row must
+     never sit invisible. */
+  .animate-row-in,
+  .animate-row-exit {
+    animation-delay: 0ms !important;
   }
 }
 

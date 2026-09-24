@@ -169,32 +169,39 @@ export async function updateTask(
   redirect("/dashboard/tasks");
 }
 
+export interface TaskActionResult {
+  ok: boolean;
+  /** Set when ok is false — shown honestly in the row. */
+  message?: string;
+}
+
 export async function toggleTaskComplete(
-  taskId: string,
-  _formData: FormData
-) {
+  taskId: string
+): Promise<TaskActionResult> {
   const user = await requireUser();
   const id = taskIdSchema.safeParse(taskId);
-  if (!id.success) return;
+  if (!id.success) return { ok: false, message: "Invalid task." };
 
   const supabase = await createClient();
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("tasks")
     .select("status")
     .eq("id", id.data)
     .eq("user_id", user.id)
     .maybeSingle();
 
-  if (!data) return;
+  if (error) return { ok: false, message: error.message };
+  if (!data) return { ok: false, message: "Task not found." };
 
-  const newStatus =
-    data.status === "completed" ? "todo" : "completed";
+  const newStatus = data.status === "completed" ? "todo" : "completed";
 
-  await supabase
+  const { error: updateError } = await supabase
     .from("tasks")
     .update({ status: newStatus })
     .eq("id", id.data)
     .eq("user_id", user.id);
+
+  if (updateError) return { ok: false, message: updateError.message };
 
   // Completing a task earns XP and feeds the streak.
   if (newStatus === "completed") {
@@ -202,19 +209,23 @@ export async function toggleTaskComplete(
   }
 
   refreshTaskPages();
+  return { ok: true };
 }
 
-export async function deleteTask(taskId: string, _formData: FormData) {
+export async function deleteTask(taskId: string): Promise<TaskActionResult> {
   const user = await requireUser();
   const id = taskIdSchema.safeParse(taskId);
-  if (!id.success) return;
+  if (!id.success) return { ok: false, message: "Invalid task." };
 
   const supabase = await createClient();
-  await supabase
+  const { error } = await supabase
     .from("tasks")
     .delete()
     .eq("id", id.data)
     .eq("user_id", user.id);
 
+  if (error) return { ok: false, message: error.message };
+
   refreshTaskPages();
+  return { ok: true };
 }

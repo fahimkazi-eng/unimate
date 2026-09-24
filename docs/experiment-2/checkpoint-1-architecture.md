@@ -157,6 +157,45 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 23 — V2 Phase 9 applied (motion polish + optimistic tasks)
+
+The task-complete/task-creation rework promised for P9/P10 (spec 15) — the
+"instant feel" premium trim. Tasks now respond on click, not on round-trip:
+
+- **`src/components/tasks/optimistic-task-row.tsx`** (new, client):
+  - Complete toggle applies INSTANTLY (check fills in), delete applies
+    instantly (row exits with the new `row-exit` animation), both reconcile
+    with the server in a `useTransition`. A failed action reverts the row
+    and shows the **real** error inline (`role="alert"`, auto-hides after
+    4 s) — no silent failures. The prior `task-row.tsx` waited silently on a
+    full server round-trip for every action.
+  - `useOptimistic` was considered and rejected deliberately: in Next 16
+    `router.refresh()` is a fire-and-forget `void`, so `useOptimistic`'s
+    revert fires *before* the fresh payload lands → a visible flicker. A tiny
+    per-row override state persists until the row unmounts (a successful
+    complete/delete always moves the row out of its current list, so the
+    fresh mount re-reads the server prop; failures clear the override
+    explicitly). Flicker-free by construction.
+  - Touch targets: the three row icon buttons are ≥44 px on mobile
+    (`min-h-11 min-w-11`), compact again on `sm` — a11y without density cost.
+  - Reduced-motion safe: `animate-row-in`/`animate-row-exit` are
+    transform/opacity only, and the existing reduce block now also zeroes
+    `animation-delay` (a staggered row must never sit invisible while its
+    keyframe `from` state holds).
+- **`src/components/tasks/task-list.tsx`** (new, client): keyed list around
+  the rows. Keys are stable task ids, so a server refresh reconciles rows in
+  place — only genuinely new rows play their entrance animation (no janky
+  full-list re-animation). Handles both the Active and Completed sections.
+- **`src/app/actions/tasks.ts`:** `toggleTaskComplete` and `deleteTask` now
+  return `TaskActionResult { ok, message? }` instead of silently swallowing
+  failures — zod-validated ids, honest error messages, still scoped to the owner, still
+  revalidate.
+- **`src/app/dashboard/tasks/page.tsx`:** both lists now render through
+  `TaskList` with the same Active/Completed split and counts. `task-row.tsx`
+  deleted (no other users).
+- **Motion tokens** in `globals.css`: `row-in` (200 ms slide-up + fade, both
+  fill) and `row-exit` (160 ms slide-right + fade); stagger ≤6 × 35 ms.
+
 ## Checkpoint 22 — V2 Phase 8 applied (emergency mode)
 
 Emergency mode at `/dashboard/emergency` — the README/landing "Emergency help"
