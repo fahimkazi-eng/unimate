@@ -93,6 +93,27 @@ export async function getTasks(userId: string): Promise<TaskWithCourse[]> {
   return (data ?? []) as TaskWithCourse[];
 }
 
+/** Tasks with a due date (any status), soonest first — for the calendar. */
+export async function getDatedTasks(
+  userId: string
+): Promise<TaskWithCourse[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("tasks")
+    .select(taskWithCourseSelect)
+    .eq("user_id", userId)
+    .not("due_date", "is", null)
+    .order("due_date", { ascending: true })
+    .limit(200);
+
+  if (error) {
+    console.error("Failed to load dated tasks:", error.message);
+    return [];
+  }
+  return (data ?? []) as TaskWithCourse[];
+}
+
 /** A single task owned by the user, or null (e.g. wrong user / missing). */
 export async function getTask(
   userId: string,

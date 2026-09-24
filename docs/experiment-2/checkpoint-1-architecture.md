@@ -157,6 +157,26 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 11 — applied (calendar / goals / command palette)
+
+- **Calendar** (`/dashboard/calendar`): Monday-first month grid derived from
+  real task due dates (`getDatedTasks`), prev/next/today month nav, today
+  highlight, course-colored dots per day, day-detail panel listing that
+  day's tasks (priority badges, links to edit). Server-driven `?month&day`
+  params → real links = keyboard/AT accessible.
+- **Goals** (`/dashboard/goals`): `supabase/v3_goals.sql` adds the `goals`
+  table (title, measure ∈ tasks-completed/focus-minutes/courses/streak,
+  target) + RLS, idempotent. `src/lib/goals.ts` computes live progress from
+  real all-time stats (no fake data; same derived approach as C10).
+  `goal-form.tsx` mirrors the course form pattern (`useActionState`).
+  Honest pre-migration state if the table is missing.
+- **Command palette** (`⌘K`): `command-palette.tsx` — fade/scale overlay,
+  full keyboard nav (↑↓ Enter Esc), combobox a11y wiring, click-outside
+  close; opens via ⌘K/Ctrl+K or the sidebar's "Jump to…" trigger
+  (CustomEvent). Mounted once in the dashboard layout.
+- Sidebar/AppNav: Calendar + Goals promoted from "Soon" to live routes;
+  "Eventually" now Notes/Profile/Settings.
+
 ## Checkpoint 10 — applied (achievements + gamification)
 
 - `src/lib/achievements.ts`: 11 badge definitions derived from *real* user

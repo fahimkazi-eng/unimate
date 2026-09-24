@@ -9,7 +9,9 @@ const items = [
   { href: "/dashboard", label: "Overview" },
   { href: "/dashboard/tasks", label: "Tasks" },
   { href: "/dashboard/courses", label: "Courses" },
+  { href: "/dashboard/calendar", label: "Calendar" },
   { href: "/dashboard/focus", label: "Focus" },
+  { href: "/dashboard/goals", label: "Goals" },
   { href: "/dashboard/progress", label: "Progress" },
   { href: "/dashboard/achievements", label: "Achievements" },
 ];

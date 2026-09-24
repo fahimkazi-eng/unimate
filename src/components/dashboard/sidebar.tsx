@@ -13,6 +13,7 @@ import {
   LayoutDashboard,
   ListChecks,
   NotebookPen,
+  Search,
   Settings,
   Target,
   Timer,
@@ -22,6 +23,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AccountMenu } from "@/components/dashboard/account-menu";
+import { openCommandPalette } from "@/components/dashboard/command-palette";
 
 /**
  * App shell sidebar — Checkpoint 3.
@@ -43,15 +45,15 @@ const mainItems: SidebarItem[] = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/dashboard/tasks", label: "Tasks", icon: ListChecks },
   { href: "/dashboard/courses", label: "Courses", icon: BookOpen },
+  { href: "/dashboard/calendar", label: "Calendar", icon: CalendarDays },
   { href: "/dashboard/focus", label: "Focus", icon: Timer },
+  { href: "/dashboard/goals", label: "Goals", icon: Target },
   { href: "/dashboard/progress", label: "Progress", icon: TrendingUp },
   { href: "/dashboard/achievements", label: "Achievements", icon: Trophy },
 ];
 
 /** Planned features — visible but honestly marked (no dead links). */
 const plannedItems: SidebarItem[] = [
-  { label: "Calendar", icon: CalendarDays },
-  { label: "Goals", icon: Target },
   { label: "Notes", icon: NotebookPen },
   { label: "Profile", icon: UserRound },
   { label: "Settings", icon: Settings },
@@ -136,6 +138,25 @@ export function Sidebar({ name, level, xp, photoUrl }: SidebarProps) {
 
       {/* Navigation */}
       <nav className="min-h-0 flex-1 overflow-y-auto py-4">
+        <button
+          type="button"
+          onClick={openCommandPalette}
+          className={cn(
+            "group mb-3 flex h-10 items-center rounded-lg text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
+            collapsed ? "w-full justify-center" : "gap-3 px-3"
+          )}
+          aria-label="Open command palette"
+        >
+          <Search className="h-[18px] w-[18px] shrink-0" />
+          {!collapsed && (
+            <>
+              <span className="truncate">Jump to…</span>
+              <kbd className="ml-auto shrink-0 rounded border border-border bg-surface-elevated px-1.5 py-0.5 text-[10px] font-medium">
+                ⌘K
+              </kbd>
+            </>
+          )}
+        </button>
         {/* Live routes — animated active pill */}
         <ul className="relative flex flex-col gap-1 px-2" aria-label="Main">
           {activeIndex >= 0 && (

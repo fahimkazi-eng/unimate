@@ -4,6 +4,7 @@ import { getOrCreateProfile } from "@/lib/queries";
 import { AppNav } from "@/components/dashboard/app-nav";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { PageTransition } from "@/components/dashboard/page-transition";
+import { CommandPalette } from "@/components/dashboard/command-palette";
 
 export const dynamic = "force-dynamic";
 
@@ -35,6 +36,9 @@ export default async function DashboardLayout({
         xp={profile?.xp ?? 0}
         photoUrl={profile?.photo_url ?? null}
       />
+
+      {/* Cmd/K command palette — available on every app page */}
+      <CommandPalette />
 
       <div className="min-w-0 flex-1">
         {/* Mobile shell until C12 — desktop uses the sidebar instead */}
