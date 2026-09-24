@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { Reveal } from "@/components/ui/reveal";
 import {
   BookOpen,
   CheckSquare,
@@ -63,21 +64,20 @@ export function Features() {
         </div>
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature) => (
-            <div
-              key={feature.title}
-              className="rounded-xl border border-border bg-surface p-6 shadow-card transition-shadow hover:shadow-card-hover"
-            >
-              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary-soft text-primary">
-                <feature.icon className="h-5 w-5" />
+          {features.map((feature, i) => (
+            <Reveal key={feature.title} delay={i * 70}>
+              <div className="h-full rounded-xl border border-border bg-surface p-6 shadow-card transition-shadow hover:shadow-card-hover">
+                <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary-soft text-primary">
+                  <feature.icon className="h-5 w-5" />
+                </div>
+                <h3 className="mt-4 text-base font-semibold text-foreground">
+                  {feature.title}
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  {feature.description}
+                </p>
               </div>
-              <h3 className="mt-4 text-base font-semibold text-foreground">
-                {feature.title}
-              </h3>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                {feature.description}
-              </p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>

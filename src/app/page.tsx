@@ -6,6 +6,7 @@ import { Features } from "@/components/landing/features";
 import { Roadmap } from "@/components/landing/roadmap";
 import { Faq } from "@/components/landing/faq";
 import { Cta } from "@/components/landing/cta";
+import { Reveal } from "@/components/ui/reveal";
 
 export default function Home() {
   return (
@@ -13,11 +14,20 @@ export default function Home() {
       <Navbar />
       <main className="flex-1">
         <Hero />
-        <HowItWorks />
+        {/* Features animates its own cards; the rest cascade on scroll. */}
+        <Reveal>
+          <HowItWorks />
+        </Reveal>
         <Features />
-        <Roadmap />
-        <Faq />
-        <Cta />
+        <Reveal delay={60}>
+          <Roadmap />
+        </Reveal>
+        <Reveal delay={60}>
+          <Faq />
+        </Reveal>
+        <Reveal delay={60}>
+          <Cta />
+        </Reveal>
       </main>
       <Footer />
     </>

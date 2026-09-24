@@ -157,6 +157,22 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 6 — applied (homepage upgrade)
+
+- `AmbientBackground` (`src/components/landing/ambient-background.tsx`): theme-aware
+  indigo/purple glow orbs + top vignette — token colors via `color-mix`
+  (zero hard-coded hex), slow transform-only drift (`animate-drift-1/2/3`,
+  22–30s), reduced-motion collapsed globally.
+- Hero rebuilt (`hero.tsx`): staged entrance (staggerDelay), app-accurate
+  preview — **"Your next move"** widget (course chip, due/priority/estimate
+  badges, Start focus), Level 7 · 1,240 XP badge, streak badge, floating
+  "+12 XP · Task completed" chip (`animate-float`); Fahim demo persona kept
+  (rule 10). Ambient bg, glass + glow accents.
+- Navbar (`navbar.tsx`): scroll-elevation effect (border + stronger blur +
+  subtle shadow after 8px scroll; settles at top).
+- Scroll reveals: features cards cascade (70ms steps) via `Reveal`;
+  How it works / Roadmap / FAQ / CTA sections reveal on scroll.
+
 ## Checkpoint 5 — applied (motion system)
 
 - `globals.css`: entrance tokens — `--animate-fade-in` (300ms), `--animate-rise-in`
