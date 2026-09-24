@@ -157,6 +157,26 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 9 — applied (Google auth + profile columns)
+
+- `supabase/v2_google_auth.sql`: idempotent migration — adds
+  `google_display_name`, `nickname`, `photo_url` to `profiles`, rewrites the
+  `handle_new_user` trigger to capture Google metadata (`full_name`/`name` →
+  display name, `avatar_url`/`picture` → photo, email local-part → nickname
+  fallback), and backfills existing accounts. **Run it in the Supabase SQL
+  Editor** — code is backward-compatible (`select("*")` → missing columns
+  read as `undefined`) but the fields only appear after the migration.
+- `src/app/actions/auth.ts` → `googleSignIn`: SSR provider flow, redirects to
+  `data.url`, honest error if the provider isn't configured yet.
+- `src/components/auth/google-button.tsx`: "Continue with Google" (multicolor
+  G) — own server action + own form, rendered as a *sibling* of the email
+  form (never nested), pending state + error surface.
+- `login-form.tsx` / `signup-form.tsx`: restructured to `GoogleButton` +
+  divider ("or continue with email" / "or sign up with email") + email form.
+- Name everywhere prefers `nickname` → `display_name` → `full_name`;
+  `Sidebar` now receives `photoUrl` (AccountMenu already rendered photos).
+- Logout already returns to `/` (C3, rule 14). Next: C10 achievements.
+
 ## Checkpoint 8 — applied (creator video + semester timeline)
 
 - `public/videos/poster.svg`: branded 16:9 poster (glow orbs, mortarboard,

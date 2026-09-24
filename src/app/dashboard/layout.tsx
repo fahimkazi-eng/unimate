@@ -22,6 +22,7 @@ export default async function DashboardLayout({
   const profile = await getOrCreateProfile(user.id);
 
   const name =
+    profile?.nickname ??
     profile?.display_name ??
     (user.user_metadata.full_name as string | undefined) ??
     "student";
@@ -32,6 +33,7 @@ export default async function DashboardLayout({
         name={name}
         level={profile?.level ?? 1}
         xp={profile?.xp ?? 0}
+        photoUrl={profile?.photo_url ?? null}
       />
 
       <div className="min-w-0 flex-1">

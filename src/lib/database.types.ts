@@ -69,6 +69,12 @@ export interface StudySessionInsert {
 export interface Profile {
   id: string;
   display_name: string | null;
+  /** Original name from the Google account (Checkpoint 9). */
+  google_display_name: string | null;
+  /** Preferred short name — falls back to display_name where set. */
+  nickname: string | null;
+  /** Avatar (Google photo or future uploads). */
+  photo_url: string | null;
   xp: number;
   level: number;
   streak: number;

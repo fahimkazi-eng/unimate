@@ -105,6 +105,40 @@ export async function login(
   redirect("/dashboard");
 }
 
+/**
+ * Checkpoint 9 — Google OAuth. Starts the provider flow server-side and
+ * redirects to Google's consent page. The callback route
+ * (/auth/callback?next=/dashboard) exchanges the code for a session and the
+ * handle_new_user trigger copies Google's name/photo into the profile.
+ */
+export async function googleSignIn(
+  _prevState: AuthState,
+  _formData: FormData
+): Promise<AuthState> {
+  const supabase = await createClient();
+  const baseUrl = await getBaseUrl();
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${baseUrl.origin}/auth/callback?next=/dashboard`,
+    },
+  });
+
+  if (error) {
+    return { message: `Couldn't start Google sign-in: ${error.message}` };
+  }
+
+  if (data.url) {
+    redirect(data.url);
+  }
+
+  return {
+    message:
+      "Google sign-in isn't configured on this project yet — try email instead.",
+  };
+}
+
 export async function logout() {
   const supabase = await createClient();
   await supabase.auth.signOut();

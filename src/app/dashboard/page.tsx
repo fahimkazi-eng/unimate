@@ -57,6 +57,7 @@ export default async function DashboardPage() {
     ]);
 
   const name =
+    profile?.nickname ??
     profile?.display_name ??
     (user.user_metadata.full_name as string | undefined) ??
     "student";
