@@ -1,4 +1,5 @@
 import {
+  BookOpen,
   CalendarClock,
   Clock3,
   Flame,
@@ -12,12 +13,18 @@ import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { DeadlineList } from "@/components/dashboard/deadline-list";
+import { NextMoveWidget } from "@/components/dashboard/next-move";
+import { WeeklyChart } from "@/components/progress/weekly-chart";
 import { formatDueLabel } from "@/lib/dates";
+import { pickNextMove } from "@/lib/next-move";
 import {
+  getCourses,
   getIncompleteDeadlines,
   getOrCreateProfile,
   getStudyStats,
   getTaskStats,
+  getTasks,
+  getWeeklyStudyByDay,
 } from "@/lib/queries";
 
 export const metadata = {
@@ -26,15 +33,26 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
+function greetingForHour(hour: number): string {
+  if (hour < 5) return "Up late";
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
+}
+
 export default async function DashboardPage() {
   const user = await requireUser();
 
-  const [profile, deadlines, taskStats, studyStats] = await Promise.all([
-    getOrCreateProfile(user.id),
-    getIncompleteDeadlines(user.id),
-    getTaskStats(user.id),
-    getStudyStats(user.id),
-  ]);
+  const [profile, deadlines, taskStats, studyStats, courses, weekly, allTasks] =
+    await Promise.all([
+      getOrCreateProfile(user.id),
+      getIncompleteDeadlines(user.id),
+      getTaskStats(user.id),
+      getStudyStats(user.id),
+      getCourses(user.id),
+      getWeeklyStudyByDay(user.id),
+      getTasks(user.id),
+    ]);
 
   const name =
     profile?.display_name ??
@@ -65,7 +83,9 @@ export default async function DashboardPage() {
       ? Math.round((taskStats.completed / taskStats.total) * 100)
       : 0;
 
-  const streakBadge: BadgeVariant = (profile?.streak ?? 0) > 0 ? "warning" : "outline";
+  const nextMove = pickNextMove(allTasks);
+  const streakBadge: BadgeVariant =
+    (profile?.streak ?? 0) > 0 ? "warning" : "outline";
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -73,7 +93,7 @@ export default async function DashboardPage() {
         <div>
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="text-2xl font-bold text-foreground">
-              Good to see you, {name} 👋
+              {greetingForHour(now.getHours())}, {name} 👋
             </h1>
             <div className="flex items-center gap-2">
               <Badge variant={streakBadge}>
@@ -94,7 +114,7 @@ export default async function DashboardPage() {
         <LogoutButton />
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <StatCard
           icon={CalendarClock}
           label="Next deadline"
@@ -112,6 +132,12 @@ export default async function DashboardPage() {
           }
         />
         <StatCard
+          icon={BookOpen}
+          label="Courses"
+          value={String(courses.length)}
+          hint={courses.length === 1 ? "1 course this term" : `${courses.length} courses this term`}
+        />
+        <StatCard
           icon={TrendingUp}
           label="Progress"
           value={`${progress}%`}
@@ -127,17 +153,35 @@ export default async function DashboardPage() {
         />
       </div>
 
-      <div className="mt-8 grid gap-6 md:grid-cols-2">
+      <div className="mt-8 grid gap-6 lg:grid-cols-5">
+        <div className="lg:col-span-3">
+          <NextMoveWidget task={nextMove} />
+        </div>
+
+        <div className="lg:col-span-2">
+          <Card className="h-full">
+            <CardHeader>
+              <CardTitle>Today&apos;s focus</CardTitle>
+              <CardDescription>Overdue and due-today tasks, most urgent first.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <DeadlineList
+                tasks={[...overdue, ...dueToday]}
+                empty="Nothing due today 🎉"
+              />
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Today&apos;s focus</CardTitle>
-            <CardDescription>Overdue and due-today tasks, most urgent first.</CardDescription>
+            <CardTitle>Weekly activity</CardTitle>
+            <CardDescription>Focus minutes, last 7 days.</CardDescription>
           </CardHeader>
           <CardContent>
-            <DeadlineList
-              tasks={[...overdue, ...dueToday]}
-              empty="Nothing due today 🎉"
-            />
+            <WeeklyChart days={weekly} />
           </CardContent>
         </Card>
 

@@ -157,6 +157,26 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 4 — applied (dashboard upgrade)
+
+- `src/lib/next-move.ts`: deterministic **"Your next move"** picker (spec §26) —
+  open tasks with due dates sorted soonest-first (overdue surfaces), then
+  priority, then estimated effort; falls back to the most important undated
+  task, then `null`. No fake AI.
+- `src/components/dashboard/next-move.tsx`: featured widget — course accent
+  rail (course color), eyebrow label, task title, due/priority/estimate
+  badges, **Start focus** button that deep-links to
+  `/dashboard/focus?course=<id>` (validated server-side) so the focus timer
+  preselects the course; honest empty state ("You're all caught up" + Add a
+  task → `/dashboard/tasks`).
+- `src/app/dashboard/page.tsx` rebuilt: time-of-day greeting
+  ("Good morning/evening…"), five KPI cards (Next deadline, Due today,
+  Courses, Progress, Studied this week), and a widget grid — Next move +
+  Today's focus, then Weekly activity (`WeeklyChart`) + Upcoming deadlines.
+- `src/components/focus/focus-timer.tsx` + `src/app/dashboard/focus/page.tsx`:
+  `initialCourseId` prop; page validates the `?course=` id against the user's
+  courses before passing it on (no accepting arbitrary ids).
+
 ## Checkpoint 3 — applied (premium app shell)
 
 - New `src/app/dashboard/layout.tsx`: server layout renders the shell for all

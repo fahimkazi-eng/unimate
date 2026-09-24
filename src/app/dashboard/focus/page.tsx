@@ -16,12 +16,24 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function FocusPage() {
+export default async function FocusPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const user = await requireUser();
   const [courses, sessions] = await Promise.all([
     getCourses(user.id),
     getRecentSessions(user.id),
   ]);
+
+  // "Start focus" deep-link: ?course=<id> preselects that course, but only
+  // when the id actually belongs to this user's courses.
+  const { course: courseParam } = await searchParams;
+  const initialCourseId =
+    typeof courseParam === "string" && courses.some((c) => c.id === courseParam)
+      ? courseParam
+      : undefined;
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -41,7 +53,7 @@ export default async function FocusPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <FocusTimer courses={courses} />
+            <FocusTimer courses={courses} initialCourseId={initialCourseId} />
           </CardContent>
         </Card>
 

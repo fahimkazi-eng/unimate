@@ -20,6 +20,11 @@ const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 
 interface FocusTimerProps {
   courses: Course[];
+  /**
+   * Course preselected by the dashboard's "Start focus" button.
+   * The page validates the id against the user's courses before passing it.
+   */
+  initialCourseId?: string;
 }
 
 /**
@@ -27,10 +32,10 @@ interface FocusTimerProps {
  * finishes it calls the recordFocusSession server action so the dashboard
  * stats and recent-session list update.
  */
-export function FocusTimer({ courses }: FocusTimerProps) {
+export function FocusTimer({ courses, initialCourseId }: FocusTimerProps) {
   const router = useRouter();
   const [preset, setPreset] = useState(25);
-  const [courseId, setCourseId] = useState("");
+  const [courseId, setCourseId] = useState(initialCourseId ?? "");
   const [secondsLeft, setSecondsLeft] = useState(25 * 60);
   const [running, setRunning] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
