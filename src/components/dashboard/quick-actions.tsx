@@ -43,7 +43,7 @@ export function QuickActions() {
             <Link
               key={action.href}
               href={action.href}
-              className="group flex min-w-[150px] snap-start items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3 transition-colors hover:border-primary/40 hover:bg-surface-elevated sm:min-w-0"
+              className="group flex min-w-[150px] snap-start items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3 transition-[transform,background-color,border-color] duration-200 ease-out-quart hover:-translate-y-0.5 hover:border-primary/40 hover:bg-surface-elevated sm:min-w-0"
             >
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-primary transition-transform duration-200 ease-out-quart group-hover:scale-110">
                 <Icon className="h-4 w-4" />

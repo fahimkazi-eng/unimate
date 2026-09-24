@@ -1,5 +1,6 @@
 import "server-only";
 
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import type {
   Course,
@@ -16,45 +17,52 @@ import type {
 
 const taskWithCourseSelect = "*, course:courses(id, name, color)";
 
-/** Profile row, created lazily if the signup trigger predates the table. */
-export async function getOrCreateProfile(userId: string): Promise<Profile | null> {
-  const supabase = await createClient();
+/**
+ * Profile row, created lazily if the signup trigger predates the table.
+ * Wrapped in React `cache()` (Phase E perf pass): the dashboard layout, the
+ * page, and the goals/achievements reports all ask for the same row every
+ * request — this collapses them into ONE query per render pass.
+ */
+export const getOrCreateProfile = cache(
+  async (userId: string): Promise<Profile | null> => {
+    const supabase = await createClient();
 
-  const { data: existing } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", userId)
-    .maybeSingle();
-
-  if (existing) return existing;
-
-  // Not found — create a default row (needs the profiles INSERT policy).
-  const { data, error } = await supabase
-    .from("profiles")
-    .insert({ id: userId })
-    .select("*")
-    .maybeSingle();
-
-  if (error) {
-    // Two requests can race to create the same profile row — the loser gets
-    // a duplicate-key error even though the row now exists. Re-read before
-    // giving up.
-    const { data: retry } = await supabase
+    const { data: existing } = await supabase
       .from("profiles")
       .select("*")
       .eq("id", userId)
       .maybeSingle();
 
-    if (retry) return retry;
+    if (existing) return existing;
 
-    console.error(
-      "Profile row missing and couldn't be created. If this account predates the signup trigger, run the 'Users create own profile' INSERT policy from supabase/v1_schema.sql in the SQL Editor.",
-      error.message
-    );
-    return null;
+    // Not found — create a default row (needs the profiles INSERT policy).
+    const { data, error } = await supabase
+      .from("profiles")
+      .insert({ id: userId })
+      .select("*")
+      .maybeSingle();
+
+    if (error) {
+      // Two requests can race to create the same profile row — the loser gets
+      // a duplicate-key error even though the row now exists. Re-read before
+      // giving up.
+      const { data: retry } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (retry) return retry;
+
+      console.error(
+        "Profile row missing and couldn't be created. If this account predates the signup trigger, run the 'Users create own profile' INSERT policy from supabase/v1_schema.sql in the SQL Editor.",
+        error.message
+      );
+      return null;
+    }
+    return data;
   }
-  return data;
-}
+);
 
 /** Incomplete tasks that have a due date, most urgent first. */
 export async function getIncompleteDeadlines(userId: string): Promise<TaskWithCourse[]> {

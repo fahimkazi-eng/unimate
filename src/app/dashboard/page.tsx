@@ -27,7 +27,6 @@ import { getGradebook } from "@/lib/gradebook";
 import {
   getCourseProgress,
   getCourses,
-  getIncompleteDeadlines,
   getOrCreateProfile,
   getStudyStats,
   getTaskStats,
@@ -46,7 +45,6 @@ export default async function DashboardPage() {
 
   const [
     profile,
-    deadlines,
     taskStats,
     courses,
     courseProgress,
@@ -58,7 +56,6 @@ export default async function DashboardPage() {
     achievementsReport,
   ] = await Promise.all([
     getOrCreateProfile(user.id),
-    getIncompleteDeadlines(user.id),
     getTaskStats(user.id),
     getCourses(user.id),
     getCourseProgress(user.id),
@@ -69,6 +66,16 @@ export default async function DashboardPage() {
     getGoals(user.id),
     getAchievements(user.id),
   ]);
+
+  // Deadlines = open tasks with a due date, most urgent first. Derived from
+  // the tasks we already fetched (Phase E perf) — one fewer round trip.
+  const deadlines = allTasks
+    .filter((t) => t.status !== "completed" && t.due_date)
+    .sort(
+      (a, b) =>
+        new Date(a.due_date as string).getTime() -
+        new Date(b.due_date as string).getTime()
+    );
 
   const name =
     profile?.nickname ??
@@ -164,31 +171,37 @@ export default async function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      {/* Row 0 — command-center hero */}
-      <Hero
-        greeting={greetingForHour(now.getHours())}
-        name={name}
-        headline={hero.headline}
-        subline={hero.subline}
-        streak={profile?.streak ?? 0}
-        level={profile?.level ?? 1}
-        xp={profile?.xp ?? 0}
-        taskProgress={progress}
-        tasksDone={taskStats.completed}
-        tasksTotal={taskStats.total}
-      />
+      {/* One grid — mobile follows spec §29's reading order; lg: keeps the
+          bento from §28. Order utilities re-flow the SAME sections. */}
+      <div className="grid gap-6 lg:grid-cols-5">
+        {/* 1 · Greeting */}
+        <div className="order-1 h-full lg:order-1 lg:col-span-5">
+          <Hero
+            greeting={greetingForHour(now.getHours())}
+            name={name}
+            headline={hero.headline}
+            subline={hero.subline}
+            streak={profile?.streak ?? 0}
+            level={profile?.level ?? 1}
+            xp={profile?.xp ?? 0}
+            taskProgress={progress}
+            tasksDone={taskStats.completed}
+            tasksTotal={taskStats.total}
+          />
+        </div>
 
-      {/* Row 1 — quick actions */}
-      <div className="mt-4 sm:mt-6">
-        <QuickActions />
-      </div>
-
-      {/* Row 2 — next move + today */}
-      <div className="mt-6 grid gap-6 lg:grid-cols-5">
-        <div className="lg:col-span-3">
+        {/* 2 mobile · 3 desktop — next move */}
+        <div className="order-2 h-full lg:order-3 lg:col-span-3">
           <NextMoveWidget task={nextMove} />
         </div>
-        <div className="lg:col-span-2">
+
+        {/* 3 mobile · 2 desktop — quick actions */}
+        <div className="order-3 h-full lg:order-2 lg:col-span-5">
+          <QuickActions />
+        </div>
+
+        {/* 4 · today */}
+        <div className="order-4 h-full lg:order-4 lg:col-span-2">
           <Card className="h-full">
             <CardHeader>
               <CardTitle>Today</CardTitle>
@@ -199,11 +212,9 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
         </div>
-      </div>
 
-      {/* Row 3 — deadlines + courses */}
-      <div className="mt-6 grid gap-6 lg:grid-cols-5">
-        <div className="lg:col-span-2">
+        {/* 5 · deadlines */}
+        <div className="order-5 h-full lg:order-5 lg:col-span-2">
           <Card className="h-full">
             <CardContent className="py-5">
               <DeadlinesPanel
@@ -215,7 +226,14 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
         </div>
-        <div className="lg:col-span-3">
+
+        {/* 6 mobile · 12 desktop — AI study assistant */}
+        <div className="order-6 h-full lg:order-12 lg:col-span-5">
+          <AiAssistantPanel aiConfigured={aiConfigured} />
+        </div>
+
+        {/* 7 mobile · 6 desktop — courses */}
+        <div className="order-7 h-full lg:order-6 lg:col-span-3">
           <Card className="h-full">
             <CardHeader>
               <CardTitle>Your courses</CardTitle>
@@ -226,11 +244,9 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
         </div>
-      </div>
 
-      {/* Row 4 — academic pulse + calendar */}
-      <div className="mt-6 grid gap-6 lg:grid-cols-5">
-        <div className="lg:col-span-3">
+        {/* 8 mobile · 7 desktop — academic pulse */}
+        <div className="order-8 h-full lg:order-7 lg:col-span-3">
           <Card className="h-full">
             <CardContent className="py-5">
               <AcademicPulse
@@ -249,7 +265,9 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
         </div>
-        <div className="lg:col-span-2">
+
+        {/* 9 mobile · 8 desktop — calendar */}
+        <div className="order-9 h-full lg:order-8 lg:col-span-2">
           <Card className="h-full">
             <CardContent className="py-5">
               <CalendarPreview
@@ -260,25 +278,23 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
         </div>
-      </div>
 
-      {/* Row 5 — smart planner */}
-      <div className="mt-6">
-        <Card className="h-full">
-          <CardContent className="py-5">
-            <PlannerPreview
-              days={plan.days}
-              plannedCount={plan.plannedCount}
-              plannedMinutes={plan.plannedMinutes}
-              overloadDays={plan.overloadDays}
-            />
-          </CardContent>
-        </Card>
-      </div>
+        {/* 10 mobile · 9 desktop — smart planner */}
+        <div className="order-10 h-full lg:order-9 lg:col-span-5">
+          <Card className="h-full">
+            <CardContent className="py-5">
+              <PlannerPreview
+                days={plan.days}
+                plannedCount={plan.plannedCount}
+                plannedMinutes={plan.plannedMinutes}
+                overloadDays={plan.overloadDays}
+              />
+            </CardContent>
+          </Card>
+        </div>
 
-      {/* Row 6 — progress + goals */}
-      <div className="mt-6 grid gap-6 lg:grid-cols-5">
-        <div className="lg:col-span-3">
+        {/* 11 mobile · 10 desktop — progress */}
+        <div className="order-11 h-full lg:order-10 lg:col-span-3">
           <Card className="h-full">
             <CardContent className="py-5">
               <ProgressPreview
@@ -294,7 +310,9 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
         </div>
-        <div className="lg:col-span-2">
+
+        {/* 12 mobile · 11 desktop — goals */}
+        <div className="order-12 h-full lg:order-11 lg:col-span-2">
           <Card className="h-full">
             <CardContent className="py-5">
               <GoalsPreview
@@ -304,16 +322,9 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
         </div>
-      </div>
 
-      {/* Row 7 — AI study assistant, full width */}
-      <div className="mt-6">
-        <AiAssistantPanel aiConfigured={aiConfigured} />
-      </div>
-
-      {/* Row 8 — achievements + emergency */}
-      <div className="mt-6 grid gap-6 lg:grid-cols-5">
-        <div className="lg:col-span-2">
+        {/* 13 · achievements */}
+        <div className="order-[13] h-full lg:order-[13] lg:col-span-2">
           <Card className="h-full">
             <CardContent className="py-5">
               <AchievementsPreview
@@ -324,7 +335,9 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
         </div>
-        <div className="lg:col-span-3">
+
+        {/* 14 · emergency */}
+        <div className="order-[14] h-full lg:order-[14] lg:col-span-3">
           <Card className="h-full">
             <CardContent className="py-5">
               <EmergencyPreview
