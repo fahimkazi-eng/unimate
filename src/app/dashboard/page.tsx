@@ -1,29 +1,17 @@
-import {
-  BookOpen,
-  CalendarClock,
-  Clock3,
-  Flame,
-  ListChecks,
-  TrendingUp,
-  Trophy,
-} from "lucide-react";
 import { requireUser } from "@/lib/auth";
-import { LogoutButton } from "@/components/auth/logout-button";
-import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { StatCard } from "@/components/dashboard/stat-card";
 import { DeadlineList } from "@/components/dashboard/deadline-list";
+import { Hero } from "@/components/dashboard/hero";
 import { NextMoveWidget } from "@/components/dashboard/next-move";
+import { QuickActions } from "@/components/dashboard/quick-actions";
 import { WeeklyChart } from "@/components/progress/weekly-chart";
 import { Reveal } from "@/components/ui/reveal";
-import { formatDueLabel } from "@/lib/dates";
-import { staggerDelay } from "@/lib/motion";
+import { daysUntil, formatRelative, todayRange } from "@/lib/dates";
+import { buildHeroHeadline, greetingForHour } from "@/lib/dashboard-hero";
 import { pickNextMove } from "@/lib/next-move";
 import {
-  getCourses,
   getIncompleteDeadlines,
   getOrCreateProfile,
-  getStudyStats,
   getTaskStats,
   getTasks,
   getWeeklyStudyByDay,
@@ -35,26 +23,16 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-function greetingForHour(hour: number): string {
-  if (hour < 5) return "Up late";
-  if (hour < 12) return "Good morning";
-  if (hour < 18) return "Good afternoon";
-  return "Good evening";
-}
-
 export default async function DashboardPage() {
   const user = await requireUser();
 
-  const [profile, deadlines, taskStats, studyStats, courses, weekly, allTasks] =
-    await Promise.all([
-      getOrCreateProfile(user.id),
-      getIncompleteDeadlines(user.id),
-      getTaskStats(user.id),
-      getStudyStats(user.id),
-      getCourses(user.id),
-      getWeeklyStudyByDay(user.id),
-      getTasks(user.id),
-    ]);
+  const [profile, deadlines, taskStats, weekly, allTasks] = await Promise.all([
+    getOrCreateProfile(user.id),
+    getIncompleteDeadlines(user.id),
+    getTaskStats(user.id),
+    getWeeklyStudyByDay(user.id),
+    getTasks(user.id),
+  ]);
 
   const name =
     profile?.nickname ??
@@ -63,125 +41,66 @@ export default async function DashboardPage() {
     "student";
 
   const now = new Date();
-  const startOfToday = new Date(now);
-  startOfToday.setHours(0, 0, 0, 0);
-  const endOfToday = new Date(startOfToday.getTime() + 86_400_000);
+  const { start: startOfToday, end: endOfToday } = todayRange();
 
-  const overdue = deadlines.filter(
-    (t) => t.due_date && new Date(t.due_date) < startOfToday
-  );
+  const overdue = deadlines.filter((t) => new Date(t.due_date ?? 0) < startOfToday);
   const dueToday = deadlines.filter(
     (t) =>
-      t.due_date &&
-      new Date(t.due_date) >= startOfToday &&
-      new Date(t.due_date) < endOfToday
+      new Date(t.due_date ?? 0) >= startOfToday &&
+      new Date(t.due_date ?? 0) < endOfToday
   );
-  const upcoming = deadlines.filter(
-    (t) => t.due_date && new Date(t.due_date) >= endOfToday
-  );
+  const upcoming = deadlines.filter((t) => new Date(t.due_date ?? 0) >= endOfToday);
 
-  const nextDeadline = deadlines[0] ?? null;
+  const nextDeadline = upcoming[0] ?? null;
   const progress =
     taskStats.total > 0
       ? Math.round((taskStats.completed / taskStats.total) * 100)
       : 0;
 
   const nextMove = pickNextMove(allTasks);
-  const streakBadge: BadgeVariant =
-    (profile?.streak ?? 0) > 0 ? "warning" : "outline";
+  const hasActivity =
+    taskStats.total > 0 || weekly.some((day) => day.minutes > 0);
 
-  const stats = [
-    {
-      icon: CalendarClock,
-      label: "Next deadline",
-      value: nextDeadline?.due_date
-        ? formatDueLabel(nextDeadline.due_date)
-        : "—",
-      hint: nextDeadline?.title ?? "No deadlines yet",
-    },
-    {
-      icon: ListChecks,
-      label: "Due today",
-      value: String(overdue.length + dueToday.length),
-      hint: overdue.length > 0 ? `${overdue.length} overdue` : "No overdue tasks",
-    },
-    {
-      icon: BookOpen,
-      label: "Courses",
-      value: String(courses.length),
-      hint:
-        courses.length === 1
-          ? "1 course this term"
-          : `${courses.length} courses this term`,
-    },
-    {
-      icon: TrendingUp,
-      label: "Progress",
-      value: `${progress}%`,
-      hint: `${taskStats.completed}/${taskStats.total} tasks complete`,
-    },
-    {
-      icon: Clock3,
-      label: "Studied this week",
-      value: `${studyStats.minutes}m`,
-      hint: `${studyStats.sessions} focus ${
-        studyStats.sessions === 1 ? "session" : "sessions"
-      }`,
-    },
-  ];
+  const hero = buildHeroHeadline({
+    overdueCount: overdue.length,
+    hasDueToday: dueToday.length > 0,
+    nextDeadline: nextDeadline
+      ? {
+          title: nextDeadline.title,
+          days: daysUntil(nextDeadline.due_date as string),
+          relative: formatRelative(nextDeadline.due_date as string),
+        }
+      : null,
+    hasActivity,
+  });
 
   return (
     <div className="mx-auto max-w-6xl">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-2xl font-bold text-foreground">
-              {greetingForHour(now.getHours())}, {name} 👋
-            </h1>
-            <div className="flex items-center gap-2">
-              <Badge variant={streakBadge}>
-                <Flame className="h-3 w-3" />
-                {profile?.streak ?? 0} day streak
-              </Badge>
-              <Badge variant="default">
-                <Trophy className="h-3 w-3" />
-                Level {profile?.level ?? 1}
-              </Badge>
-              <Badge variant="outline">{profile?.xp ?? 0} XP</Badge>
-            </div>
-          </div>
-          <p className="mt-2 text-muted-foreground">
-            Here&apos;s your semester at a glance.
-          </p>
-        </div>
-        <LogoutButton />
+      {/* Command-center hero: greeting + adaptive headline + stat cluster */}
+      <Hero
+        greeting={greetingForHour(now.getHours())}
+        name={name}
+        headline={hero.headline}
+        subline={hero.subline}
+        streak={profile?.streak ?? 0}
+        level={profile?.level ?? 1}
+        xp={profile?.xp ?? 0}
+        taskProgress={progress}
+        tasksDone={taskStats.completed}
+        tasksTotal={taskStats.total}
+      />
+
+      {/* Quick-action command bar */}
+      <div className="mt-4 sm:mt-6">
+        <QuickActions />
       </div>
 
-      {/* C12: swipeable stat rail on mobile, full grid from sm up */}
-      <div className="mt-8 -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:px-0 lg:grid-cols-3 xl:grid-cols-5 [&::-webkit-scrollbar]:hidden">
-        {stats.map((stat, i) => (
-          <div
-            key={stat.label}
-            className="min-w-[230px] shrink-0 snap-start sm:min-w-0 sm:shrink animate-rise-in"
-            style={{ animationDelay: staggerDelay(i) }}
-          >
-            <StatCard {...stat} />
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-8 grid gap-6 lg:grid-cols-5">
-        <div
-          className="animate-rise-in lg:col-span-3"
-          style={{ animationDelay: staggerDelay(5) }}
-        >
+      <div className="mt-6 grid gap-6 lg:grid-cols-5">
+        <div className="lg:col-span-3">
           <NextMoveWidget task={nextMove} />
         </div>
 
-        <div
-          className="animate-rise-in lg:col-span-2"
-          style={{ animationDelay: staggerDelay(6) }}
-        >
+        <div className="lg:col-span-2">
           <Card className="h-full">
             <CardHeader>
               <CardTitle>Today&apos;s focus</CardTitle>
@@ -197,7 +116,7 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-2">
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <Reveal>
           <Card>
             <CardHeader>

@@ -1,3 +1,4 @@
+import { daysUntil } from "@/lib/dates";
 import type { TaskWithCourse } from "@/lib/database.types";
 
 const priorityWeight: Record<TaskWithCourse["priority"], number> = {
@@ -36,4 +37,40 @@ export function pickNextMove(tasks: TaskWithCourse[]): TaskWithCourse | null {
 
   const withoutDate = open.filter((task) => !task.due_date).sort(byUrgency);
   return withoutDate[0] ?? null;
+}
+
+export interface NextMoveReason {
+  /** Drives the bullet's accent color. */
+  tone: "danger" | "warning" | "info";
+  label: string;
+}
+
+/** Human-readable "why this task" bullets — explains the pick, no AI. */
+export function nextMoveReasons(task: TaskWithCourse): NextMoveReason[] {
+  const reasons: NextMoveReason[] = [];
+
+  if (task.due_date) {
+    const days = daysUntil(task.due_date);
+    if (days < 0) {
+      reasons.push({ tone: "danger", label: `Overdue by ${-days} day${-days === 1 ? "" : "s"}` });
+    } else if (days === 0) {
+      reasons.push({ tone: "danger", label: "Due today" });
+    } else if (days === 1) {
+      reasons.push({ tone: "warning", label: "Due tomorrow" });
+    } else {
+      reasons.push({ tone: "info", label: `Due in ${days} days` });
+    }
+  }
+
+  if (task.priority === "high") {
+    reasons.push({ tone: "danger", label: "High priority" });
+  } else if (task.priority === "medium") {
+    reasons.push({ tone: "warning", label: "Medium priority" });
+  }
+
+  if (task.estimated_minutes) {
+    reasons.push({ tone: "info", label: `${task.estimated_minutes} min estimated` });
+  }
+
+  return reasons;
 }

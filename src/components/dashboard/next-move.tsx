@@ -1,8 +1,9 @@
-import { Clock3, Flag, Play, Sparkles } from "lucide-react";
+import { Clock3, Flag, ListChecks, Play, Sparkles } from "lucide-react";
 import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { daysUntil, formatRelative } from "@/lib/dates";
+import { nextMoveReasons } from "@/lib/next-move";
 import type { TaskWithCourse } from "@/lib/database.types";
 
 const priorityVariant: Record<TaskWithCourse["priority"], BadgeVariant> = {
@@ -56,6 +57,13 @@ export function NextMoveWidget({ task }: NextMoveWidgetProps) {
   const focusHref = task.course
     ? `/dashboard/focus?course=${task.course.id}`
     : "/dashboard/focus";
+  const reasons = nextMoveReasons(task);
+
+  const toneStyles: Record<string, string> = {
+    danger: "bg-danger/10 text-danger",
+    warning: "bg-warning/10 text-warning",
+    info: "bg-primary-soft text-primary",
+  };
 
   return (
     <Card className="relative h-full overflow-hidden border-primary/30 shadow-glow-accent">
@@ -76,6 +84,10 @@ export function NextMoveWidget({ task }: NextMoveWidgetProps) {
             Your next move
           </span>
           <span className="h-px flex-1 bg-border" aria-hidden />
+          <Badge variant="outline">
+            <Sparkles className="h-3 w-3" />
+            Recommended
+          </Badge>
         </div>
 
         <div>
@@ -113,10 +125,33 @@ export function NextMoveWidget({ task }: NextMoveWidgetProps) {
           </div>
         </div>
 
+        {reasons.length > 0 ? (
+          <div className="rounded-xl border border-border bg-muted/50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              UniMate recommends this because
+            </p>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {reasons.map((reason) => (
+                <li
+                  key={reason.label}
+                  className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${toneStyles[reason.tone]}`}
+                >
+                  <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden />
+                  {reason.label}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
         <div className="mt-auto flex flex-wrap items-center gap-3">
           <Button href={focusHref}>
             <Play className="h-4 w-4" />
             Start focus
+          </Button>
+          <Button variant="outline" href="/dashboard/tasks">
+            <ListChecks className="h-4 w-4" />
+            View task
           </Button>
           <span className="text-xs text-muted-foreground">
             Picked from your deadlines, priority and estimates.
