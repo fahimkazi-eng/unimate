@@ -51,12 +51,12 @@ const mainItems: SidebarItem[] = [
   { href: "/dashboard/goals", label: "Goals", icon: Target },
   { href: "/dashboard/progress", label: "Progress", icon: TrendingUp },
   { href: "/dashboard/achievements", label: "Achievements", icon: Trophy },
+  { href: "/dashboard/profile", label: "Profile", icon: UserRound },
 ];
 
 /** Planned features — visible but honestly marked (no dead links). */
 const plannedItems: SidebarItem[] = [
   { label: "Notes", icon: NotebookPen },
-  { label: "Profile", icon: UserRound },
   { label: "Settings", icon: Settings },
 ];
 

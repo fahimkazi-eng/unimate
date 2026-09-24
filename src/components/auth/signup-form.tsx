@@ -1,18 +1,21 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import Link from "next/link";
 import { signup, type AuthState } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/auth/label";
 import { GoogleButton } from "@/components/auth/google-button";
+import { PasswordInput } from "@/components/auth/password-input";
+import { PasswordStrength } from "@/components/auth/password-strength";
 
 export function SignupForm() {
   const [state, action, pending] = useActionState<AuthState, FormData>(
     signup,
     undefined
   );
+  const [password, setPassword] = useState("");
 
   return (
     <div className="space-y-4">
@@ -67,17 +70,19 @@ export function SignupForm() {
 
         <div className="space-y-2">
           <Label htmlFor="password">Password</Label>
-          <Input
+          <PasswordInput
             id="password"
             name="password"
-            type="password"
             placeholder="At least 8 characters"
             autoComplete="new-password"
             required
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
           />
           {state?.errors?.password && (
             <p className="text-xs text-danger">{state.errors.password[0]}</p>
           )}
+          <PasswordStrength value={password} />
         </div>
 
         <Button type="submit" className="w-full" disabled={pending}>

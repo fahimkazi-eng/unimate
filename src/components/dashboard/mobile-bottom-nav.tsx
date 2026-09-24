@@ -16,6 +16,7 @@ import {
   Timer,
   TrendingUp,
   Trophy,
+  UserRound,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -38,6 +39,7 @@ const MORE = [
   { href: "/dashboard/courses", label: "Courses", icon: BookOpen },
   { href: "/dashboard/goals", label: "Goals", icon: Target },
   { href: "/dashboard/achievements", label: "Achievements", icon: Trophy },
+  { href: "/dashboard/profile", label: "Profile", icon: UserRound },
 ];
 
 function isActive(href: string, pathname: string): boolean {

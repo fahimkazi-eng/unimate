@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import {
   ChevronUp,
   GraduationCap,
@@ -49,7 +50,6 @@ function Avatar({
 }
 
 const soonItems = [
-  { icon: UserRound, label: "Profile" },
   { icon: Settings, label: "Settings" },
   { icon: Palette, label: "Appearance" },
 ];
@@ -136,6 +136,16 @@ export function AccountMenu({
               Level {level} · {xp} XP
             </span>
           </p>
+
+          <Link
+            href="/dashboard/profile"
+            role="menuitem"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+          >
+            <UserRound className="h-4 w-4" />
+            Profile
+          </Link>
 
           {soonItems.map((item) => (
             <div

@@ -75,6 +75,11 @@ export interface Profile {
   nickname: string | null;
   /** Avatar (Google photo or future uploads). */
   photo_url: string | null;
+  /** Academic identity (V2 Phase 3 — v4 migration). */
+  university: string | null;
+  department: string | null;
+  semester: number | null;
+  academic_year: number | null;
   xp: number;
   level: number;
   streak: number;

@@ -23,6 +23,22 @@ const loginSchema = z.object({
   password: z.string().min(1, "Password is required."),
 });
 
+const emailSchema = z.object({
+  email: z.string().email("Enter a valid email.").trim(),
+});
+
+const resetPasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters."),
+    confirm: z.string().min(1, "Please repeat your password."),
+  })
+  .refine((data) => data.password === data.confirm, {
+    message: "Passwords don't match.",
+    path: ["confirm"],
+  });
+
 /* ---------- Types ---------- */
 
 export type AuthState =
@@ -145,4 +161,76 @@ export async function logout() {
   // Experiment #2 rule 14: signing out returns to the public homepage,
   // which shows the demo experience (never private data after logout).
   redirect("/");
+}
+
+/* ---------- Password reset (V2 Phase 3) ---------- */
+
+export type ResetState =
+  | { errors?: Record<string, string[]>; message?: string }
+  | undefined;
+
+/**
+ * V2 Phase 3 (spec 24) — sends a password-reset email. Uses the anon-key
+ * resetPasswordForEmail (safe client-side), pointing the recovery link back
+ * at /auth/callback?next=/reset-password, which exchanges the code for a
+ * recovery session before showing the reset form. Always answers generically
+ * so we never reveal whether an email has an account.
+ */
+export async function sendPasswordReset(
+  _prev: ResetState,
+  formData: FormData
+): Promise<ResetState> {
+  const parsed = emailSchema.safeParse({
+    email: formData.get("email"),
+  });
+
+  if (!parsed.success) {
+    return { errors: parsed.error.flatten().fieldErrors };
+  }
+
+  const supabase = await createClient();
+  const baseUrl = await getBaseUrl();
+
+  const { error } = await supabase.auth.resetPasswordForEmail(
+    parsed.data.email,
+    {
+      redirectTo: `${baseUrl.origin}/auth/callback?next=/reset-password`,
+    }
+  );
+
+  if (error) {
+    return { message: "Something went wrong — please try again." };
+  }
+
+  // Generic success — the user may or may not exist; never leak that.
+  return { message: "reset-email-sent" };
+}
+
+/**
+ * Sets a new password for the recovery session (the user arrived from the
+ * reset email). On success the session is good — go straight to the app.
+ */
+export async function updatePassword(
+  _prev: ResetState,
+  formData: FormData
+): Promise<ResetState> {
+  const parsed = resetPasswordSchema.safeParse({
+    password: formData.get("password"),
+    confirm: formData.get("confirm"),
+  });
+
+  if (!parsed.success) {
+    return { errors: parsed.error.flatten().fieldErrors };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({
+    password: parsed.data.password,
+  });
+
+  if (error) {
+    return { message: `Couldn't update your password: ${error.message}` };
+  }
+
+  redirect("/dashboard");
 }

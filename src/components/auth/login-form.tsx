@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/auth/label";
 import { GoogleButton } from "@/components/auth/google-button";
+import { PasswordInput } from "@/components/auth/password-input";
 
 export function LoginForm() {
   const [state, action, pending] = useActionState<AuthState, FormData>(
@@ -52,11 +53,18 @@ export function LoginForm() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="password">Password</Label>
-          <Input
+          <div className="flex items-center justify-between">
+            <Label htmlFor="password">Password</Label>
+            <Link
+              href="/forgot-password"
+              className="text-xs font-medium text-muted-foreground transition-colors hover:text-primary"
+            >
+              Forgot password?
+            </Link>
+          </div>
+          <PasswordInput
             id="password"
             name="password"
-            type="password"
             placeholder="Your password"
             autoComplete="current-password"
             required
