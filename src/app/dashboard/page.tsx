@@ -1,12 +1,17 @@
 import { requireUser } from "@/lib/auth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AcademicPulse } from "@/components/dashboard/academic-pulse";
+import { AchievementsPreview } from "@/components/dashboard/achievements-preview";
+import { AiAssistantPanel } from "@/components/dashboard/ai-assistant-panel";
 import { CalendarPreview } from "@/components/dashboard/calendar-preview";
 import { CoursesSnapshot, type CourseSnapshotCourse } from "@/components/dashboard/courses-snapshot";
 import { DeadlinesPanel } from "@/components/dashboard/deadlines-panel";
+import { EmergencyPreview } from "@/components/dashboard/emergency-preview";
+import { GoalsPreview } from "@/components/dashboard/goals-preview";
 import { Hero } from "@/components/dashboard/hero";
 import { NextMoveWidget } from "@/components/dashboard/next-move";
 import { PlannerPreview } from "@/components/dashboard/planner-preview";
+import { ProgressPreview } from "@/components/dashboard/progress-preview";
 import { QuickActions } from "@/components/dashboard/quick-actions";
 import { TodayTimeline } from "@/components/dashboard/today-timeline";
 import { daysUntil, formatRelative, startOfDay } from "@/lib/dates";
@@ -15,14 +20,19 @@ import { computeGpa } from "@/lib/grades";
 import { pickNextMove } from "@/lib/next-move";
 import { planWeek } from "@/lib/planner";
 import { dayKey } from "@/lib/calendar";
+import { detectCrisis } from "@/lib/emergency";
+import { getAchievements } from "@/lib/achievements";
+import { getGoals } from "@/lib/goals";
 import { getGradebook } from "@/lib/gradebook";
 import {
   getCourseProgress,
   getCourses,
   getIncompleteDeadlines,
   getOrCreateProfile,
+  getStudyStats,
   getTaskStats,
   getTasks,
+  getWeeklyStudyByDay,
 } from "@/lib/queries";
 
 export const metadata = {
@@ -42,6 +52,10 @@ export default async function DashboardPage() {
     courseProgress,
     gradebook,
     allTasks,
+    weekDays,
+    studyStats,
+    goalsReport,
+    achievementsReport,
   ] = await Promise.all([
     getOrCreateProfile(user.id),
     getIncompleteDeadlines(user.id),
@@ -50,6 +64,10 @@ export default async function DashboardPage() {
     getCourseProgress(user.id),
     getGradebook(user.id),
     getTasks(user.id),
+    getWeeklyStudyByDay(user.id),
+    getStudyStats(user.id),
+    getGoals(user.id),
+    getAchievements(user.id),
   ]);
 
   const name =
@@ -134,6 +152,15 @@ export default async function DashboardPage() {
   // Calendar preview + planner.
   const calendarWeek = deadlines.filter((t) => new Date(t.due_date ?? 0) < weekEnd);
   const plan = planWeek(allTasks, dayKey(now));
+
+  // Emergency card — controlled: only urgent when a real crisis exists.
+  const crisis = detectCrisis(allTasks, dayKey(now), now.toISOString());
+  const openDatedTasks = allTasks.filter(
+    (t) => t.status !== "completed" && t.due_date
+  ).length;
+
+  // AI section — the key never leaves the server; honest offline state.
+  const aiConfigured = Boolean(process.env.ASSISTANT_API_KEY);
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -247,6 +274,66 @@ export default async function DashboardPage() {
             />
           </CardContent>
         </Card>
+      </div>
+
+      {/* Row 6 — progress + goals */}
+      <div className="mt-6 grid gap-6 lg:grid-cols-5">
+        <div className="lg:col-span-3">
+          <Card className="h-full">
+            <CardContent className="py-5">
+              <ProgressPreview
+                days={weekDays}
+                weekMinutes={studyStats.minutes}
+                weekSessions={studyStats.sessions}
+                tasksCompleted={taskStats.completed}
+                tasksTotal={taskStats.total}
+                streak={profile?.streak ?? 0}
+                xp={profile?.xp ?? 0}
+                level={profile?.level ?? 1}
+              />
+            </CardContent>
+          </Card>
+        </div>
+        <div className="lg:col-span-2">
+          <Card className="h-full">
+            <CardContent className="py-5">
+              <GoalsPreview
+                goals={goalsReport.goals}
+                error={goalsReport.error}
+              />
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Row 7 — AI study assistant, full width */}
+      <div className="mt-6">
+        <AiAssistantPanel aiConfigured={aiConfigured} />
+      </div>
+
+      {/* Row 8 — achievements + emergency */}
+      <div className="mt-6 grid gap-6 lg:grid-cols-5">
+        <div className="lg:col-span-2">
+          <Card className="h-full">
+            <CardContent className="py-5">
+              <AchievementsPreview
+                achievements={achievementsReport.achievements}
+                unlockedCount={achievementsReport.unlockedCount}
+                totalCount={achievementsReport.totalCount}
+              />
+            </CardContent>
+          </Card>
+        </div>
+        <div className="lg:col-span-3">
+          <Card className="h-full">
+            <CardContent className="py-5">
+              <EmergencyPreview
+                crisis={crisis}
+                openDatedTasks={openDatedTasks}
+              />
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
