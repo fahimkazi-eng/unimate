@@ -140,17 +140,17 @@ npm run lint     # ESLint
 
 ## 🖼️ Screenshots
 
-| Dashboard | Tasks |
-| --- | --- |
-| ![Dashboard](public/screenshots/dashboard.png) | ![Tasks](public/screenshots/tasks.png) |
-
-| Courses | Focus timer |
-| --- | --- |
-| ![Courses](public/screenshots/courses.png) | ![Focus timer](public/screenshots/focus.png) |
-
-| Progress |
+| Homepage hero |
 | --- |
-| ![Progress](public/screenshots/progress.png) |
+| ![Homepage hero](public/screenshots/home-hero.png) |
+
+| Log in | Create account | After signup |
+| --- | --- | --- |
+| ![Log in](public/screenshots/login.png) | ![Create account](public/screenshots/signup.png) | ![Check your email](public/screenshots/check-email.png) |
+
+> Dashboard screenshots are being refreshed to the new dark theme —
+> they need a logged-in session. Run `npm run screenshots -- --dashboard`
+> with `UNIMATE_SESSION` set (see `scripts/shoot-screenshots.cjs`).
 
 ## 📄 License
 
