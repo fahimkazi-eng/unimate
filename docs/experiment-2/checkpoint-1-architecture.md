@@ -157,6 +157,35 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 20 — V2 Phase 6 applied (smart planner)
+
+Smart Planner — a deterministic week-plan engine over real open tasks,
+*advisory by construction* (spec 37: it never writes; every planned row still
+opens the task so the user confirms):
+
+- **`src/lib/planner.ts`** (new, pure, server-safe): `planWeek` spreads real
+  open tasks across the next 7 days with honest rules — overdue tasks land
+  earliest (a task too big for any remaining slot is force-placed on the
+  lightest day and that day is marked overloaded, so nothing overdue is ever
+  stranded); dated tasks are back-planned to the LATEST day ≤ their due date
+  (work lands near the deadline but never after it, and tasks that miss get an
+  honest "after due date" flag); undated tasks fill the lightest days, high
+  priority first. Completed tasks are ignored; `?budget=` (30–300, default
+  120) is clamped via `parseBudgetParam`. 32-assertion probe green
+  (param clamping, overdue-first, back-planning, late flags, overload honesty,
+  unassigned honesty, deterministic repeatability).
+- **`src/app/dashboard/planner/page.tsx`** (new, server, force-dynamic):
+  day cards for the 7-day horizon (Today/Tomorrow/date headings), per-day
+  minutes + "over budget" honesty, a 3-stat strip (planned / over budget /
+  after due date), an honest "couldn't place this week" section (with a
+  warning when a task exceeds the whole daily budget), the advisory-footer
+  note, and a server-driven `?budget=` segmented control (60/90/120/180 min)
+  matching the calendar view-switcher pattern (a11y, no-JS).
+- **Nav:** Planner added to the sidebar and the Cmd+K palette right after
+  Calendar, and to the mobile More sheet (between Courses and Goals).
+- Tasks with no estimate are assumed at 25 min (`DEFAULT_ESTIMATE_MINUTES`) —
+  stated honestly in code and copy, never silently.
+
 ## Checkpoint 19 — V2 Phase 5 applied (AI study OS)
 
 Study Coach — the AI layer, built *honest by construction*:

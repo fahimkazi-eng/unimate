@@ -7,6 +7,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   BookOpen,
   CalendarDays,
+  CalendarClock,
   ChevronsLeft,
   ChevronsRight,
   GraduationCap,
@@ -48,6 +49,7 @@ const mainItems: SidebarItem[] = [
   { href: "/dashboard/tasks", label: "Tasks", icon: ListChecks },
   { href: "/dashboard/courses", label: "Courses", icon: BookOpen },
   { href: "/dashboard/calendar", label: "Calendar", icon: CalendarDays },
+  { href: "/dashboard/planner", label: "Planner", icon: CalendarClock },
   { href: "/dashboard/focus", label: "Focus", icon: Timer },
   { href: "/dashboard/goals", label: "Goals", icon: Target },
   { href: "/dashboard/progress", label: "Progress", icon: TrendingUp },

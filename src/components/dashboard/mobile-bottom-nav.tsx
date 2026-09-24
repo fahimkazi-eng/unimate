@@ -7,6 +7,7 @@ import { logout } from "@/app/actions/auth";
 import {
   BookOpen,
   CalendarDays,
+  CalendarClock,
   GraduationCap,
   LayoutDashboard,
   ListChecks,
@@ -38,6 +39,7 @@ const PRIMARY = [
 
 const MORE = [
   { href: "/dashboard/courses", label: "Courses", icon: BookOpen },
+  { href: "/dashboard/planner", label: "Planner", icon: CalendarClock },
   { href: "/dashboard/goals", label: "Goals", icon: Target },
   { href: "/dashboard/achievements", label: "Achievements", icon: Trophy },
   { href: "/dashboard/assistant", label: "Assistant", icon: Sparkles },
