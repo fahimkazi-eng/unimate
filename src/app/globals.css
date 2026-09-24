@@ -145,6 +145,7 @@
    Keyframes are emitted on demand when an `animate-*` utility is used. */
 @theme inline {
   --animate-fade-in: fade-in 300ms var(--ease-out-quart) both;
+  --animate-fade-in-fast: fade-in 180ms var(--ease-out-quart) both;
   --animate-rise-in: rise-in 500ms var(--ease-out-quart) both;
   --animate-scale-in: scale-in 350ms var(--ease-out-expo) both;
 
@@ -256,6 +257,25 @@
     outline-offset: 2px;
   }
 
+  /* V2 Phase 1 (spec 6–8) — instant press feedback on anything tappable:
+     a tiny transform-only scale, so state changes immediately with no
+     layout hit. Elements carrying their own `transition-*` utility keep
+     their property list (there the scale snaps instantly — feedback, not
+     a spectacle); plain links/buttons get a 120ms tween. */
+  a:active,
+  button:active,
+  [role="button"]:active {
+    transform: scale(0.97);
+    transition: transform 120ms var(--ease-out-quart);
+  }
+
+  /* Kill the legacy ~300ms double-tap zoom delay on touch devices. */
+  a,
+  button,
+  [role="button"] {
+    touch-action: manipulation;
+  }
+
   ::selection {
     background: var(--color-primary-soft);
     color: var(--color-foreground);
@@ -297,5 +317,16 @@
   .reveal {
     opacity: 1 !important;
     transform: none !important;
+  }
+}
+
+/* ---- V2 Phase 1 (spec 11) — mobile decoration budget ----
+   On small screens, drop the two peripheral hero orbs (continuous
+   overdraw on phone GPUs) and keep the center glow + vignette.
+   Desktop keeps the full drift. */
+@media (max-width: 767px) {
+  .animate-drift-2,
+  .animate-drift-3 {
+    display: none;
   }
 }

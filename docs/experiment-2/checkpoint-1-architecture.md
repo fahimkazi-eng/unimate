@@ -157,6 +157,28 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 15 — V2 Phase 1 applied (performance foundation)
+
+V2 master spec phases land on top of Experiment #2 as checkpoints (this doc
+stays canonical). Phase 1 = feel, not features:
+
+- **Instant press feedback** (spec 6–8): global `a/button/[role=button]:active`
+  → `transform: scale(0.97)` in `globals.css` base layer (transform-only,
+  compositor-safe; elements with their own `transition-*` utility keep it,
+  everyone else gets a 120ms tween). Nothing elaborate — motion with purpose.
+- **Tap delay**: `touch-action: manipulation` on all `a`/`button` kills the
+  legacy ~300ms double-tap zoom delay on touch devices.
+- **Faster navigation** (spec 6): route-change fade cut 300ms → 180ms via new
+  `--animate-fade-in-fast` token (`page-transition.tsx`).
+- **Mobile decoration budget** (spec 11): the two peripheral hero orbs are
+  `display:none` below 768px (overdraw cost on phone GPUs); center glow +
+  vignette stay. Ambient orbs were already filter-free (gradient + transform
+  drift), so desktop keeps the full ambience.
+- **Deferred deliberately** (documented, not forgotten): skeletons (spec 14)
+  land with the first client-data screens (AI tools, P5); optimistic updates
+  (spec 15) land with task-complete/task-creation rework (P9/P10). Dashboards
+  are server-rendered — no client loading state to skeleton yet.
+
 ## Checkpoint 14 — applied (final polish + screenshots)
 
 - **Re-shoot tooling**: `scripts/shoot-screenshots.cjs` + `npm run screenshots`
