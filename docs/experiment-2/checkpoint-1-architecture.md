@@ -157,6 +157,22 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 10 — applied (achievements + gamification)
+
+- `src/lib/achievements.ts`: 11 badge definitions derived from *real* user
+  data — no `achievements` table (deliberate: unlocks are computed fresh each
+  load from tasks/courses/study_sessions/profile, so they can never go
+  stale). Measures: tasks completed, courses, focus sessions, 30-min session,
+  streak, XP, level. `getAchievements(userId)` returns per-badge state +
+  the closest locked badge ("next up").
+- `src/app/dashboard/achievements/page.tsx`: unlock-progress SVG ring,
+  Level & XP card (reuses `gamification.ts` math: `levelFromXp`, `xpIntoLevel`,
+  `xpForNextLevel`), streak badge, "Next up" spotlight card, and a staggered
+  badge grid — locked badges show honest progress bars, unlocked ones glow
+  with gradient medals (data-accented, no hard-coded hex).
+- Sidebar (desktop) + AppNav (mobile) now list Achievements as a live route
+  with the animated active pill.
+
 ## Checkpoint 9 — applied (Google auth + profile columns)
 
 - `supabase/v2_google_auth.sql`: idempotent migration — adds

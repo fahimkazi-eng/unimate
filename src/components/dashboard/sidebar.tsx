@@ -17,6 +17,7 @@ import {
   Target,
   Timer,
   TrendingUp,
+  Trophy,
   UserRound,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -44,6 +45,7 @@ const mainItems: SidebarItem[] = [
   { href: "/dashboard/courses", label: "Courses", icon: BookOpen },
   { href: "/dashboard/focus", label: "Focus", icon: Timer },
   { href: "/dashboard/progress", label: "Progress", icon: TrendingUp },
+  { href: "/dashboard/achievements", label: "Achievements", icon: Trophy },
 ];
 
 /** Planned features — visible but honestly marked (no dead links). */

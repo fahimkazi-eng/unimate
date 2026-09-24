@@ -11,6 +11,7 @@ const items = [
   { href: "/dashboard/courses", label: "Courses" },
   { href: "/dashboard/focus", label: "Focus" },
   { href: "/dashboard/progress", label: "Progress" },
+  { href: "/dashboard/achievements", label: "Achievements" },
 ];
 
 /** Top-level nav shared by app pages: brand mark + scrollable tab row. */
