@@ -1,41 +1,68 @@
 @import "tailwindcss";
 
+/*
+  ─────────────────────────────────────────────────────────────
+  UniMate design system — Experiment #2 (Checkpoint 2)
+  Premium SaaS tokens. Light (default) + dark via
+  <html data-theme="dark">.
+
+  Tailwind v4 mechanics:
+    - @theme emits the tokens below as CSS vars on :root; utilities
+      (bg-surface, text-foreground, …) reference them via var().
+    - [data-theme="dark"] re-declares the SAME vars with dark values
+      (higher specificity than :root), so every layout/Card/button
+      swaps themes automatically — no component changes needed.
+  Components must never hard-code colors; only these tokens.
+  ─────────────────────────────────────────────────────────────
+*/
+
+/* ---- Typography (loaded via next/font in layout.tsx) ---- */
 @theme inline {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo,
+    monospace;
 }
 
-/*
-  Design tokens — UniMate
-  Clean, minimal, premium. Light theme first; dark mode can be added later.
-  Semantic names everywhere: components never hardcode hex values.
-*/
+:root {
+  color-scheme: light;
+}
+
+/* ---- Light theme (default) ---- */
 @theme {
   /* Surfaces */
-  --color-background: #fafafa;
+  --color-background: #f7f7fb;
+  --color-background-secondary: #f1f1f8;
   --color-surface: #ffffff;
-  --color-foreground: #18181b;
+  --color-surface-elevated: #ffffff;
+  --color-surface-glass: rgb(255 255 255 / 0.72);
 
-  /* Muted */
-  --color-muted: #f4f4f5;
-  --color-muted-foreground: #71717a;
+  /* Text */
+  --color-foreground: #13131a;
+  --color-foreground-secondary: #3f3f4a;
+  --color-muted: #f1f1f5;
+  --color-muted-foreground: #6f6f7d;
 
-  /* Borders / inputs */
-  --color-border: #e4e4e7;
-  --color-input: #e4e4e7;
+  /* Lines / inputs */
+  --color-border: #e5e5ec;
+  --color-border-hover: #d3d3df;
+  --color-input: #e5e5ec;
 
-  /* Brand */
+  /* Brand — indigo core with purple accent */
   --color-primary: #4f46e5;
   --color-primary-hover: #4338ca;
+  --color-primary-dark: #4338ca;
+  --color-primary-light: #818cf8;
   --color-primary-foreground: #ffffff;
   --color-primary-soft: #eef2ff;
 
-  /* Secondary / accent */
   --color-secondary: #f4f4f5;
   --color-secondary-foreground: #18181b;
-  --color-accent: #7c3aed;
 
-  /* Semantic status */
+  --color-accent: #7c3aed;
+  --color-accent-soft: #f5f3ff;
+
+  /* Status */
   --color-success: #16a34a;
   --color-warning: #d97706;
   --color-danger: #dc2626;
@@ -50,17 +77,89 @@
   --radius-xl: 1rem;
   --radius-2xl: 1.25rem;
 
-  /* Shadows */
-  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06);
-  --shadow-card-hover: 0 4px 12px -2px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+  /* Shadows & glow */
+  --shadow-sm: 0 1px 2px rgb(19 19 26 / 0.05);
+  --shadow-card: 0 1px 3px 0 rgb(19 19 26 / 0.06),
+    0 1px 2px -1px rgb(19 19 26 / 0.06);
+  --shadow-card-hover: 0 4px 12px -2px rgb(19 19 26 / 0.08),
+    0 2px 4px -2px rgb(19 19 26 / 0.06);
+  --shadow-lg: 0 12px 32px -8px rgb(19 19 26 / 0.16);
+  --shadow-glow-primary: 0 0 24px -4px rgb(79 70 229 / 0.35);
+  --shadow-glow-accent: 0 0 24px -4px rgb(124 58 237 / 0.35);
+
+  /* Motion (refined in Checkpoint 5) */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-html {
-  scroll-behavior: smooth;
+/* ---- Dark theme — deep black / indigo / purple glow ---- */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-background: #0a0a12;
+  --color-background-secondary: #0f0f19;
+  --color-surface: #131320;
+  --color-surface-elevated: #1a1a2a;
+  --color-surface-glass: rgb(19 19 32 / 0.72);
+
+  --color-foreground: #ededf5;
+  --color-foreground-secondary: #c3c3d1;
+  --color-muted: #1b1b29;
+  --color-muted-foreground: #8b8b9e;
+
+  --color-border: #262637;
+  --color-border-hover: #323247;
+  --color-input: #262637;
+
+  --color-primary: #8b5cf6;
+  --color-primary-hover: #7c3aed;
+  --color-primary-dark: #6d28d9;
+  --color-primary-light: #a78bfa;
+  --color-primary-foreground: #ffffff;
+  --color-primary-soft: rgb(139 92 246 / 0.16);
+
+  --color-secondary: #1d1d2d;
+  --color-secondary-foreground: #ededf5;
+
+  --color-accent: #a855f7;
+  --color-accent-soft: rgb(168 85 247 / 0.16);
+
+  --color-success: #4ade80;
+  --color-warning: #fbbf24;
+  --color-danger: #f87171;
+
+  --color-ring: #8b5cf6;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.4),
+    0 1px 2px -1px rgb(0 0 0 / 0.4);
+  --shadow-card-hover: 0 4px 12px -2px rgb(0 0 0 / 0.45),
+    0 2px 4px -2px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 16px 40px -12px rgb(0 0 0 / 0.55);
+  --shadow-glow-primary: 0 0 28px -6px rgb(139 92 246 / 0.45);
+  --shadow-glow-accent: 0 0 28px -6px rgb(168 85 247 / 0.4);
 }
 
-body {
-  background: var(--color-background);
-  color: var(--color-foreground);
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui,
+      -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Focus rings should "cut out" the page color, not hard-coded white. */
+  * {
+    --tw-ring-offset-color: var(--color-background);
+  }
+
+  ::selection {
+    background: var(--color-primary-soft);
+    color: var(--color-foreground);
+  }
 }

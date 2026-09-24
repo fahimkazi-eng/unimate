@@ -157,6 +157,24 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 2 — applied (design system)
+
+- **Fonts:** Plus Jakarta Sans (via `next/font/google`, `--font-plus-jakarta-sans`)
+  as the UI font; Geist Mono retained for code. Constants live in `layout.tsx`.
+- **Tokens:** `src/app/globals.css` now carries the full semantic set —
+  `background-secondary`, `surface-elevated`, `surface-glass`,
+  `foreground-secondary`, `border-hover`, `primary-light/dark`, `accent-soft`,
+  `shadow-lg`, `shadow-glow-primary/accent`, `ease-out-quart/expo`.
+- **Themes:** light (default) + dark via `<html data-theme="dark">`. Dark
+  values re-declare the same CSS vars (higher specificity than `:root`), so
+  every token-using component swaps automatically. `color-scheme` follows the
+  theme. Default is **dark**; the appearance setting (Dark/Light/System) will
+  land with the Settings page (C9/C11) and should just toggle this attribute.
+- **Base polish:** focus-ring offset now uses `--color-background` (no more
+  white gap on dark), themed `::selection`.
+- Verified compiled: `#0a0a12` bg, glow shadows, Plus Jakarta all present in
+  the built CSS chunk.
+
 ## Watch-outs
 
 - **Next.js 16.** Do not create `middleware.ts` (it is `proxy.ts` here) and
