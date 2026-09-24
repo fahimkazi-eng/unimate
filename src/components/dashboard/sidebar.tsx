@@ -48,6 +48,7 @@ const mainItems: SidebarItem[] = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/dashboard/tasks", label: "Tasks", icon: ListChecks },
   { href: "/dashboard/courses", label: "Courses", icon: BookOpen },
+  { href: "/dashboard/academics", label: "Academics", icon: GraduationCap },
   { href: "/dashboard/calendar", label: "Calendar", icon: CalendarDays },
   { href: "/dashboard/planner", label: "Planner", icon: CalendarClock },
   { href: "/dashboard/focus", label: "Focus", icon: Timer },

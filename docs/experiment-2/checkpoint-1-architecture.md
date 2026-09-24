@@ -157,6 +157,40 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 21 — V2 Phase 7 applied (academics)
+
+Academic center at `/dashboard/academics` — real where the schema supports it,
+honest where it doesn't (no fabricated grades, attendance or exam data):
+
+- **Gradebook & GPA** — the only part needing a new table. `supabase/v5_gradebook.sql`
+  creates `public.grades` (user_id, course_id FK cascade, letter, credits, RLS —
+  same idempotent pattern as v3 goals). What the user enters is *their* data;
+  the GPA is pure math over it. `src/lib/grades.ts` (pure, server-safe): 4.0
+  letter scale, credit-weighted `computeGpa` (Σ points×credits / Σ credits,
+  `gpa: null` when empty — honest "no grades yet", never a fake 0.0),
+  `perCourseGpa`, `formatGpa`. 21-assertion probe green (scale, weighting,
+  missing/zero credits default 3, unknown-letter skip, F counted, per-course map).
+- **Two server actions** (`src/app/actions/grades.ts`): `addGrade` uses
+  `upsert` on `(user_id, course_id)` so re-saving a course updates instead of
+  duplicating; `deleteGrade` is user-scoped. Both zod-validated; `PGRST204`
+  (table missing pre-migration) returns a clear "run v5" message instead of a
+  crash — same tolerant pattern as goals (C11).
+- **`src/lib/gradebook.ts`** (server-only): `getGradebook` joins grades to
+  courses, returns `{ grades, error }` so the page shows an honest migration
+  banner when the table doesn't exist yet.
+- **Page** (server, force-dynamic): cumulative GPA card + add-grade form
+  (`src/components/academics/grade-form.tsx`, course/letter/credits selects,
+  disabled honestly when the user has no courses) + deletable grade list with
+  course color bars; a **course snapshot** section derived from real tasks
+  (per-course done/open counts, completion bar, next due via `formatDueLabel`,
+  per-course GPA badge); and honest **coming-soon** cards for Attendance and
+  Exams explaining *why* (no institutional data source exists — never invented
+  percentages or results) with a pointer to using tasks for exam dates.
+- **Nav:** Academics (GraduationCap) added to the sidebar after Courses, the
+  Cmd+K palette (keywords: gpa grades gradebook attendance exams semester), and
+  the mobile More sheet (after Courses).
+- Query path verified: unauth GET redirects 307 → `/login?next=%2Fdashboard%2Facademics` (same guard as every dashboard page).
+
 ## Checkpoint 20 — V2 Phase 6 applied (smart planner)
 
 Smart Planner — a deterministic week-plan engine over real open tasks,
@@ -330,8 +364,8 @@ stays canonical). Phase 1 = feel, not features:
 - **Verified dark**: pixel-sampled the new PNGs (avg luminance 14–27 vs
   248–251 for the old light set).
 - **Status**: project redeploys on `main` push (Vercel). Pending user-owned
-  steps: Supabase v2/v3 migrations + Google provider config (C9/C11), and
-  optionally re-shooting dashboard shots with real data.
+  steps: Supabase v2/v3/v4/v5 migrations + Google provider config (C9/C11/P7),
+  and optionally re-shooting dashboard shots with real data.
 - Probe note: two unconfirmed throwaway auth users were created during C14
   (`unimate.shot+…`, `rawprobe+…` @gmail) — safe to purge in Supabase →
   Auth → Users.

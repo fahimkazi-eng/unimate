@@ -39,6 +39,7 @@ const PRIMARY = [
 
 const MORE = [
   { href: "/dashboard/courses", label: "Courses", icon: BookOpen },
+  { href: "/dashboard/academics", label: "Academics", icon: GraduationCap },
   { href: "/dashboard/planner", label: "Planner", icon: CalendarClock },
   { href: "/dashboard/goals", label: "Goals", icon: Target },
   { href: "/dashboard/achievements", label: "Achievements", icon: Trophy },

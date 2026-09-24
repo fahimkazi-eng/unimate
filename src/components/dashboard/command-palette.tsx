@@ -41,6 +41,7 @@ const NAV_ITEMS: {
   { href: "/dashboard", label: "Overview", icon: GraduationCap, keywords: "home dashboard start" },
   { href: "/dashboard/tasks", label: "Tasks", icon: ListChecks, keywords: "todo todo list deadlines work" },
   { href: "/dashboard/courses", label: "Courses", icon: BookOpen, keywords: "classes subjects modules" },
+  { href: "/dashboard/academics", label: "Academics", icon: GraduationCap, keywords: "gpa grades gradebook attendance exams semester" },
   { href: "/dashboard/calendar", label: "Calendar", icon: CalendarDays, keywords: "schedule month due dates plan" },
   { href: "/dashboard/planner", label: "Planner", icon: CalendarClock, keywords: "week plan schedule budget spread" },
   { href: "/dashboard/focus", label: "Focus", icon: Timer, keywords: "timer pomodoro study session" },
