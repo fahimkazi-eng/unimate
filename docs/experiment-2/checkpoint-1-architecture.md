@@ -157,6 +157,23 @@ shell (Checkpoint 12).
 - Honest "Coming soon" roadmap copy. ✅
 - Meaningful commits, typed + componentized code, env via `.env`. ✅
 
+## Checkpoint 16 — V2 Phase 2 staged (brand, awaiting logo asset)
+
+- **`src/components/brand/brand-mark.tsx`** — single source of truth for the
+  UniMate mark everywhere (navbar, footer, /login, /signup, sidebar, mobile
+  header). Renders `public/logo.svg` the instant the asset exists (hidden
+  while loading — never a broken-image flash); falls back to the current
+  indigo graduation-cap placeholder until then. Drop the file at
+  `public/logo.svg` and the entire brand upgrades with zero component edits.
+- **Interim favicon** — `src/app/icon.tsx` (`next/og` ImageResponse, 64px
+  PNG): indigo rounded mark + white cap glyph. Swap the glyph for the real
+  logo's simplified mark when the asset lands.
+- **Subtle entrance** — the landing navbar + auth-page brand marks get the
+  existing `animate-scale-in` (spec 5: calm, not bouncy).
+- **Still queued once the asset lands**: final favicon/app-icon derived from
+  the real logo, logo entrance glow choreography if the mark benefits from
+  it, and a screenshot check that branding is consistent in both themes.
+
 ## Checkpoint 15 — V2 Phase 1 applied (performance foundation)
 
 V2 master spec phases land on top of Experiment #2 as checkpoints (this doc

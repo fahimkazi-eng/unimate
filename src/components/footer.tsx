@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GraduationCap } from "lucide-react";
+import { BrandMark } from "@/components/brand/brand-mark";
 
 export function Footer() {
   return (
@@ -11,9 +11,7 @@ export function Footer() {
               href="/"
               className="flex items-center gap-2 font-semibold text-foreground"
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                <GraduationCap className="h-5 w-5" />
-              </span>
+              <BrandMark />
               <span>UniMate</span>
             </Link>
             <p className="mt-4 max-w-sm text-sm leading-6 text-muted-foreground">

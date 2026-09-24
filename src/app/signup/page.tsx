@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { GraduationCap } from "lucide-react";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
 } from "@/components/ui/card";
+import { BrandMark } from "@/components/brand/brand-mark";
 import { SignupForm } from "@/components/auth/signup-form";
 
 export const metadata = {
@@ -15,10 +15,8 @@ export const metadata = {
 export default function SignupPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-12">
-      <Link href="/" className="mb-8 flex items-center gap-2 font-semibold text-foreground">
-        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-          <GraduationCap className="h-5 w-5" />
-        </span>
+      <Link href="/" className="mb-8 flex animate-scale-in items-center gap-2 font-semibold text-foreground">
+        <BrandMark />
         UniMate
       </Link>
 

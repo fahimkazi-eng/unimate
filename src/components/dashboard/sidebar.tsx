@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AccountMenu } from "@/components/dashboard/account-menu";
+import { BrandMark } from "@/components/brand/brand-mark";
 import { openCommandPalette } from "@/components/dashboard/command-palette";
 
 /**
@@ -129,9 +130,7 @@ export function Sidebar({ name, level, xp, photoUrl }: SidebarProps) {
           aria-label="UniMate — overview"
           className="flex items-center gap-2 font-semibold text-foreground"
         >
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-glow-primary">
-            <GraduationCap className="h-5 w-5" />
-          </span>
+          <BrandMark className="shadow-glow-primary" />
           {!collapsed && <span className="text-sm">UniMate</span>}
         </Link>
       </div>
