@@ -3,10 +3,10 @@
 > Your student operating system — plan your semester, manage deadlines, study
 > smarter, all in one place.
 
-UniMate is a student productivity app in active development (V2). Tasks,
+UniMate is a student productivity app in active development (V3). Tasks,
 deadlines, courses, a pomodoro focus timer, quiet gamification (XP, levels,
-streaks) — plus an AI Study Coach, smart planner, gradebook, and calendar —
-built to be fast, calm, and useful on day one.
+streaks) — plus an AI Study Coach, smart planner, gradebook, calendar, and a
+command-center Overview — built to be fast, calm, and useful on day one.
 
 ## ✨ Features (V1)
 
@@ -33,6 +33,17 @@ built to be fast, calm, and useful on day one.
 | **Emergency mode** | One calm screen for crunch time — real crisis, honest load math, advisory "what can wait" |
 | **Calendar 2.0** | Month / week / agenda views, server-driven links, add-on-day |
 | **Auth UX** | Password strength, forgot/reset flow, Google sign-in, richer profile |
+
+### ✨ Features (V3 — command-center build)
+
+| Area | What you get |
+| --- | --- |
+| **Overview 3.0** | Bento command center: adaptive hero, Next Move (your single best action), quick-action bar, Today timeline, urgency-ranked deadlines, live course progress, real GPA pulse, calendar + planner previews, weekly progress, goals, achievements, and honest emergency mode |
+| **Mobile order** | Overview re-stacks in a spec reading order on phones (greeting → next move → quick actions → …) while the desktop keeps the bento grid |
+| **Honest intelligence** | No fake data: attendance/exams show "not tracked yet" until wired, GPA is computed from your gradebook, the AI coach says plainly when it's offline |
+| **Homepage AI demo** | A scripted, interactive Study Coach sample (mock persona, pre-login) so visitors feel the product before signing up |
+| **Sign-out safety** | Logout moved off the Overview into Profile behind a confirmation dialog — no accidental sign-outs |
+| **Motion & theme** | Dark theme default, transform/opacity-only animation, `prefers-reduced-motion` honored site-wide |
 
 ## 🧰 Tech stack
 
@@ -90,25 +101,32 @@ Open http://localhost:3000, sign up, and you're in.
 ```
 src/
 ├── app/
-│   ├── actions/          # Server actions (auth, tasks, courses, sessions)
+│   ├── actions/          # Server actions (auth, tasks, courses, sessions, assistant)
 │   ├── auth/callback/    # OAuth-ish email confirmation callback
-│   ├── dashboard/        # Overview, tasks, courses, focus, progress
+│   ├── dashboard/        # Overview 3.0 + 13 feature pages
 │   ├── login/ signup/    # Auth pages
 │   └── page.tsx          # Landing page
 ├── components/
 │   ├── ui/               # Button, Card, Input, Select, Badge, Textarea
-│   ├── dashboard/        # AppNav, StatCard, DeadlineList
+│   ├── dashboard/        # Hero, Next Move, Today, Deadlines, Academic Pulse,
+│   │                     #   AI panel, Progress, Goals, Achievements, Emergency…
+│   ├── demos/            # Landing "live demo" panels (one per feature)
 │   ├── tasks/ courses/ focus/ progress/   # Feature components
-│   └── landing/          # Hero, Features, Roadmap, FAQ, CTA…
+│   └── landing/          # Hero, How It Works, AI Demo, Features, Roadmap, FAQ…
 ├── lib/
-│   ├── queries.ts        # Typed data access (all queries here)
+│   ├── queries.ts        # Typed data access (all queries here, profile cached)
 │   ├── gamification.ts   # XP / level / streak math + writes
+│   ├── goals.ts          # Goal progress + live state
+│   ├── achievements.ts   # Achievement unlock state
+│   ├── emergency.ts      # detectCrisis + honest load math
+│   ├── gradebook.ts / grades.ts   # GPA computation
+│   ├── planner.ts        # planWeek preview (advisory)
 │   ├── auth.ts           # requireUser, getUser (cached)
 │   ├── dates.ts          # Date helpers
 │   ├── database.types.ts # Row types + join shapes
 │   └── supabase/         # Server, client, middleware clients
 ├── proxy.ts              # Session refresh + route protection
-└── app/globals.css       # Design tokens (@theme)
+└── app/globals.css       # Design tokens (@theme) + reduced-motion guard
 ```
 
 ## 🗄️ Data model
@@ -150,17 +168,38 @@ npm run lint     # ESLint
 
 ## 🖼️ Screenshots
 
-| Homepage hero |
-| --- |
-| ![Homepage hero](public/screenshots/home-hero.png) |
+| Homepage hero | Study Coach demo |
+| --- | --- |
+| ![Homepage hero](public/screenshots/home-hero.png) | ![Study Coach demo](public/screenshots/coach-demo.png) |
 
 | Log in | Create account | After signup |
 | --- | --- | --- |
 | ![Log in](public/screenshots/login.png) | ![Create account](public/screenshots/signup.png) | ![Check your email](public/screenshots/check-email.png) |
 
-> Dashboard screenshots are being refreshed to the new dark theme —
-> they need a logged-in session. Run `npm run screenshots -- --dashboard`
-> with `UNIMATE_SESSION` set (see `scripts/shoot-screenshots.cjs`).
+The dashboard shots need a logged-in session. Run:
+
+```bash
+npm run screenshots -- --dashboard
+```
+
+with `UNIMATE_SESSION` set (see `scripts/shoot-screenshots.cjs` for how to
+copy the cookie from DevTools). It captures every live route:
+
+| Overview | Tasks | Courses | Calendar |
+| --- | --- | --- | --- |
+| ![Overview](public/screenshots/dashboard.png) | ![Tasks](public/screenshots/tasks.png) | ![Courses](public/screenshots/courses.png) | ![Calendar](public/screenshots/calendar.png) |
+
+| Academics | Planner | Focus | Progress |
+| --- | --- | --- | --- |
+| ![Academics](public/screenshots/academics.png) | ![Planner](public/screenshots/planner.png) | ![Focus](public/screenshots/focus.png) | ![Progress](public/screenshots/progress.png) |
+
+| Goals | Achievements | Emergency | Assistant |
+| --- | --- | --- | --- |
+| ![Goals](public/screenshots/goals.png) | ![Achievements](public/screenshots/achievements.png) | ![Emergency](public/screenshots/emergency.png) | ![Assistant](public/screenshots/assistant.png) |
+
+| Profile |
+| --- |
+| ![Profile](public/screenshots/profile.png) |
 
 ## 📄 License
 

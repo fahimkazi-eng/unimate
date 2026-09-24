@@ -27,6 +27,7 @@ const KS = { waitUntil: "networkidle", timeout: 60_000 };
 
 const PUBLIC = [
   { name: "home-hero.png", url: `${BASE}/`, full: false },
+  { name: "coach-demo.png", url: `${BASE}/`, selector: "#coach-demo" },
   { name: "login.png", url: `${BASE}/login`, full: false },
   { name: "signup.png", url: `${BASE}/signup`, full: false },
   { name: "check-email.png", url: `${BASE}/check-email`, full: false },
@@ -36,8 +37,16 @@ const DASH = [
   { name: "dashboard.png", url: `${BASE}/dashboard`, full: false },
   { name: "tasks.png", url: `${BASE}/dashboard/tasks`, full: false },
   { name: "courses.png", url: `${BASE}/dashboard/courses`, full: false },
+  { name: "calendar.png", url: `${BASE}/dashboard/calendar`, full: false },
+  { name: "academics.png", url: `${BASE}/dashboard/academics`, full: false },
+  { name: "planner.png", url: `${BASE}/dashboard/planner`, full: false },
   { name: "focus.png", url: `${BASE}/dashboard/focus`, full: false },
   { name: "progress.png", url: `${BASE}/dashboard/progress`, full: false },
+  { name: "goals.png", url: `${BASE}/dashboard/goals`, full: false },
+  { name: "achievements.png", url: `${BASE}/dashboard/achievements`, full: false },
+  { name: "emergency.png", url: `${BASE}/dashboard/emergency`, full: false },
+  { name: "assistant.png", url: `${BASE}/dashboard/assistant`, full: false },
+  { name: "profile.png", url: `${BASE}/dashboard/profile`, full: false },
 ];
 
 async function main() {
@@ -69,7 +78,14 @@ async function main() {
     await page.goto(s.url, KS);
     // Let the reveal-on-intersect observer settle.
     await page.waitForTimeout(1500);
-    await page.screenshot({ path: path.join(OUT, s.name), fullPage: s.full });
+    if (s.selector) {
+      const el = page.locator(s.selector);
+      await el.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(500);
+      await el.screenshot({ path: path.join(OUT, s.name) });
+    } else {
+      await page.screenshot({ path: path.join(OUT, s.name), fullPage: s.full });
+    }
     console.log(`shot ${s.name}`);
   }
 
