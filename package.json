@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "screenshots": "node scripts/shoot-screenshots.cjs",
-    "responsive:check": "node scripts/check-responsive.cjs"
+    "responsive:check": "node scripts/check-responsive.cjs",
+    "perf:audit": "node scripts/audit-perf.cjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
