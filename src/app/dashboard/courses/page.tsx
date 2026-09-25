@@ -64,7 +64,7 @@ export default async function CoursesPage() {
           No courses yet — add your first one above, then link tasks to it. 👆
         </div>
       ) : (
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        <div className="mt-6 grid [&>*]:min-w-0 gap-4 sm:grid-cols-2">
           {courses.map((course) => (
             <Card key={course.id} className="flex items-center gap-4 p-5">
               <span

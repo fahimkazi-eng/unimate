@@ -61,11 +61,19 @@ async function auditPage(page, url, width) {
     for (const el of document.querySelectorAll("body *")) {
       const r = el.getBoundingClientRect();
       if (r.width > 0 && (r.right > w + 1 || r.left < -1)) {
-        // Legitimate: anything inside a horizontal scroll container.
         let parent = el.parentElement;
         let insideRail = false;
+        let clipped = false;
         while (parent) {
           const cs = getComputedStyle(parent);
+          // Clipped by an overflow:hidden/clip ancestor — contributes nothing
+          // to the document width (decorative glows, rounded-corner bleed).
+          if (cs.overflowX === "hidden" || cs.overflowX === "clip" ||
+              cs.overflowY === "hidden" || cs.overflowY === "clip") {
+            clipped = true;
+            break;
+          }
+          // Legitimate: anything inside a horizontal scroll container.
           if (
             (cs.overflowX === "auto" || cs.overflowX === "scroll") &&
             parent.getBoundingClientRect().width <= w
@@ -75,7 +83,7 @@ async function auditPage(page, url, width) {
           }
           parent = parent.parentElement;
         }
-        if (!insideRail) {
+        if (!insideRail && !clipped) {
           offenders.push({
             tag: el.tagName,
             cls: String(el.className || "").slice(0, 80),
@@ -99,7 +107,7 @@ async function main() {
       process.exit(1);
     }
     const [name, value] = SESSION_COOKIE.split("=");
-    await ctx.addCookies([{ name, value, url: BASE, path: "/", sameSite: "Lax" }]);
+    await ctx.addCookies([{ name, value, url: BASE, sameSite: "Lax" }]);
   }
 
   const page = await ctx.newPage();

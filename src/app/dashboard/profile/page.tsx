@@ -118,7 +118,7 @@ export default async function ProfilePage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <dl className="grid [&>*]:min-w-0 grid-cols-2 gap-4 sm:grid-cols-4">
             <Stat icon={Trophy} label="Level" value={String(profile?.level ?? 1)} />
             <Stat icon={TrendingUp} label="XP" value={String(profile?.xp ?? 0)} />
             <Stat icon={Flame} label="Streak" value={`${profile?.streak ?? 0}d`} />

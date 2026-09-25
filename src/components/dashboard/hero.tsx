@@ -99,7 +99,7 @@ export function Hero({
       />
 
       <div className="relative p-6 sm:p-8">
-        <p className="truncate text-sm font-semibold uppercase tracking-[0.14em] text-primary">
+        <p className="break-words text-sm font-semibold uppercase tracking-[0.14em] text-primary">
           {greeting}, {name}
         </p>
         <h1 className="mt-3 max-w-2xl break-words text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl">

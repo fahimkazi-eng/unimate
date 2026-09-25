@@ -200,7 +200,7 @@ export default async function EmergencyPage() {
         )}
 
         {/* -------- Load strip (real numbers) -------- */}
-        <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="mt-4 grid [&>*]:min-w-0 grid-cols-2 gap-4 sm:grid-cols-4">
           {strip.map((s) => (
             <Card key={s.label} className="border-border/60">
               <CardContent className="pt-6">
@@ -232,7 +232,7 @@ export default async function EmergencyPage() {
             Real tasks vs. your real focus pace — no schedule assumptions.
           </CardDescription>
         </CardHeader>
-        <CardContent className="grid gap-4 sm:grid-cols-2">
+        <CardContent className="grid [&>*]:min-w-0 gap-4 sm:grid-cols-2">
           <div className="rounded-xl border border-border bg-surface px-4 py-3">
             <p className="text-sm text-muted-foreground">Load ahead</p>
             <p className="mt-1 text-xl font-bold text-foreground">

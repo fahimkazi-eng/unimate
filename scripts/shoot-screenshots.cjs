@@ -64,7 +64,7 @@ async function main() {
     }
     const [name, value] = SESSION_COOKIE.split("=");
     await ctx.addCookies([
-      { name, value, url: BASE, path: "/", sameSite: "Lax" },
+      { name, value, url: BASE, sameSite: "Lax" },
     ]);
   }
 

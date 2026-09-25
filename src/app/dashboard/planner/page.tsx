@@ -181,7 +181,7 @@ export default async function PlannerPage({
         </Card>
       ) : (
         <>
-          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          <div className="mt-6 grid [&>*]:min-w-0 gap-3 sm:grid-cols-3">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">

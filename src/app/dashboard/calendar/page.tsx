@@ -269,7 +269,7 @@ export default async function CalendarPage({
 
           <CardContent>
             <div
-              className="grid grid-cols-7 gap-1"
+              className="grid grid-cols-7 gap-1 [&>*]:min-w-0"
               role="grid"
               aria-label={`${MONTHS[month.month]} ${month.year} calendar`}
             >

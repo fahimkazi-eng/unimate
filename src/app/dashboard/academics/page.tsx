@@ -98,7 +98,7 @@ export default async function AcademicsPage() {
           </h2>
         </div>
 
-        <div className="mt-3 grid gap-4 lg:grid-cols-3">
+        <div className="mt-3 grid [&>*]:min-w-0 gap-4 lg:grid-cols-3">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
@@ -232,7 +232,7 @@ export default async function AcademicsPage() {
             to see your snapshot.
           </div>
         ) : (
-          <div className="mt-3 grid gap-4 sm:grid-cols-2">
+          <div className="mt-3 grid [&>*]:min-w-0 gap-4 sm:grid-cols-2">
             {snapshot.map(({ course, openCount, doneCount, nextDue, gpa }) => {
               const total = openCount + doneCount;
               const pct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
@@ -307,7 +307,7 @@ export default async function AcademicsPage() {
           </h2>
         </div>
 
-        <div className="mt-3 grid gap-4 sm:grid-cols-2">
+        <div className="mt-3 grid [&>*]:min-w-0 gap-4 sm:grid-cols-2">
           <Card className="border-dashed">
             <CardHeader>
               <CardTitle className="text-base">Attendance</CardTitle>

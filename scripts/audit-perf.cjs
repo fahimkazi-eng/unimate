@@ -137,7 +137,7 @@ async function main() {
         viewport: { width: vp.width, height: vp.height },
       });
       if (cookie) {
-        await ctx.addCookies([{ name: cookie[0], value: cookie[1], url: BASE, path: "/", sameSite: "Lax" }]);
+        await ctx.addCookies([{ name: cookie[0], value: cookie[1], url: BASE, sameSite: "Lax" }]);
       }
       const page = await ctx.newPage();
       const client = await ctx.newCDPSession(page);

@@ -192,7 +192,7 @@ export default async function DashboardPage() {
       {/* One grid — mobile follows spec §29's reading order; lg: keeps the
           bento from §28; md: (tablet) is an intermediate 2-column cascade.
           Order utilities re-flow the SAME sections. */}
-      <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-4 [&>*]:min-w-0 sm:gap-6 md:grid-cols-2 lg:grid-cols-5">
         {/* 1 · Greeting */}
         <div className="order-1 h-full md:col-span-2 lg:order-1 lg:col-span-5">
           <Hero

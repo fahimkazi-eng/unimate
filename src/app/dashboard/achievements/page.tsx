@@ -105,7 +105,7 @@ export default async function AchievementsPage() {
         </p>
       </header>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-3">
+      <div className="mt-8 grid [&>*]:min-w-0 gap-6 lg:grid-cols-3">
         {/* Unlock ring */}
         <Card>
           <CardHeader>
@@ -203,7 +203,7 @@ export default async function AchievementsPage() {
       {/* Badge grid */}
       <div className="mt-10">
         <h2 className="text-lg font-semibold text-foreground">All badges</h2>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="mt-4 grid [&>*]:min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {achievements.map((badge, i) => (
             <Reveal key={badge.id} delay={Math.min(i * 40, 200)}>
               <Card

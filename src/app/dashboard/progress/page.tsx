@@ -59,7 +59,7 @@ export default async function ProgressPage() {
         </p>
       </header>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-3">
+      <div className="mt-8 grid [&>*]:min-w-0 gap-6 lg:grid-cols-3">
         {/* Level card */}
         <Card>
           <CardHeader>
