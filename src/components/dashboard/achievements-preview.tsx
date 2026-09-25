@@ -64,27 +64,29 @@ export function AchievementsPreview({
           </p>
         </div>
       ) : (
-        <div className="mt-3 flex items-center gap-3">
-          {shownUnlocked.map((badge) => (
-            <span
-              key={badge.id}
-              title={badge.title}
-              className={cn(
-                "flex h-11 w-11 items-center justify-center rounded-full text-xl transition-transform duration-200 ease-out-quart",
-                `bg-gradient-to-br ${badge.accent} shadow-glow-primary`
-              )}
-            >
-              <span className="drop-shadow">{badge.emoji}</span>
-            </span>
-          ))}
-          {unlockedCount > shownUnlocked.length ? (
-            <span className="flex h-11 items-center justify-center rounded-full border border-border px-3 text-xs font-medium text-muted-foreground">
-              +{unlockedCount - shownUnlocked.length}
-            </span>
-          ) : null}
-          <span className="ml-auto shrink-0 text-xs tabular-nums text-muted-foreground">
+        <div className="mt-3">
+          <div className="flex items-center gap-3 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {shownUnlocked.map((badge) => (
+              <span
+                key={badge.id}
+                title={badge.title}
+                className={cn(
+                  "flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-xl transition-transform duration-200 ease-out-quart",
+                  `bg-gradient-to-br ${badge.accent} shadow-glow-primary`
+                )}
+              >
+                <span className="drop-shadow">{badge.emoji}</span>
+              </span>
+            ))}
+            {unlockedCount > shownUnlocked.length ? (
+              <span className="flex h-11 shrink-0 items-center justify-center rounded-full border border-border px-3 text-xs font-medium text-muted-foreground">
+                +{unlockedCount - shownUnlocked.length}
+              </span>
+            ) : null}
+          </div>
+          <p className="mt-2 text-xs tabular-nums text-muted-foreground">
             {unlockedCount}/{totalCount} earned
-          </span>
+          </p>
         </div>
       )}
 

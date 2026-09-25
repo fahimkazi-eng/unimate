@@ -178,6 +178,11 @@ export function AiDemo() {
               to step through it. Your coach after sign-in answers from your
               own tasks and courses.
             </p>
+
+            {/* Phones: the conversation ends with one clear next step. */}
+            <Button href="/signup" className="mt-4 w-full sm:hidden">
+              Start your plan
+            </Button>
           </div>
         </div>
       </div>

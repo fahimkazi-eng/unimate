@@ -130,7 +130,7 @@ export function StudyAssistant({ aiConfigured }: StudyAssistantProps) {
                   type="button"
                   onClick={() => send(s)}
                   disabled={pending}
-                  className="rounded-full border border-border bg-secondary px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-muted disabled:opacity-50"
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-border bg-secondary px-4 py-2 text-center text-sm text-foreground transition-colors hover:bg-muted disabled:opacity-50"
                 >
                   {s}
                 </button>
@@ -191,7 +191,7 @@ export function StudyAssistant({ aiConfigured }: StudyAssistantProps) {
             started ? "Follow up…" : "Ask about your study plan…"
           }
           aria-label="Message the Study Coach"
-          className="h-10 flex-1"
+          className="h-11 flex-1"
           disabled={pending}
         />
         <Button

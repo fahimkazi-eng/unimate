@@ -83,7 +83,7 @@ export function TodayTimeline({ tasks }: TodayTimelineProps) {
       <li className="pt-2">
         <Link
           href="/dashboard/tasks"
-          className="text-xs font-medium text-primary hover:underline"
+          className="inline-block py-1.5 text-xs font-medium text-primary hover:underline"
         >
           Open all tasks →
         </Link>

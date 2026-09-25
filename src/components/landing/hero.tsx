@@ -71,7 +71,7 @@ export function Hero() {
           style={{ animationDelay: staggerDelay(5) }}
         >
           <div className="rounded-2xl border border-border bg-surface p-6 shadow-lg shadow-glow-accent">
-            <div className="flex items-start justify-between gap-3">
+            <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <p className="text-base font-semibold text-foreground">
                   Good evening, Fahim 👋

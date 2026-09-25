@@ -83,7 +83,7 @@ export function EmergencyPreview({ crisis, openDatedTasks }: EmergencyPreviewPro
       <Link
         href="/dashboard/emergency"
         className={cn(
-          "mt-4 inline-flex h-10 items-center justify-center gap-1.5 rounded-lg px-4 text-sm font-semibold transition-colors",
+          "mt-4 inline-flex h-11 items-center justify-center gap-1.5 rounded-lg px-4 text-sm font-semibold transition-colors",
           crisis
             ? "bg-danger text-white hover:bg-danger/90"
             : "border border-border bg-secondary text-foreground hover:bg-muted"

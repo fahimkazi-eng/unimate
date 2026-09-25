@@ -158,6 +158,24 @@ export default async function DashboardPage() {
 
   // Calendar preview + planner.
   const calendarWeek = deadlines.filter((t) => new Date(t.due_date ?? 0) < weekEnd);
+
+  // "This week" strip for the mobile calendar preview — real per-day counts
+  // from the tasks we already fetched (no invented events).
+  const dayCounts = new Map<string, number>();
+  for (const t of calendarWeek) {
+    const key = dayKey(new Date(t.due_date as string));
+    dayCounts.set(key, (dayCounts.get(key) ?? 0) + 1);
+  }
+  const weekStrip = Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(todayStart.getTime() + i * 86_400_000);
+    return {
+      key: dayKey(date),
+      label: new Intl.DateTimeFormat("en", { weekday: "short" }).format(date),
+      date: date.getDate(),
+      count: dayCounts.get(dayKey(date)) ?? 0,
+    };
+  });
+
   const plan = planWeek(allTasks, dayKey(now));
 
   // Emergency card — controlled: only urgent when a real crisis exists.
@@ -172,10 +190,11 @@ export default async function DashboardPage() {
   return (
     <div className="mx-auto max-w-6xl">
       {/* One grid — mobile follows spec §29's reading order; lg: keeps the
-          bento from §28. Order utilities re-flow the SAME sections. */}
-      <div className="grid gap-6 lg:grid-cols-5">
+          bento from §28; md: (tablet) is an intermediate 2-column cascade.
+          Order utilities re-flow the SAME sections. */}
+      <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-5">
         {/* 1 · Greeting */}
-        <div className="order-1 h-full lg:order-1 lg:col-span-5">
+        <div className="order-1 h-full md:col-span-2 lg:order-1 lg:col-span-5">
           <Hero
             greeting={greetingForHour(now.getHours())}
             name={name}
@@ -196,7 +215,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* 3 mobile · 2 desktop — quick actions */}
-        <div className="order-3 h-full lg:order-2 lg:col-span-5">
+        <div className="order-3 h-full md:col-span-2 lg:order-2 lg:col-span-5">
           <QuickActions />
         </div>
 
@@ -228,7 +247,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* 6 mobile · 12 desktop — AI study assistant */}
-        <div className="order-6 h-full lg:order-12 lg:col-span-5">
+        <div className="order-6 h-full md:col-span-2 lg:order-12 lg:col-span-5">
           <AiAssistantPanel aiConfigured={aiConfigured} />
         </div>
 
@@ -274,13 +293,14 @@ export default async function DashboardPage() {
                 today={dueToday}
                 tomorrow={dueTomorrow}
                 weekCount={calendarWeek.length}
+                week={weekStrip}
               />
             </CardContent>
           </Card>
         </div>
 
         {/* 10 mobile · 9 desktop — smart planner */}
-        <div className="order-10 h-full lg:order-9 lg:col-span-5">
+        <div className="order-10 h-full md:col-span-2 lg:order-9 lg:col-span-5">
           <Card className="h-full">
             <CardContent className="py-5">
               <PlannerPreview

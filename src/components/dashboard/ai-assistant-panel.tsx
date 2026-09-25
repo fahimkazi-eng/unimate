@@ -20,10 +20,10 @@ export function AiAssistantPanel({ aiConfigured }: AiAssistantPanelProps) {
       aria-labelledby="ai-panel-heading"
       className="relative overflow-hidden rounded-2xl border border-accent/30 bg-surface shadow-glow-accent"
     >
-      {/* Static AI glow — transform-free, one paint. */}
+      {/* Static AI glow — desktop only; phones skip the large blur surface. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-28 right-0 h-72 w-72 rounded-full bg-accent/10 blur-3xl"
+        className="pointer-events-none absolute -top-28 right-0 hidden h-72 w-72 rounded-full bg-accent/10 blur-3xl sm:block"
       />
 
       <div className="relative p-4 sm:p-6">

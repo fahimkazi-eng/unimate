@@ -87,16 +87,16 @@ export function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+                className="flex min-h-[44px] items-center rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
               >
                 {link.label}
               </Link>
             ))}
             <div className="mt-2 flex gap-2">
-              <Button variant="outline" size="sm" href="/login" className="flex-1">
+              <Button variant="outline" size="sm" href="/login" className="h-11 flex-1">
                 Log in
               </Button>
-              <Button size="sm" href="/signup" className="flex-1">
+              <Button size="sm" href="/signup" className="h-11 flex-1">
                 Get Started
               </Button>
             </div>

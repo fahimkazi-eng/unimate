@@ -86,7 +86,7 @@ export function MobileBottomNav() {
           className="fixed inset-0 z-40 lg:hidden"
           onClick={() => setMoreOpen(false)}
         >
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-fade-in" aria-hidden />
+          <div className="absolute inset-0 bg-black/60 animate-fade-in" aria-hidden />
           <div
             className="absolute inset-x-3 bottom-24 max-h-[70vh] overflow-y-auto rounded-2xl border border-border bg-surface p-2 shadow-2xl animate-scale-in"
             onClick={(event) => event.stopPropagation()}
@@ -138,10 +138,11 @@ export function MobileBottomNav() {
         </div>
       ) : null}
 
-      {/* Bottom bar */}
+      {/* Bottom bar — solid surface (no full-width backdrop blur on phone
+          GPUs). Subtle active-icon scale is transform-only. */}
       <nav
         aria-label="Mobile navigation"
-        className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-surface pb-[env(safe-area-inset-bottom)] lg:hidden"
       >
         <div className="flex items-stretch">
           {PRIMARY.map((item) => {
@@ -162,7 +163,12 @@ export function MobileBottomNav() {
                     aria-hidden
                   />
                 ) : null}
-                <item.icon className="h-5 w-5" />
+                <item.icon
+                  className={cn(
+                    "h-5 w-5 transition-transform duration-200 ease-out-quart",
+                    active && "scale-110"
+                  )}
+                />
                 {item.label}
               </Link>
             );
@@ -185,7 +191,12 @@ export function MobileBottomNav() {
                 aria-hidden
               />
             ) : null}
-            <MoreHorizontal className="h-5 w-5" />
+            <MoreHorizontal
+              className={cn(
+                "h-5 w-5 transition-transform duration-200 ease-out-quart",
+                moreActive && "scale-110"
+              )}
+            />
             More
           </button>
         </div>

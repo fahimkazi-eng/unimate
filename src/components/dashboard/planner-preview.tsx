@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight, CalendarRange } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import type { PlannedDay } from "@/lib/planner";
 
 /**
@@ -92,6 +93,15 @@ export function PlannerPreview({
               );
             })}
           </div>
+
+          {/* Phones: one clear tap to the full planner. Desktop keeps the
+              quiet header link. */}
+          <Button
+            href="/dashboard/planner"
+            className="mt-4 w-full sm:hidden"
+          >
+            Build my study plan
+          </Button>
         </>
       )}
     </div>

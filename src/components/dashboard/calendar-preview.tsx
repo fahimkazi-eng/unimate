@@ -1,12 +1,22 @@
 import Link from "next/link";
 import { ArrowUpRight, CalendarDays } from "lucide-react";
+import { cn } from "@/lib/utils";
 import type { TaskWithCourse } from "@/lib/database.types";
 
 /**
  * V3 Phase B §11 — Calendar preview (NOT the full calendar).
  * Shows what the next few days actually hold from the user's dated tasks,
- * then hands off to the full Calendar page.
+ * then hands off to the full Calendar page. Phones get a compact
+ * "This week" day strip (real per-day counts, scrollable); sm+ keeps the
+ * today/tomorrow rows.
  */
+
+interface CalendarDay {
+  key: string;
+  label: string;
+  date: number;
+  count: number;
+}
 
 interface CalendarPreviewProps {
   /** Tasks due today, most urgent first. */
@@ -15,9 +25,16 @@ interface CalendarPreviewProps {
   tomorrow: TaskWithCourse[];
   /** Total dated tasks across the next 7 days (incl. today/tomorrow). */
   weekCount: number;
+  /** Next 7 days, one cell each — real counts, never invented events. */
+  week: CalendarDay[];
 }
 
-export function CalendarPreview({ today, tomorrow, weekCount }: CalendarPreviewProps) {
+export function CalendarPreview({
+  today,
+  tomorrow,
+  weekCount,
+  week,
+}: CalendarPreviewProps) {
   const rows = [
     { label: "Today", tasks: today },
     { label: "Tomorrow", tasks: tomorrow },
@@ -36,7 +53,41 @@ export function CalendarPreview({ today, tomorrow, weekCount }: CalendarPreviewP
         </Link>
       </div>
 
-      <div className="mt-3 flex flex-1 flex-col gap-3">
+      {/* This week — compact day strip on phones (preview only; the full
+          calendar lives on its own page). */}
+      <div
+        aria-label="This week"
+        className="mt-3 flex snap-x gap-1.5 overflow-x-auto pb-1 sm:hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {week.map((day) => (
+          <div
+            key={day.key}
+            className={cn(
+              "flex min-w-[58px] snap-start flex-col items-center rounded-xl border px-2 py-2",
+              day.count > 0
+                ? "border-primary/40 bg-primary-soft"
+                : "border-border bg-surface"
+            )}
+          >
+            <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+              {day.label}
+            </span>
+            <span className="mt-0.5 text-base font-bold tabular-nums text-foreground">
+              {day.date}
+            </span>
+            <span
+              className={cn(
+                "mt-1 min-h-4 whitespace-nowrap text-[10px] font-semibold",
+                day.count > 0 ? "text-primary" : "text-muted-foreground/60"
+              )}
+            >
+              {day.count > 0 ? `${day.count} task${day.count === 1 ? "" : "s"}` : "—"}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-3 hidden flex-1 flex-col gap-3 sm:flex">
         {rows.map((row) => (
           <div key={row.label}>
             <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
@@ -72,17 +123,17 @@ export function CalendarPreview({ today, tomorrow, weekCount }: CalendarPreviewP
             )}
           </div>
         ))}
-
-        <Link
-          href="/dashboard/calendar"
-          className="mt-auto inline-flex items-center gap-2 rounded-lg border border-dashed border-border px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
-        >
-          <CalendarDays className="h-4 w-4" />
-          {weekCount > 0
-            ? `${weekCount} deadline${weekCount === 1 ? "" : "s"} across the next 7 days`
-            : "The next 7 days are clear"}
-        </Link>
       </div>
+
+      <Link
+        href="/dashboard/calendar"
+        className="mt-4 inline-flex items-center gap-2 rounded-lg border border-dashed border-border px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground sm:mt-auto"
+      >
+        <CalendarDays className="h-4 w-4" />
+        {weekCount > 0
+          ? `${weekCount} deadline${weekCount === 1 ? "" : "s"} across the next 7 days`
+          : "The next 7 days are clear"}
+      </Link>
     </div>
   );
 }

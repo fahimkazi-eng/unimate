@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { requireUser } from "@/lib/auth";
 import { getOrCreateProfile } from "@/lib/queries";
-import { AppNav } from "@/components/dashboard/app-nav";
+import { MobileHeader } from "@/components/dashboard/mobile-header";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { PageTransition } from "@/components/dashboard/page-transition";
 import { CommandPalette } from "@/components/dashboard/command-palette";
@@ -49,12 +49,10 @@ export default async function DashboardLayout({
       <CommandPalette />
 
       <div className="min-w-0 flex-1">
-        {/* Mobile shell until C12 — desktop uses the sidebar instead */}
-        <div className="lg:hidden">
-          <AppNav />
-        </div>
+        {/* Sticky mobile header — desktop uses the sidebar instead */}
+        <MobileHeader name={name} photoUrl={profile?.photo_url ?? null} />
 
-        <main id="main-content" className="w-full scroll-mt-4 px-4 pb-28 pt-10 sm:px-6 lg:pb-10">
+        <main id="main-content" className="w-full scroll-mt-20 px-4 pb-28 pt-4 sm:px-6 lg:pb-10 lg:pt-8">
           <PageTransition>{children}</PageTransition>
         </main>
       </div>

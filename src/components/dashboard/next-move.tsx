@@ -78,7 +78,7 @@ export function NextMoveWidget({ task }: NextMoveWidgetProps) {
         }
       />
 
-      <div className="flex h-full flex-col gap-5 p-6 sm:p-7">
+      <div className="flex h-full flex-col gap-5 p-5 sm:p-7">
         <div className="flex items-center gap-2">
           <span className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">
             Your next move

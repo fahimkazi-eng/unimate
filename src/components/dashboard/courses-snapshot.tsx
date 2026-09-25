@@ -33,7 +33,7 @@ export function CoursesSnapshot({ courses }: CoursesSnapshotProps) {
         </div>
         <Link
           href="/dashboard/courses"
-          className="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
+          className="inline-flex h-11 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
         >
           <Plus className="h-4 w-4" />
           Add your first course
@@ -43,14 +43,14 @@ export function CoursesSnapshot({ courses }: CoursesSnapshotProps) {
   }
 
   return (
-    <ul className="grid gap-3 sm:grid-cols-2">
+    <ul className="flex snap-x gap-3 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0 [&::-webkit-scrollbar]:hidden">
       {courses.map((course) => {
         const pct =
           course.total > 0
             ? Math.round((course.completed / course.total) * 100)
             : 0;
         return (
-          <li key={course.id}>
+          <li key={course.id} className="min-w-[240px] snap-start sm:min-w-0">
             <Link
               href="/dashboard/courses"
               className="group flex h-full flex-col gap-2 rounded-xl border border-border bg-surface p-4 transition-colors hover:border-primary/40 hover:bg-surface-elevated"

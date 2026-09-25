@@ -44,6 +44,7 @@ command-center Overview — built to be fast, calm, and useful on day one.
 | **Homepage AI demo** | A scripted, interactive Study Coach sample (mock persona, pre-login) so visitors feel the product before signing up |
 | **Sign-out safety** | Logout moved off the Overview into Profile behind a confirmation dialog — no accidental sign-outs |
 | **Motion & theme** | Dark theme default, transform/opacity-only animation, `prefers-reduced-motion` honored site-wide |
+| **Responsive compositions** | One product, two layouts: a compact touch-first phone (sticky header, stat rail, swipe rails, week strip) and the expansive desktop bento — tablet gets an intermediate 2-column cascade. Sticky safe-area nav, 44px+ targets, zero horizontal overflow 320→1440px |
 
 ## 🧰 Tech stack
 
@@ -151,11 +152,15 @@ depth — queries filter by user *and* RLS enforces it).
 ## 📜 Scripts
 
 ```bash
-npm run dev      # Start the dev server (Turbopack)
-npm run build    # Production build
-npm run start    # Serve the production build
-npm run lint     # ESLint
+npm run dev              # Start the dev server (Turbopack)
+npm run build            # Production build
+npm run start            # Serve the production build
+npm run lint             # ESLint
+npm run screenshots      # Capture screenshots (public, or --dashboard w/ session)
+npm run responsive:check # Spec §38 width sweep — fails on any horizontal overflow
 ```
+`responsive:check` audits 320→1440px on every public page; pass
+`UNIMATE_SESSION` + `--dashboard` to include the logged-in routes too.
 
 ## ☁️ Deployment (Vercel)
 
