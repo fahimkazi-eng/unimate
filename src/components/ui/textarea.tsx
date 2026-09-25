@@ -10,7 +10,7 @@ export function Textarea({
   return (
     <textarea
       className={cn(
-        "min-h-24 w-full rounded-lg border border-input bg-surface px-3 py-2 text-sm",
+        "min-h-24 w-full rounded-md border border-input bg-surface px-3 py-2 text-sm",
         "placeholder:text-muted-foreground",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         "disabled:pointer-events-none disabled:opacity-50",
