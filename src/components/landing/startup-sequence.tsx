@@ -8,13 +8,16 @@ import { prefersReducedMotion } from "@/lib/motion";
 /**
  * Cinematic startup entrance for the public homepage (visual overhaul §9–10).
  *
- * - Plays once per session (sessionStorage flag), never on reloads.
+ * - Plays once per BROWSER (localStorage flag), never on reloads or repeat
+ *   visits — mobile users who open the site daily see the veil exactly once,
+ *   so it never reads as a slow loader.
  * - Skipped entirely under `prefers-reduced-motion` (functionality first).
  * - Pure opacity/transform motion; the overlay is pointer-events-none from
  *   the start, so the page underneath stays fully interactive — the
  *   sequence never blocks the app.
- * - Timing: glow ~0ms → logo ~150ms → light pass ~400ms → wordmark ~450ms →
- *   the whole veil dissolves ~1.2s → gone by ~1.75s.
+ * - Timing: glow ~0ms → logo ~150ms → light pass ~250ms → wordmark ~350ms →
+ *   the whole veil dissolves ~0.75s → gone by ~1.15s. Kept snappy so the
+ *   first visit still exposes content in about a second.
  *
  * Hydration-safe: the first render is ALWAYS the visible veil on both the
  * server and the client (no `window` reads during render), so HTML matches.
@@ -33,7 +36,7 @@ export function StartupSequence() {
   useLayoutEffect(() => {
     let alreadySeen = false;
     try {
-      alreadySeen = sessionStorage.getItem(STORAGE_KEY) === "1";
+      alreadySeen = localStorage.getItem(STORAGE_KEY) === "1";
     } catch {
       /* storage unavailable — play anyway */
     }
@@ -45,13 +48,13 @@ export function StartupSequence() {
     }
 
     try {
-      sessionStorage.setItem(STORAGE_KEY, "1");
+      localStorage.setItem(STORAGE_KEY, "1");
     } catch {
       /* storage unavailable — play anyway */
     }
 
-    const leave = setTimeout(() => setPhase("leaving"), 1250);
-    const done = setTimeout(() => setPhase("done"), 1750);
+    const leave = setTimeout(() => setPhase("leaving"), 750);
+    const done = setTimeout(() => setPhase("done"), 1150);
     return () => {
       clearTimeout(leave);
       clearTimeout(done);
@@ -95,7 +98,7 @@ export function StartupSequence() {
             {/* Light pass across the logo */}
             <div
               className="pointer-events-none absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-white/40 to-transparent"
-              style={{ animation: "sheen 1.6s 300ms var(--ease-out-expo) both" }}
+              style={{ animation: "sheen 1.1s 150ms var(--ease-out-expo) both" }}
             />
           </div>
         </div>
