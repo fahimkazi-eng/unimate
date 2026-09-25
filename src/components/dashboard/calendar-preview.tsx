@@ -65,7 +65,7 @@ export function CalendarPreview({
             className={cn(
               "flex min-w-[58px] snap-start flex-col items-center rounded-xl border px-2 py-2",
               day.count > 0
-                ? "border-primary/40 bg-primary-soft"
+                ? "border-violet-500/40 bg-violet-500/10"
                 : "border-border bg-surface"
             )}
           >
@@ -78,7 +78,7 @@ export function CalendarPreview({
             <span
               className={cn(
                 "mt-1 min-h-4 whitespace-nowrap text-[10px] font-semibold",
-                day.count > 0 ? "text-primary" : "text-muted-foreground/60"
+                day.count > 0 ? "text-violet-400" : "text-muted-foreground/60"
               )}
             >
               {day.count > 0 ? `${day.count} task${day.count === 1 ? "" : "s"}` : "—"}

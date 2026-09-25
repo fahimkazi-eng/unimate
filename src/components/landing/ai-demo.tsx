@@ -1,188 +1,194 @@
 "use client";
 
-import { useState } from "react";
-import { Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowRight, Check, GraduationCap, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { prefersReducedMotion } from "@/lib/motion";
 
 /**
- * V3 Phase F — interactive Study Coach demo on the public homepage.
+ * UniMate AI live demo — visual overhaul §13–14.
  *
- * Honest by design: this is a SCRIPTED sample conversation in a mock
- * "Fahim" persona (rule 10 — the dashboard never uses this name). The
- * replies are pre-written example answers so a visitor can feel the
- * interaction before signing up; there is no live AI call, no typing
- * timer, no fake latency — tap a question, get the deterministic reply.
- * Motion is transform/opacity only and `prefers-reduced-motion` collapses
- * it globally.
+ * A realistic, scripted recovery-plan conversation on the public homepage:
+ *   "I have a Data Structures exam in 5 days and I haven't started." → the
+ *   coach builds a 5-day plan, rows reveal one by one, then a Start Plan
+ *   CTA appears. Honest by design: it is a pre-written DEMO (no live AI
+ *   call, nothing leaves the page, the "Fahim" persona never appears in the
+ *   real dashboard). Under `prefers-reduced-motion` the whole exchange is
+ *   revealed instantly with no timers.
+ *
+ * Motion is transform/opacity only; the moving gradient border + orbit ring
+ * are single compositor elements.
  */
 
-interface Exchange {
-  question: string;
-  answer: string;
+interface PlanDay {
+  day: string;
+  topic: string;
+  tone: string;
 }
 
-const EXCHANGES: Exchange[] = [
-  {
-    question: "Where should I start today?",
-    answer:
-      "Database Systems is due tomorrow — start with the EER diagram, about 45 minutes. Nothing else is urgent today.",
-  },
-  {
-    question: "Am I on pace this week?",
-    answer:
-      "You've logged 2h 10m across 3 sessions this week. You need about 6h total by Friday — the plan keeps you on track.",
-  },
-  {
-    question: "What can wait?",
-    answer:
-      "Linear Algebra isn't due for 4 days, so the problem set can wait. Focus on Database Systems first.",
-  },
-  {
-    question: "Plan my next 3 sessions",
-    answer:
-      "Tonight: EER diagram (45m). Tomorrow: Linear Algebra problem set (60m). Friday: review + a 25m focus burst.",
-  },
+const PLAN: PlanDay[] = [
+  { day: "Day 1", topic: "Arrays + linked lists", tone: "bg-violet-500/15 text-violet-300 border-violet-500/30" },
+  { day: "Day 2", topic: "Stacks + queues", tone: "bg-sky-500/15 text-sky-300 border-sky-500/30" },
+  { day: "Day 3", topic: "Trees", tone: "bg-fuchsia-500/15 text-fuchsia-300 border-fuchsia-500/30" },
+  { day: "Day 4", topic: "Graphs + practice", tone: "bg-cyan-500/15 text-cyan-300 border-cyan-500/30" },
+  { day: "Day 5", topic: "Mock test + weak topics", tone: "bg-amber-500/15 text-amber-300 border-amber-500/30" },
 ];
 
+const STRENGTHS = ["Courses", "Tasks", "Calendar", "Notes", "Progress"];
+
+/** Progress through the demo: 0 student → 1 typing → 2 reply → 3 plan → 4 done. */
+type Stage = 0 | 1 | 2 | 3 | 4;
+
 export function AiDemo() {
-  const [picked, setPicked] = useState<number | null>(null);
-  const reply = picked === null ? null : EXCHANGES[picked];
+  const [stage, setStage] = useState<Stage>(0);
+
+  useEffect(() => {
+    if (prefersReducedMotion()) {
+      const t = setTimeout(() => setStage(4), 0);
+      return () => clearTimeout(t);
+    }
+    const timers = [
+      setTimeout(() => setStage(1), 500),
+      setTimeout(() => setStage(2), 1500),
+      setTimeout(() => setStage(3), 2200),
+      setTimeout(() => setStage(4), 3600),
+    ];
+    return () => timers.forEach(clearTimeout);
+  }, []);
 
   return (
-    <section id="coach-demo" className="scroll-mt-16 border-t border-border bg-surface py-20">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-          {/* Copy */}
-          <div>
-            <Badge variant="outline">
-              <Sparkles className="h-3 w-3" />
-              Study Coach
-            </Badge>
-            <h2 className="mt-4 text-3xl font-bold tracking-tight text-foreground">
-              Ask your coach anything.
-            </h2>
-            <p className="mt-4 text-lg leading-8 text-muted-foreground">
-              UniMate&apos;s Study Coach turns your real tasks, courses and
-              focus time into plain-language answers — what to do first,
-              how your week is pacing, and what can wait.
-            </p>
+    <section id="coach-demo" className="relative scroll-mt-20 overflow-hidden border-y border-border bg-background-secondary/60">
+      {/* Section ambience — violet + cyan */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-32 top-10 hidden h-96 w-96 rounded-full opacity-70 lg:block"
+        style={{
+          background:
+            "radial-gradient(circle, color-mix(in srgb, var(--color-accent) 16%, transparent) 0%, transparent 68%)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-32 bottom-0 hidden h-96 w-96 rounded-full opacity-70 lg:block"
+        style={{
+          background:
+            "radial-gradient(circle, color-mix(in srgb, rgb(34 211 238 / 1) 14%, transparent) 0%, transparent 68%)",
+        }}
+      />
 
-            <ul className="mt-6 space-y-2.5 text-sm leading-6 text-muted-foreground">
-              <li className="flex items-start gap-2.5">
-                <span
-                  aria-hidden
-                  className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary"
-                />
-                Answers grounded in your actual data — never made-up numbers.
-              </li>
-              <li className="flex items-start gap-2.5">
-                <span
-                  aria-hidden
-                  className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary"
-                />
-                Honest when it&apos;s offline: no key, no pretend intelligence.
-              </li>
-              <li className="flex items-start gap-2.5">
-                <span
-                  aria-hidden
-                  className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary"
-                />
-                Plans with you — it advises, it never silently moves deadlines.
-              </li>
-            </ul>
+      <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:py-28">
+        {/* Left — the pitch */}
+        <div>
+          <Badge className="border-fuchsia-500/30 bg-fuchsia-500/10 text-fuchsia-300">
+            <Sparkles className="h-3 w-3" aria-hidden /> UniMate AI
+          </Badge>
+          <h2 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            Your personal study{" "}
+            <span className="text-gradient">assistant</span>.
+          </h2>
+          <p className="mt-4 max-w-md text-lg leading-8 text-muted-foreground">
+            Tell it what&apos;s on your plate — deadlines, courses, focus
+            time — and it turns chaos into a day-by-day plan you can actually
+            start.
+          </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Button size="lg" href="/signup">
-                Try it with your own data
-              </Button>
-              <p className="text-xs text-muted-foreground">
-                Free · setup takes under a minute
-              </p>
-            </div>
-          </div>
-
-          {/* Interactive demo */}
-          <div className="rounded-2xl border border-border bg-background p-4 shadow-lg shadow-glow-accent sm:p-5">
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2.5">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent-soft text-accent">
-                  <Sparkles className="h-4 w-4" />
-                </span>
-                <div>
-                  <p className="text-sm font-semibold text-foreground">Study Coach</p>
-                  <p className="text-xs text-muted-foreground">Scripted demo · sample student</p>
+          {/* What the AI reads */}
+          <div className="mt-8 flex max-w-md">
+            <div className="relative">
+              {/* Orb + slowly orbiting ring (transform-only element) */}
+              <div className="relative flex h-16 w-16 items-center justify-center">
+                <div
+                  aria-hidden
+                  className="absolute inset-0 animate-orbit-slow rounded-full border border-dashed border-violet-400/40"
+                />
+                <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-gradient-brand shadow-glow-primary">
+                  <Sparkles className="h-5 w-5 text-white" aria-hidden />
                 </div>
               </div>
-              <Badge variant="outline">Not live AI</Badge>
+              <div className="ml-5 flex flex-wrap items-center gap-2">
+                {STRENGTHS.map((label, i) => (
+                  <span
+                    key={label}
+                    className="animate-rise-in inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-medium text-muted-foreground"
+                    style={{ animationDelay: `${i * 80}ms` }}
+                  >
+                    <Check className="h-3 w-3 text-success" aria-hidden />
+                    {label}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right — the live demo conversation */}
+        <div className="gradient-ring relative rounded-2xl border border-border bg-surface p-5 shadow-lg shadow-glow-accent sm:p-6">
+          {/* Typing indicator + messages */}
+          <div className="space-y-3">
+            {/* Student bubble */}
+            <div
+              className="animate-rise-in ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-primary-soft px-4 py-3 text-sm text-foreground"
+              style={{ animationDelay: "100ms" }}
+            >
+              I have a Data Structures exam in 5 days and I haven&apos;t
+              started.
             </div>
 
-            {/* Conversation */}
-            <div className="mt-4 space-y-3">
-              <div className="flex items-end gap-1.5">
-                <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
-                  <Sparkles className="h-3 w-3" aria-hidden />
+            {/* Reply bubble */}
+            {stage >= 1 && (
+              <div className="flex max-w-[85%] items-start gap-2 animate-rise-in">
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-brand">
+                  <Sparkles className="h-3.5 w-3.5 text-white" aria-hidden />
                 </span>
-                <p className="max-w-[85%] rounded-2xl rounded-bl-sm border border-border bg-secondary px-3.5 py-2.5 text-sm leading-relaxed text-foreground">
-                  Hi Fahim! Database Systems is due tomorrow and Linear
-                  Algebra lands in 4 days. What would you like to sort out
-                  first?
+                <div className="rounded-2xl rounded-bl-sm border border-border bg-surface-elevated px-4 py-3 text-sm text-foreground">
+                  {stage === 1 ? (
+                    <span className="flex items-center gap-1.5 text-muted-foreground">
+                      UniMate is thinking
+                      <span className="flex gap-1" aria-hidden>
+                        <span className="h-1 w-1 animate-typing-dot rounded-full bg-current" />
+                        <span className="h-1 w-1 animate-typing-dot rounded-full bg-current [animation-delay:150ms]" />
+                        <span className="h-1 w-1 animate-typing-dot rounded-full bg-current [animation-delay:300ms]" />
+                      </span>
+                    </span>
+                  ) : (
+                    <>
+                      You&apos;re not too late. I built a{" "}
+                      <span className="font-semibold text-primary">5-day recovery plan</span>.
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* The plan */}
+            {stage >= 2 && (
+              <ul className="space-y-1.5">
+                {PLAN.map((row, i) => (
+                  <li
+                    key={row.day}
+                    className={`animate-rise-in flex items-center justify-between gap-2 rounded-lg border px-3 py-2 ${row.tone}`}
+                    style={{ animationDelay: `${240 + i * 140}ms` }}
+                  >
+                    <span className="text-xs font-bold uppercase tracking-wide">{row.day}</span>
+                    <span className="text-sm font-medium">{row.topic}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {stage >= 3 && (
+              <div className="animate-rise-in pt-1" style={{ animationDelay: "100ms" }}>
+                <Button href="/signup" size="md" className="w-full bg-gradient-brand shadow-glow-primary">
+                  Start Plan
+                  <ArrowRight className="h-4 w-4" aria-hidden />
+                </Button>
+                <p className="mt-2 flex items-center justify-center gap-1.5 text-center text-[11px] text-muted-foreground">
+                  <GraduationCap className="h-3.5 w-3.5" aria-hidden />
+                  Scripted demo — no live AI call, nothing leaves this page.
                 </p>
               </div>
-
-              {reply ? (
-                <>
-                  <div className="flex justify-end">
-                    <p className="max-w-[85%] rounded-2xl rounded-br-sm bg-primary px-3.5 py-2.5 text-sm leading-relaxed text-primary-foreground animate-fade-in-fast">
-                      {reply.question}
-                    </p>
-                  </div>
-                  <div className="flex items-end gap-1.5">
-                    <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
-                      <Sparkles className="h-3 w-3" aria-hidden />
-                    </span>
-                    <p
-                      key={picked}
-                      className="max-w-[85%] rounded-2xl rounded-bl-sm border border-border bg-secondary px-3.5 py-2.5 text-sm leading-relaxed text-foreground animate-fade-in-fast"
-                    >
-                      {reply.answer}
-                    </p>
-                  </div>
-                </>
-              ) : null}
-            </div>
-
-            {/* Suggestion chips — real buttons, full-width tappable area */}
-            <div className="mt-4 flex flex-wrap gap-2">
-              {EXCHANGES.map((exchange, i) => (
-                <button
-                  key={exchange.question}
-                  type="button"
-                  onClick={() => setPicked(i)}
-                  aria-pressed={picked === i}
-                  className={cn(
-                    "min-h-[44px] rounded-full border px-4 py-2.5 text-sm font-medium transition-colors",
-                    picked === i
-                      ? "border-primary bg-primary-soft text-foreground"
-                      : "border-border bg-surface text-foreground hover:border-primary/40 hover:bg-muted"
-                  )}
-                >
-                  {exchange.question}
-                </button>
-              ))}
-            </div>
-
-            <p className="mt-3 text-xs leading-5 text-muted-foreground">
-              Sample conversation with pre-written answers — tap a question
-              to step through it. Your coach after sign-in answers from your
-              own tasks and courses.
-            </p>
-
-            {/* Phones: the conversation ends with one clear next step. */}
-            <Button href="/signup" className="mt-4 w-full sm:hidden">
-              Start your plan
-            </Button>
+            )}
           </div>
         </div>
       </div>

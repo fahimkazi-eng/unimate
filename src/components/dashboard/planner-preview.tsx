@@ -80,7 +80,7 @@ export function PlannerPreview({
                         day.overload
                           ? "bg-warning"
                           : day.minutes > 0
-                            ? "bg-primary"
+                            ? "bg-gradient-to-t from-sky-500/80 to-cyan-400/80"
                             : "bg-transparent"
                       }`}
                       style={{ height: `${height}%` }}

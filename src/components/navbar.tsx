@@ -8,9 +8,9 @@ import { BrandMark } from "@/components/brand/brand-mark";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { label: "Features", href: "#features" },
+  { label: "Product", href: "#features" },
+  { label: "AI", href: "#coach-demo" },
   { label: "How it works", href: "#how-it-works" },
-  { label: "Roadmap", href: "#roadmap" },
   { label: "FAQ", href: "#faq" },
 ];
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -69,9 +69,10 @@ function isActive(href: string, pathname: string): boolean {
     : pathname.startsWith(href);
 }
 
-export function MobileBottomNav() {
+export const MobileBottomNav = memo(function MobileBottomNav() {
   const pathname = usePathname();
   const [moreOpen, setMoreOpen] = useState(false);
+  const toggleMore = useCallback(() => setMoreOpen((open) => !open), []);
 
   const moreActive = MORE.some((item) => isActive(item.href, pathname));
 
@@ -159,7 +160,7 @@ export function MobileBottomNav() {
               >
                 {active ? (
                   <span
-                    className="absolute top-0 h-0.5 w-8 rounded-full bg-primary"
+                    className="absolute top-0 h-0.5 w-8 rounded-full bg-gradient-brand"
                     aria-hidden
                   />
                 ) : null}
@@ -176,7 +177,7 @@ export function MobileBottomNav() {
 
           <button
             type="button"
-            onClick={() => setMoreOpen((open) => !open)}
+            onClick={toggleMore}
             aria-expanded={moreOpen}
             aria-haspopup="dialog"
             aria-label="More pages"
@@ -187,7 +188,7 @@ export function MobileBottomNav() {
           >
             {moreActive ? (
               <span
-                className="absolute top-0 h-0.5 w-8 rounded-full bg-primary"
+                className="absolute top-0 h-0.5 w-8 rounded-full bg-gradient-brand"
                 aria-hidden
               />
             ) : null}
@@ -203,4 +204,4 @@ export function MobileBottomNav() {
       </nav>
     </>
   );
-}
+});

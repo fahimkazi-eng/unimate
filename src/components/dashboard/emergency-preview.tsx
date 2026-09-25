@@ -26,7 +26,7 @@ export function EmergencyPreview({ crisis, openDatedTasks }: EmergencyPreviewPro
       className={cn(
         "flex h-full flex-col rounded-xl border p-5",
         crisis
-          ? "border-danger/60 bg-danger/10"
+          ? "border-danger/60 bg-gradient-to-br from-rose-600/20 via-rose-500/10 to-amber-500/10"
           : "border-border bg-surface"
       )}
     >
@@ -68,7 +68,7 @@ export function EmergencyPreview({ crisis, openDatedTasks }: EmergencyPreviewPro
       ) : (
         <div className="mt-3 flex flex-1 flex-col">
           <p className="flex items-center gap-1.5 text-sm font-medium text-foreground">
-            <CheckCircle2 className="h-4 w-4 text-primary" aria-hidden />
+            <CheckCircle2 className="h-4 w-4 text-emerald-400" aria-hidden />
             {openDatedTasks === 0
               ? "Nothing due yet — clear skies"
               : "You're managing the load"}
@@ -83,9 +83,9 @@ export function EmergencyPreview({ crisis, openDatedTasks }: EmergencyPreviewPro
       <Link
         href="/dashboard/emergency"
         className={cn(
-          "mt-4 inline-flex h-11 items-center justify-center gap-1.5 rounded-lg px-4 text-sm font-semibold transition-colors",
+          "mt-4 inline-flex h-11 items-center justify-center gap-1.5 rounded-lg px-4 text-sm font-semibold transition-[filter,background-color]",
           crisis
-            ? "bg-danger text-white hover:bg-danger/90"
+            ? "bg-gradient-to-r from-rose-600 to-amber-500 text-white hover:brightness-110"
             : "border border-border bg-secondary text-foreground hover:bg-muted"
         )}
       >

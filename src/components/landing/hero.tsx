@@ -1,21 +1,15 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AmbientBackground } from "@/components/landing/ambient-background";
+import { HeroPreview } from "@/components/landing/hero-preview";
 import { staggerDelay } from "@/lib/motion";
-import {
-  CalendarClock,
-  CheckCircle2,
-  Flame,
-  Play,
-  Timer,
-  Trophy,
-} from "lucide-react";
+import { CalendarClock, CheckCircle2, Flame, Timer, Trophy } from "lucide-react";
 
 /**
- * Homepage hero — Checkpoint 6.
- * Ambient background, staged entrance (staggerDelay), an app-accurate
- * "Your next move" preview (Fahim demo persona, rule 10) and a floating
- * XP chip. Everything is token-based and theme-aware.
+ * Homepage hero — visual overhaul.
+ * Deep Space ambience, a staged entrance (staggerDelay), an animated
+ * gradient brand line, a living product preview (HeroPreview) and a
+ * floating XP chip. Everything is token-based and theme-aware.
  */
 export function Hero() {
   return (
@@ -25,7 +19,9 @@ export function Hero() {
       <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-2 lg:pt-24">
         <div>
           <div className="animate-rise-in" style={{ animationDelay: staggerDelay(0) }}>
-            <Badge>Your student operating system</Badge>
+            <Badge className="border-primary/30 bg-primary-soft text-primary shadow-glow-primary">
+              <span aria-hidden>✦</span> Your student operating system
+            </Badge>
           </div>
 
           <h1
@@ -34,7 +30,7 @@ export function Hero() {
           >
             University is complicated.
             <br />
-            <span className="text-primary">Your tools don&apos;t have to be.</span>
+            <span className="text-gradient">Your tools don&apos;t have to be.</span>
           </h1>
 
           <p
@@ -49,11 +45,20 @@ export function Hero() {
             className="mt-8 flex animate-rise-in flex-wrap items-center gap-3"
             style={{ animationDelay: staggerDelay(3) }}
           >
-            <Button size="lg" href="/signup">
+            <Button
+              size="lg"
+              href="/signup"
+              className="bg-gradient-cta shadow-lg shadow-glow-primary"
+            >
               Get Started
             </Button>
-            <Button size="lg" variant="outline" href="#how-it-works">
-              See How It Works
+            <Button
+              size="lg"
+              variant="outline"
+              href="#how-it-works"
+              className="border-border/80 bg-surface-glass backdrop-blur-sm"
+            >
+              See UniMate in Action
             </Button>
           </div>
 
@@ -65,7 +70,7 @@ export function Hero() {
           </p>
         </div>
 
-        {/* App-accurate preview */}
+        {/* Living app preview + floating XP chip */}
         <div
           className="relative animate-rise-in"
           style={{ animationDelay: staggerDelay(5) }}
@@ -77,48 +82,25 @@ export function Hero() {
                   Good evening, Fahim 👋
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  3 things to take care of today.
+                  Watch UniMate handle your day.
                 </p>
               </div>
-              <Badge variant="default">
+              <Badge variant="outline" className="border-amber-500/30 bg-amber-500/10 text-amber-400">
                 <Trophy className="h-3 w-3" />
                 Level 7 · 1,240 XP
               </Badge>
             </div>
 
-            {/* The app's headline widget */}
-            <div className="mt-5 rounded-xl border border-primary/30 bg-background-secondary p-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">
-                Your next move
-              </p>
-              <p className="mt-1 text-sm font-semibold text-foreground">
-                Database Systems Assignment
-              </p>
-              <div className="mt-2 flex flex-wrap items-center gap-2">
-                <Badge variant="default">Due tomorrow</Badge>
-                <Badge variant="warning">High priority</Badge>
-                <Badge variant="outline">~45 min</Badge>
-              </div>
-              <div className="mt-3 flex items-center gap-2">
-                <span className="inline-flex h-7 items-center gap-1.5 rounded-lg bg-primary px-3 text-xs font-medium text-primary-foreground">
-                  <Play className="h-3 w-3" />
-                  Start focus
-                </span>
-                <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <span
-                    aria-hidden
-                    className="h-2 w-2 rounded-full"
-                    style={{ background: "var(--color-primary)" }}
-                  />
-                  Database Systems
-                </span>
-              </div>
+            <div className="mt-5">
+              <HeroPreview />
             </div>
 
             <div className="mt-4 space-y-3">
               <div className="flex items-center justify-between rounded-lg border border-border bg-background px-4 py-3">
                 <div className="flex items-center gap-3">
-                  <CalendarClock className="h-4 w-4 text-primary" />
+                  <span aria-hidden className="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-500/15 text-sky-400">
+                    <CalendarClock className="h-4 w-4" />
+                  </span>
                   <div>
                     <p className="text-sm font-medium text-foreground">
                       Linear Algebra Problem Set
@@ -131,7 +113,9 @@ export function Hero() {
 
               <div className="flex items-center justify-between rounded-lg border border-border bg-background px-4 py-3">
                 <div className="flex items-center gap-3">
-                  <Timer className="h-4 w-4 text-primary" />
+                  <span aria-hidden className="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-500/15 text-cyan-400">
+                    <Timer className="h-4 w-4" />
+                  </span>
                   <div>
                     <p className="text-sm font-medium text-foreground">
                       Today&apos;s focus
@@ -141,20 +125,10 @@ export function Hero() {
                     </p>
                   </div>
                 </div>
-                <Badge>
+                <Badge className="border-orange-500/30 bg-orange-500/10 text-orange-400">
                   <Flame className="h-3 w-3" />
                   4 day streak
                 </Badge>
-              </div>
-            </div>
-
-            <div className="mt-5">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>Semester progress</span>
-                <span className="font-medium text-foreground">78%</span>
-              </div>
-              <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
-                <div className="h-full w-[78%] rounded-full bg-primary" />
               </div>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight, CalendarClock, Clock3, Sparkles, UserRoundCheck } from "lucide-react";
 import { formatGpa } from "@/lib/grades";
+import type { CSSProperties } from "react";
 
 /**
  * V3 Phase B §10 — Academic Pulse.
@@ -38,15 +39,35 @@ export function AcademicPulse({
       </div>
 
       <div className="mt-3 grid grid-cols-2 gap-3">
-        {/* GPA — the one real, headline number. */}
-        <div className="rounded-xl border border-border bg-surface p-4">
+        {/* GPA — the one real, headline number, with a radial gauge arc. */}
+        <div className="relative overflow-hidden rounded-xl border border-violet-500/30 bg-surface p-4">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-10 -top-10 h-24 w-24 rounded-full bg-violet-500/10 blur-2xl"
+          />
           <p className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            <Sparkles className="h-3.5 w-3.5" />
+            <Sparkles className="h-3.5 w-3.5 text-violet-400" />
             GPA
           </p>
-          <p className="mt-2 text-3xl font-bold tabular-nums text-foreground">
-            {gpa !== null ? formatGpa(gpa) : "—"}
-          </p>
+          <div className="mt-2 flex items-center gap-3">
+            <p className="text-3xl font-bold tabular-nums text-foreground">
+              {gpa !== null ? formatGpa(gpa) : "—"}
+            </p>
+            {gpa !== null ? (
+              <span
+                aria-hidden
+                className="relative h-10 w-10"
+                style={
+                  {
+                    "--gauge": Math.round((gpa / 4) * 100),
+                    "--gauge-color": "#a78bfa",
+                  } as CSSProperties
+                }
+              >
+                <span className="gauge-ring block h-10 w-10 opacity-90" />
+              </span>
+            ) : null}
+          </div>
           <p className="mt-1 text-xs text-muted-foreground">
             {gradeCount === 0
               ? "No grades yet — add one in Academics"
@@ -55,9 +76,9 @@ export function AcademicPulse({
         </div>
 
         {/* Next deadline (honest stand-in for an exam countdown). */}
-        <div className="rounded-xl border border-border bg-surface p-4">
+        <div className="rounded-xl border border-amber-500/30 bg-surface p-4">
           <p className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            <CalendarClock className="h-3.5 w-3.5" />
+            <CalendarClock className="h-3.5 w-3.5 text-amber-400" />
             Next deadline
           </p>
           <p className="mt-2 text-lg font-bold leading-tight text-foreground">
@@ -71,7 +92,7 @@ export function AcademicPulse({
         {/* Attendance — honest: not tracked yet. */}
         <div className="rounded-xl border border-dashed border-border bg-muted/30 p-4">
           <p className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            <UserRoundCheck className="h-3.5 w-3.5" />
+            <UserRoundCheck className="h-3.5 w-3.5 text-cyan-400" />
             Attendance
           </p>
           <p className="mt-2 text-sm font-semibold text-foreground">
@@ -85,7 +106,7 @@ export function AcademicPulse({
         {/* Exams — honest: no data model. */}
         <div className="rounded-xl border border-dashed border-border bg-muted/30 p-4">
           <p className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            <Clock3 className="h-3.5 w-3.5" />
+            <Clock3 className="h-3.5 w-3.5 text-rose-400" />
             Exam countdown
           </p>
           <p className="mt-2 text-sm font-semibold text-foreground">

@@ -29,7 +29,7 @@
   color-scheme: light;
 }
 
-/* ---- Light theme (default) — Bootstrap 5.3 light ---- */
+/* ---- Light theme (default) — Bootstrap 5.3 light, UniMate violet brand ---- */
 @theme {
   /* Surfaces (Bootstrap grays) */
   --color-background: #f8f9fa;
@@ -49,27 +49,27 @@
   --color-border-hover: #ced4da;
   --color-input: #ced4da;
 
-  /* Brand — Bootstrap primary blue; accent uses Bootstrap purple */
-  --color-primary: #0d6efd;
-  --color-primary-hover: #0b5ed7;
-  --color-primary-dark: #0a58ca;
-  --color-primary-light: #6ea8fe;
+  /* Brand — UniMate violet primary, indigo accent */
+  --color-primary: #7c3aed;
+  --color-primary-hover: #6d28d9;
+  --color-primary-dark: #5b21b6;
+  --color-primary-light: #a78bfa;
   --color-primary-foreground: #ffffff;
-  --color-primary-soft: #cfe2ff;
+  --color-primary-soft: rgb(124 58 237 / 0.1);
 
   --color-secondary: #e9ecef;
   --color-secondary-foreground: #212529;
 
-  --color-accent: #6f42c1;
-  --color-accent-soft: rgb(111 66 193 / 0.12);
+  --color-accent: #4f46e5;
+  --color-accent-soft: rgb(79 70 229 / 0.1);
 
-  /* Status (Bootstrap) */
-  --color-success: #198754;
-  --color-warning: #ffc107;
-  --color-danger: #dc3545;
+  /* Status */
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-danger: #e11d48;
 
   /* Focus ring */
-  --color-ring: #0d6efd;
+  --color-ring: #7c3aed;
 
   /* Radii (Bootstrap border-radius scale) */
   --radius-sm: 0.25rem;
@@ -83,58 +83,58 @@
   --shadow-card: 0 0.125rem 0.25rem rgb(33 37 41 / 0.075);
   --shadow-card-hover: 0 0.5rem 1rem rgb(33 37 41 / 0.15);
   --shadow-lg: 0 1rem 3rem rgb(33 37 41 / 0.175);
-  --shadow-glow-primary: 0 0.5rem 1rem rgb(33 37 41 / 0.15);
-  --shadow-glow-accent: 0 0.5rem 1rem rgb(33 37 41 / 0.15);
+  --shadow-glow-primary: 0 0.5rem 1rem rgb(124 58 237 / 0.18);
+  --shadow-glow-accent: 0 0.5rem 1rem rgb(79 70 229 / 0.18);
 
   /* Motion (refined in Checkpoint 5) */
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ---- Dark theme — Bootstrap dark: neutral slate panels, blue accent ---- */
+/* ---- Dark theme — UniMate Deep Space: violet-black base, premium glow ---- */
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --color-background: #212529;
-  --color-background-secondary: #2b3035;
-  --color-surface: #343a40;
-  --color-surface-elevated: #3d444b;
-  --color-surface-glass: rgb(52 58 64 / 0.85);
+  --color-background: #08070f;
+  --color-background-secondary: #100d21;
+  --color-surface: #131022;
+  --color-surface-elevated: #1a1532;
+  --color-surface-glass: rgb(19 16 34 / 0.85);
 
-  --color-foreground: #f8f9fa;
-  --color-foreground-secondary: #ced4da;
-  --color-muted: #495057;
-  --color-muted-foreground: #adb5bd;
+  --color-foreground: #f6f4ff;
+  --color-foreground-secondary: #cec9e8;
+  --color-muted: #231e42;
+  --color-muted-foreground: #918baf;
 
-  --color-border: #495057;
-  --color-border-hover: #6c757d;
-  --color-input: #495057;
+  --color-border: #2b2547;
+  --color-border-hover: #3d3566;
+  --color-input: #2b2547;
 
-  --color-primary: #0d6efd;
-  --color-primary-hover: #3d8bfd;
-  --color-primary-dark: #0a58ca;
-  --color-primary-light: #6ea8fe;
+  --color-primary: #8b5cf6;
+  --color-primary-hover: #a78bfa;
+  --color-primary-dark: #7c3aed;
+  --color-primary-light: #c4b5fd;
   --color-primary-foreground: #ffffff;
-  --color-primary-soft: rgb(13 110 253 / 0.16);
+  --color-primary-soft: rgb(139 92 246 / 0.16);
 
-  --color-secondary: #495057;
-  --color-secondary-foreground: #f8f9fa;
+  --color-secondary: #241f45;
+  --color-secondary-foreground: #f6f4ff;
 
-  --color-accent: #a78bfa;
-  --color-accent-soft: rgb(167 139 250 / 0.16);
+  --color-accent: #6366f1;
+  --color-accent-soft: rgb(99 102 241 / 0.16);
 
-  --color-success: #75b798;
-  --color-warning: #ffda6a;
-  --color-danger: #ea868f;
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-danger: #fb7185;
 
-  --color-ring: #6ea8fe;
+  --color-ring: #8b5cf6;
 
-  --shadow-sm: 0 0.125rem 0.25rem rgb(0 0 0 / 0.4);
-  --shadow-card: 0 0.125rem 0.25rem rgb(0 0 0 / 0.4);
-  --shadow-card-hover: 0 0.5rem 1rem rgb(0 0 0 / 0.5);
+  --shadow-sm: 0 0.125rem 0.25rem rgb(0 0 0 / 0.5);
+  --shadow-card: 0 0.125rem 0.5rem rgb(0 0 0 / 0.35);
+  --shadow-card-hover: 0 0.5rem 1.5rem rgb(0 0 0 / 0.55);
   --shadow-lg: 0 1rem 3rem rgb(0 0 0 / 0.6);
-  --shadow-glow-primary: 0 0.5rem 1rem rgb(0 0 0 / 0.5);
-  --shadow-glow-accent: 0 0.5rem 1rem rgb(0 0 0 / 0.5);
+  --shadow-glow-primary: 0 0.5rem 1.75rem rgb(139 92 246 / 0.28);
+  --shadow-glow-accent: 0 0.5rem 1.75rem rgb(99 102 241 / 0.28);
 }
 
 /* ---- Motion system (Checkpoint 5) ----
@@ -253,6 +253,96 @@
   }
 }
 
+/* ---- Visual overhaul: premium atmosphere + micro-motion (transform/opacity
+   only where possible). Collapsed globally by prefers-reduced-motion. ---- */
+@theme inline {
+  /* Soft breathing glow — used behind hero cards, AI orb, CTAs. */
+  --animate-pulse-soft: pulse-soft 6s ease-in-out infinite;
+
+  @keyframes pulse-soft {
+    0%,
+    100% {
+      opacity: 0.55;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  /* One-shot light pass (startup logo, AI orb sheen). */
+  --animate-sheen: sheen 1.6s var(--ease-out-expo) 1;
+
+  @keyframes sheen {
+    from {
+      transform: translateX(-130%) skewX(-18deg);
+    }
+    to {
+      transform: translateX(230%) skewX(-18deg);
+    }
+  }
+
+  /* Slowly rotating orbit rings around the AI core (transform only). */
+  --animate-orbit-slow: orbit-rotate 26s linear infinite;
+
+  @keyframes orbit-rotate {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Typing indicator dots — staggered with inline delays. */
+  --animate-typing-dot: typing-dot 1.2s ease-in-out infinite;
+
+  @keyframes typing-dot {
+    0%,
+    60%,
+    100% {
+      opacity: 0.25;
+      transform: translateY(0);
+    }
+    30% {
+      opacity: 1;
+      transform: translateY(-2px);
+    }
+  }
+
+  /* Very slow in-place aurora cross-fade for ambient blobs. */
+  --animate-aurora: aurora 14s ease-in-out infinite alternate;
+
+  @keyframes aurora {
+    from {
+      opacity: 0.5;
+      transform: scale(1) translate3d(0, 0, 0);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1.08) translate3d(12px, -8px, 0);
+    }
+  }
+
+  /* Gradient-mesh drift — transform only, kept far below threshold. */
+  --animate-mesh-drift: mesh-drift 36s ease-in-out infinite alternate;
+
+  @keyframes mesh-drift {
+    from {
+      transform: translate3d(-2%, -1%, 0);
+    }
+    to {
+      transform: translate3d(2%, 1.5%, 0);
+    }
+  }
+
+  /* Moving gradient border (AI card) — animated via @property --gangle; the
+     fallback is a static gradient border on engines without @property. */
+  --animate-border-spin: border-spin 9s linear infinite;
+
+  @keyframes border-spin {
+    to {
+      --gangle: 360deg;
+    }
+  }
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -359,5 +449,143 @@
   .animate-drift-2,
   .animate-drift-3 {
     display: none;
+  }
+}
+
+/* =============================================================
+   Visual overhaul — atmosphere + gradient utilities
+   (unlayered: they always ship and always win over utilities)
+   ============================================================= */
+
+/* Multi-stop brand gradient text (hero line, greeting accents). */
+.text-gradient {
+  background-image: linear-gradient(
+    100deg,
+    #a855f7 0%,
+    #6366f1 34%,
+    #22d3ee 62%,
+    #ec4899 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Solid brand gradients for CTAs / panels. */
+.bg-gradient-brand {
+  background-image: linear-gradient(135deg, #8b5cf6 0%, #6366f1 52%, #38bdf8 100%);
+}
+
+.bg-gradient-cta {
+  background-image: linear-gradient(
+    135deg,
+    #7c3aed 0%,
+    #6366f1 40%,
+    #38bdf8 75%,
+    #22d3ee 100%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-gradient,
+  .bg-gradient-brand,
+  .bg-gradient-cta {
+    background-image: none !important;
+    color: var(--color-foreground) !important;
+    background-color: var(--color-primary);
+  }
+}
+
+/* Animated gradient border — used on the AI card (one element, subtle).
+   @property registration keeps the rotation on the compositor's paint
+   path; browsers without it just show a static gradient ring. */
+@property --gangle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.gradient-ring {
+  position: relative;
+  border-radius: inherit;
+}
+
+.gradient-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--gangle),
+    transparent 0deg,
+    rgb(139 92 246 / 0.9) 80deg,
+    rgb(99 102 241 / 0.9) 150deg,
+    rgb(34 211 238 / 0.7) 220deg,
+    transparent 300deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: border-spin 9s linear infinite;
+  pointer-events: none;
+}
+
+/* Radial gauge (GPA ring) — conic arc in a circle, static and cheap. */
+.gauge-ring {
+  border-radius: 9999px;
+  background: conic-gradient(
+    var(--gauge-color, var(--color-primary)) calc(var(--gauge, 0) * 1%),
+    color-mix(in srgb, var(--gauge-color, var(--color-primary)) 18%, transparent) 0
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 calc(100% - 5px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 calc(100% - 5px));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gradient-ring::before {
+    animation: none;
+  }
+}
+
+/* Homepage gradient-mesh overlay (static image, slow drift). */
+.mesh-overlay {
+  background-image:
+    radial-gradient(42% 36% at 18% 12%, rgb(139 92 246 / 0.16), transparent 70%),
+    radial-gradient(38% 32% at 82% 8%, rgb(34 211 238 / 0.1), transparent 70%),
+    radial-gradient(46% 40% at 70% 88%, rgb(236 72 153 / 0.1), transparent 72%),
+    radial-gradient(34% 30% at 8% 82%, rgb(99 102 241 / 0.14), transparent 70%);
+}
+
+@media (max-width: 767px) {
+  /* Phones: a single faint violet cast instead of the full mesh. */
+  .mesh-overlay {
+    background-image: radial-gradient(
+      70% 50% at 50% 0%,
+      rgb(124 58 237 / 0.14),
+      transparent 75%
+    );
+  }
+}
+
+/* Premium scrollbar (WebKit) — matches the Deep Space surfaces. */
+@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--color-muted-foreground) 35%, transparent);
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
   }
 }

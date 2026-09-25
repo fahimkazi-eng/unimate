@@ -53,7 +53,7 @@ export function AchievementsPreview({
 
       {unlockedCount === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-2 py-8 text-center">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground">
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-500/15 text-amber-400">
             <Trophy className="h-5 w-5" />
           </span>
           <p className="text-sm font-medium text-foreground">
@@ -100,7 +100,7 @@ export function AchievementsPreview({
             </p>
             <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-muted">
               <div
-                className="h-full rounded-full bg-primary transition-[width] duration-500 ease-out-quart"
+                className="h-full rounded-full bg-gradient-brand transition-[width] duration-500 ease-out-quart"
                 style={{ width: `${Math.round(Math.min(nextUp.progress, 1) * 100)}%` }}
               />
             </div>

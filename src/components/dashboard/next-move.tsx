@@ -66,11 +66,30 @@ export function NextMoveWidget({ task }: NextMoveWidgetProps) {
   };
 
   return (
-    <Card className="relative h-full overflow-hidden border-primary/30 shadow-glow-accent">
-      {/* Course accent rail — falls back to the brand gradient. */}
+    <Card className="relative h-full overflow-hidden border-primary/30 shadow-glow-accent transition-shadow duration-200 ease-out-quart hover:shadow-lg hover:shadow-glow-primary">
+      {/* Soft brand light in the corner */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-primary/15 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-20 -left-10 h-44 w-44 rounded-full bg-accent/10 blur-3xl"
+      />
+
+      {/* Course accent rail — animated glow behind the solid line. */}
       <span
         aria-hidden
-        className="absolute inset-y-0 left-0 w-1 bg-primary"
+        className="absolute inset-y-0 left-0 w-1.5 animate-pulse-soft bg-gradient-brand opacity-80 blur-[6px]"
+        style={
+          task.course
+            ? { background: task.course.color }
+            : undefined
+        }
+      />
+      <span
+        aria-hidden
+        className="absolute inset-y-0 left-0 w-1.5 bg-gradient-brand"
         style={
           task.course
             ? { background: task.course.color }

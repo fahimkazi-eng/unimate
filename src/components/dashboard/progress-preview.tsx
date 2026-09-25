@@ -49,6 +49,7 @@ export function ProgressPreview({
       label: "Focused this week",
       value: minutesLabel(weekMinutes),
       hint: `${weekSessions} session${weekSessions === 1 ? "" : "s"}`,
+      tone: "text-cyan-400",
     },
     {
       icon: ListChecks,
@@ -56,12 +57,14 @@ export function ProgressPreview({
       value: String(tasksCompleted),
       hint:
         tasksTotal === 0 ? "no tasks yet" : `${Math.round((tasksCompleted / tasksTotal) * 100)}% of all tasks`,
+      tone: "text-violet-400",
     },
     {
       icon: Flame,
       label: "Streak",
       value: `${streak}d`,
       hint: streak > 0 ? "keep it alive" : "start one today",
+      tone: "text-amber-400",
     },
   ];
 
@@ -84,7 +87,7 @@ export function ProgressPreview({
           return (
             <div key={stat.label} className="rounded-xl border border-border bg-surface p-3">
               <p className="flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-                <Icon className="h-3 w-3" aria-hidden />
+                <Icon className={`h-3 w-3 ${stat.tone}`} aria-hidden />
                 <span className="truncate">{stat.label}</span>
               </p>
               <p className="mt-1.5 text-xl font-bold tabular-nums text-foreground">
@@ -115,7 +118,7 @@ export function ProgressPreview({
           role="presentation"
         >
           <div
-            className="h-full rounded-full bg-primary transition-[width] duration-500 ease-out-quart"
+            className="h-full rounded-full bg-gradient-brand transition-[width] duration-500 ease-out-quart"
             style={{ width: `${levelPct}%` }}
           />
         </div>

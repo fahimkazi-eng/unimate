@@ -22,14 +22,16 @@ interface QuickAction {
   icon: LucideIcon;
   /** Short caption shown on larger screens. */
   caption: string;
+  /** Colored icon chip (overhaul §18 — each action has its own accent). */
+  tone: string;
 }
 
 const ACTIONS: QuickAction[] = [
-  { href: "/dashboard/tasks", label: "Add Task", icon: ListPlus, caption: "Capture a task" },
-  { href: "/dashboard/calendar", label: "Add Event", icon: CalendarPlus2, caption: "Block time" },
-  { href: "/dashboard/focus", label: "Start Focus", icon: Play, caption: "Begin a session" },
-  { href: "/dashboard/assistant", label: "Ask UniMate", icon: Sparkles, caption: "Chat with your coach" },
-  { href: "/dashboard/planner", label: "Plan My Week", icon: CalendarRange, caption: "Spread the workload" },
+  { href: "/dashboard/tasks", label: "Add Task", icon: ListPlus, caption: "Capture a task", tone: "bg-violet-500/15 text-violet-400" },
+  { href: "/dashboard/calendar", label: "Add Event", icon: CalendarPlus2, caption: "Block time", tone: "bg-blue-500/15 text-blue-400" },
+  { href: "/dashboard/focus", label: "Start Focus", icon: Play, caption: "Begin a session", tone: "bg-cyan-500/15 text-cyan-400" },
+  { href: "/dashboard/assistant", label: "Ask UniMate", icon: Sparkles, caption: "Chat with your coach", tone: "bg-fuchsia-500/15 text-fuchsia-400" },
+  { href: "/dashboard/planner", label: "Plan My Week", icon: CalendarRange, caption: "Spread the workload", tone: "bg-amber-500/15 text-amber-400" },
 ];
 
 export function QuickActions() {
@@ -45,7 +47,7 @@ export function QuickActions() {
               href={action.href}
               className="group flex min-w-[150px] snap-start items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3 transition-[transform,background-color,border-color] duration-200 ease-out-quart hover:-translate-y-0.5 hover:border-primary/40 hover:bg-surface-elevated sm:min-w-0"
             >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-primary transition-transform duration-200 ease-out-quart group-hover:scale-110">
+              <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-transform duration-200 ease-out-quart group-hover:scale-110 ${action.tone}`}>
                 <Icon className="h-4 w-4" />
               </span>
               <span className="min-w-0">

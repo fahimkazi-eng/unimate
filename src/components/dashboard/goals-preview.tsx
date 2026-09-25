@@ -76,8 +76,8 @@ export function GoalsPreview({ goals, error }: GoalsPreviewProps) {
                     aria-hidden
                     className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${
                       goal.complete
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-muted-foreground"
+                        ? "bg-emerald-500/90 text-white"
+                        : "bg-amber-500/15 text-amber-400"
                     }`}
                   >
                     {goal.complete ? (
@@ -96,7 +96,7 @@ export function GoalsPreview({ goals, error }: GoalsPreviewProps) {
                 </div>
                 <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-muted">
                   <div
-                    className="h-full rounded-full bg-primary transition-[width] duration-500 ease-out-quart"
+                    className="h-full rounded-full bg-amber-400/90 transition-[width] duration-500 ease-out-quart"
                     style={{ width: `${Math.min(pct, 100)}%` }}
                   />
                 </div>

@@ -12,7 +12,7 @@ export type ButtonSize = "sm" | "md" | "lg";
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "bg-primary text-primary-foreground hover:bg-primary-hover shadow-sm",
+    "bg-gradient-brand text-primary-foreground shadow-sm hover:brightness-110",
   secondary:
     "bg-secondary text-secondary-foreground hover:bg-muted",
   outline:
@@ -43,7 +43,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const classes = cn(
-    "inline-flex items-center justify-center rounded-md font-medium transition-colors",
+    "inline-flex items-center justify-center rounded-md font-medium transition-[filter,background-color,box-shadow,color]",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
     "disabled:pointer-events-none disabled:opacity-50",
     variantClasses[variant],

@@ -9,6 +9,8 @@ interface HeroStatDef {
   value: number;
   suffix?: string;
   hint: string;
+  /** Accent tone for the stat icon (overhaul §16 — each stat has a color). */
+  tone: string;
   /** Show a slim progress bar under the value (XP-into-level). */
   progress?: number;
 }
@@ -57,6 +59,7 @@ export function Hero({
       value: streak,
       suffix: "d",
       hint: streak > 0 ? "Keep it alive today" : "Start one today",
+      tone: "text-amber-400",
     },
     {
       key: "level",
@@ -64,6 +67,7 @@ export function Hero({
       icon: Trophy,
       value: level,
       hint: `Level ${level} of the climb`,
+      tone: "text-violet-400",
     },
     {
       key: "xp",
@@ -71,6 +75,7 @@ export function Hero({
       icon: Sparkles,
       value: xp,
       hint: `${toNext - intoLevel} XP to level ${level + 1}`,
+      tone: "text-fuchsia-400",
       progress: xpProgress,
     },
     {
@@ -83,6 +88,7 @@ export function Hero({
         tasksTotal === 0
           ? "No tasks yet"
           : `${tasksDone}/${tasksTotal} tasks complete`,
+      tone: "text-cyan-400",
     },
   ];
 
@@ -97,10 +103,12 @@ export function Hero({
         aria-hidden
         className="pointer-events-none absolute -bottom-24 -left-16 h-64 w-64 rounded-full bg-accent/10 blur-3xl"
       />
+      {/* Brand aura bar */}
+      <div aria-hidden className="absolute inset-x-0 top-0 h-1 bg-gradient-brand opacity-90" />
 
       <div className="relative p-6 sm:p-8">
-        <p className="break-words text-sm font-semibold uppercase tracking-[0.14em] text-primary">
-          {greeting}, {name}
+        <p className="break-words text-sm font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+          <span className="text-gradient">{greeting}</span>, {name}
         </p>
         <h1 className="mt-3 max-w-2xl break-words text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl">
           {headline}
@@ -117,7 +125,7 @@ export function Hero({
             return (
               <div key={stat.key} className="min-w-[132px] snap-start sm:min-w-0">
                 <dt className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  <Icon className="h-3.5 w-3.5" aria-hidden />
+                  <Icon className={`h-3.5 w-3.5 ${stat.tone}`} aria-hidden />
                   {stat.label}
                 </dt>
                 <dd className="mt-1.5 text-2xl font-bold tabular-nums text-foreground sm:text-3xl">
@@ -134,7 +142,7 @@ export function Hero({
                     role="presentation"
                   >
                     <div
-                      className="h-full rounded-full bg-primary transition-[width] duration-500 ease-out-quart"
+                      className="h-full rounded-full bg-gradient-brand transition-[width] duration-500 ease-out-quart"
                       style={{ width: `${stat.progress}%` }}
                     />
                   </div>

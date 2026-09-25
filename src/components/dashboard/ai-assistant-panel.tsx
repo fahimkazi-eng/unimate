@@ -18,18 +18,22 @@ export function AiAssistantPanel({ aiConfigured }: AiAssistantPanelProps) {
   return (
     <section
       aria-labelledby="ai-panel-heading"
-      className="relative overflow-hidden rounded-2xl border border-accent/30 bg-surface shadow-glow-accent"
+      className="gradient-ring relative overflow-hidden rounded-2xl border border-accent/30 bg-surface shadow-glow-accent"
     >
-      {/* Static AI glow — desktop only; phones skip the large blur surface. */}
+      {/* AI atmosphere — desktop only; phones skip the large blur surfaces. */}
       <div
         aria-hidden
         className="pointer-events-none absolute -top-28 right-0 hidden h-72 w-72 rounded-full bg-accent/10 blur-3xl sm:block"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-24 -left-20 hidden h-64 w-64 rounded-full bg-primary/10 blur-3xl lg:block"
       />
 
       <div className="relative p-4 sm:p-6">
         <header className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent shadow-glow-accent">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-brand text-white shadow-glow-primary">
               <Sparkles className="h-5 w-5" aria-hidden />
             </span>
             <div>
@@ -37,7 +41,7 @@ export function AiAssistantPanel({ aiConfigured }: AiAssistantPanelProps) {
                 id="ai-panel-heading"
                 className="text-lg font-bold tracking-tight text-foreground"
               >
-                UniMate AI
+                <span className="text-gradient">✦ UniMate AI</span>
               </h2>
               <p className="text-sm text-muted-foreground">
                 Your personal study assistant — answers from your real tasks,
